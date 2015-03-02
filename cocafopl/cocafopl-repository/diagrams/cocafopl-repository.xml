@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><entities>
+	<entity>
+		<entity-name>vwg.skoda.cocafopl.entity.Predstavitel</entity-name>
+		<entity-width>120</entity-width>
+		<entity-height>546</entity-height>
+		<entity-X-Coordinate>18</entity-X-Coordinate>
+		<entity-Y-Coordinate>52</entity-Y-Coordinate>
+		<primary-collapsed>false</primary-collapsed>
+		<relation-collapsed>false</relation-collapsed>
+		<basic-collapsed>false</basic-collapsed>
+	</entity>
+
+	<entity>
+		<entity-name>vwg.skoda.cocafopl.entity.MtProd</entity-name>
+		<entity-width>120</entity-width>
+		<entity-height>108</entity-height>
+		<entity-X-Coordinate>1140</entity-X-Coordinate>
+		<entity-Y-Coordinate>549</entity-Y-Coordinate>
+		<primary-collapsed>false</primary-collapsed>
+		<relation-collapsed>false</relation-collapsed>
+		<basic-collapsed>false</basic-collapsed>
+	</entity>
+
+	<entity>
+		<entity-name>vwg.skoda.cocafopl.entity.PredstavitelMessage</entity-name>
+		<entity-width>159</entity-width>
+		<entity-height>206</entity-height>
+		<entity-X-Coordinate>439</entity-X-Coordinate>
+		<entity-Y-Coordinate>303</entity-Y-Coordinate>
+		<primary-collapsed>false</primary-collapsed>
+		<relation-collapsed>false</relation-collapsed>
+		<basic-collapsed>false</basic-collapsed>
+	</entity>
+
+	<entity>
+		<entity-name>vwg.skoda.cocafopl.entity.MvPopisMessage</entity-name>
+		<entity-width>128</entity-width>
+		<entity-height>206</entity-height>
+		<entity-X-Coordinate>630</entity-X-Coordinate>
+		<entity-Y-Coordinate>405</entity-Y-Coordinate>
+		<primary-collapsed>false</primary-collapsed>
+		<relation-collapsed>false</relation-collapsed>
+		<basic-collapsed>false</basic-collapsed>
+	</entity>
+
+	<entity>
+		<entity-name>vwg.skoda.cocafopl.entity.MvPopisPr</entity-name>
+		<entity-width>120</entity-width>
+		<entity-height>246</entity-height>
+		<entity-X-Coordinate>630</entity-X-Coordinate>
+		<entity-Y-Coordinate>650</entity-Y-Coordinate>
+		<primary-collapsed>false</primary-collapsed>
+		<relation-collapsed>false</relation-collapsed>
+		<basic-collapsed>false</basic-collapsed>
+	</entity>
+
+	<entity>
+		<entity-name>vwg.skoda.cocafopl.entity.MtKalkulace</entity-name>
+		<entity-width>168</entity-width>
+		<entity-height>306</entity-height>
+		<entity-X-Coordinate>210</entity-X-Coordinate>
+		<entity-Y-Coordinate>680</entity-Y-Coordinate>
+		<primary-collapsed>false</primary-collapsed>
+		<relation-collapsed>false</relation-collapsed>
+		<basic-collapsed>false</basic-collapsed>
+	</entity>
+
+	<entity>
+		<entity-name>vwg.skoda.cocafopl.entity.Kalkulace</entity-name>
+		<entity-width>157</entity-width>
+		<entity-height>326</entity-height>
+		<entity-X-Coordinate>451</entity-X-Coordinate>
+		<entity-Y-Coordinate>650</entity-Y-Coordinate>
+		<primary-collapsed>false</primary-collapsed>
+		<relation-collapsed>false</relation-collapsed>
+		<basic-collapsed>false</basic-collapsed>
+	</entity>
+
+	<entity>
+		<entity-name>vwg.skoda.cocafopl.entity.User</entity-name>
+		<entity-width>120</entity-width>
+		<entity-height>306</entity-height>
+		<entity-X-Coordinate>810</entity-X-Coordinate>
+		<entity-Y-Coordinate>51</entity-Y-Coordinate>
+		<primary-collapsed>false</primary-collapsed>
+		<relation-collapsed>false</relation-collapsed>
+		<basic-collapsed>false</basic-collapsed>
+	</entity>
+
+	<entity>
+		<entity-name>vwg.skoda.cocafopl.entity.PredstavitelPaketInfo</entity-name>
+		<entity-width>160</entity-width>
+		<entity-height>206</entity-height>
+		<entity-X-Coordinate>328</entity-X-Coordinate>
+		<entity-Y-Coordinate>52</entity-Y-Coordinate>
+		<primary-collapsed>false</primary-collapsed>
+		<relation-collapsed>false</relation-collapsed>
+		<basic-collapsed>false</basic-collapsed>
+	</entity>
+
+	<entity>
+		<entity-name>vwg.skoda.cocafopl.entity.ProtokolSecurity</entity-name>
+		<entity-width>120</entity-width>
+		<entity-height>168</entity-height>
+		<entity-X-Coordinate>981</entity-X-Coordinate>
+		<entity-Y-Coordinate>241</entity-Y-Coordinate>
+		<primary-collapsed>false</primary-collapsed>
+		<relation-collapsed>false</relation-collapsed>
+		<basic-collapsed>false</basic-collapsed>
+	</entity>
+
+	<entity>
+		<entity-name>vwg.skoda.cocafopl.entity.UserZentaAdm</entity-name>
+		<entity-width>120</entity-width>
+		<entity-height>488</entity-height>
+		<entity-X-Coordinate>1140</entity-X-Coordinate>
+		<entity-Y-Coordinate>50</entity-Y-Coordinate>
+		<primary-collapsed>false</primary-collapsed>
+		<relation-collapsed>false</relation-collapsed>
+		<basic-collapsed>false</basic-collapsed>
+	</entity>
+
+	<entity>
+		<entity-name>vwg.skoda.cocafopl.entity.Protokol</entity-name>
+		<entity-width>120</entity-width>
+		<entity-height>188</entity-height>
+		<entity-X-Coordinate>981</entity-X-Coordinate>
+		<entity-Y-Coordinate>50</entity-Y-Coordinate>
+		<primary-collapsed>false</primary-collapsed>
+		<relation-collapsed>false</relation-collapsed>
+		<basic-collapsed>false</basic-collapsed>
+	</entity>
+
+	<entity>
+		<entity-name>vwg.skoda.cocafopl.entity.PredstavitelKalkulace</entity-name>
+		<entity-width>176</entity-width>
+		<entity-height>266</entity-height>
+		<entity-X-Coordinate>197</entity-X-Coordinate>
+		<entity-Y-Coordinate>366</entity-Y-Coordinate>
+		<primary-collapsed>false</primary-collapsed>
+		<relation-collapsed>false</relation-collapsed>
+		<basic-collapsed>false</basic-collapsed>
+	</entity>
+
+	<entity>
+		<entity-name>vwg.skoda.cocafopl.entity.Offline</entity-name>
+		<entity-width>120</entity-width>
+		<entity-height>268</entity-height>
+		<entity-X-Coordinate>630</entity-X-Coordinate>
+		<entity-Y-Coordinate>51</entity-Y-Coordinate>
+		<primary-collapsed>false</primary-collapsed>
+		<relation-collapsed>false</relation-collapsed>
+		<basic-collapsed>false</basic-collapsed>
+	</entity>
+
+	<entity>
+		<entity-name>vwg.skoda.cocafopl.entity.MvPopisPaketInfo</entity-name>
+		<entity-width>140</entity-width>
+		<entity-height>206</entity-height>
+		<entity-X-Coordinate>981</entity-X-Coordinate>
+		<entity-Y-Coordinate>755</entity-Y-Coordinate>
+		<primary-collapsed>false</primary-collapsed>
+		<relation-collapsed>false</relation-collapsed>
+		<basic-collapsed>false</basic-collapsed>
+	</entity>
+
+	<entity>
+		<entity-name>vwg.skoda.cocafopl.entity.MessageException</entity-name>
+		<entity-width>140</entity-width>
+		<entity-height>168</entity-height>
+		<entity-X-Coordinate>981</entity-X-Coordinate>
+		<entity-Y-Coordinate>453</entity-Y-Coordinate>
+		<primary-collapsed>false</primary-collapsed>
+		<relation-collapsed>false</relation-collapsed>
+		<basic-collapsed>false</basic-collapsed>
+	</entity>
+
+	<entity>
+		<entity-name>vwg.skoda.cocafopl.entity.KalkulaceMtZavod</entity-name>
+		<entity-width>131</entity-width>
+		<entity-height>208</entity-height>
+		<entity-X-Coordinate>1140</entity-X-Coordinate>
+		<entity-Y-Coordinate>668</entity-Y-Coordinate>
+		<primary-collapsed>false</primary-collapsed>
+		<relation-collapsed>false</relation-collapsed>
+		<basic-collapsed>false</basic-collapsed>
+	</entity>
+
+	<entity>
+		<entity-name>vwg.skoda.cocafopl.entity.PredstavitelPr</entity-name>
+		<entity-width>120</entity-width>
+		<entity-height>246</entity-height>
+		<entity-X-Coordinate>176</entity-X-Coordinate>
+		<entity-Y-Coordinate>52</entity-Y-Coordinate>
+		<primary-collapsed>false</primary-collapsed>
+		<relation-collapsed>false</relation-collapsed>
+		<basic-collapsed>false</basic-collapsed>
+	</entity>
+
+	<entity>
+		<entity-name>vwg.skoda.cocafopl.entity.Mt</entity-name>
+		<entity-width>120</entity-width>
+		<entity-height>366</entity-height>
+		<entity-X-Coordinate>18</entity-X-Coordinate>
+		<entity-Y-Coordinate>629</entity-Y-Coordinate>
+		<primary-collapsed>false</primary-collapsed>
+		<relation-collapsed>false</relation-collapsed>
+		<basic-collapsed>false</basic-collapsed>
+	</entity>
+
+	<entity>
+		<entity-name>vwg.skoda.cocafopl.entity.MvPopis</entity-name>
+		<entity-width>120</entity-width>
+		<entity-height>446</entity-height>
+		<entity-X-Coordinate>810</entity-X-Coordinate>
+		<entity-Y-Coordinate>441</entity-Y-Coordinate>
+		<primary-collapsed>false</primary-collapsed>
+		<relation-collapsed>false</relation-collapsed>
+		<basic-collapsed>false</basic-collapsed>
+	</entity>
+</entities>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.0"
+	xmlns="http://java.sun.com/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd">
+
+	<persistence-unit name="cocafoplPersistence" transaction-type="RESOURCE_LOCAL">
+
+		<!-- Hibernatovsky provider pro dataSource (alternativa je tady treba EclipseLink) -->
+		<!-- !!! musi byt uveden pred dataSourcem !!! -->
+		<provider>org.hibernate.ejb.HibernatePersistence</provider>
+
+		<!-- dataSource ktery pouzije muj lokalni server, tedy Achape-tomcat. Kompletni 
+			ConnectString je nakonfigurovan v context.xml na lokalnim serveru (tomcat) -->
+		<non-jta-data-source>java:comp/env/jdbc/Cocafoppl</non-jta-data-source>
+		<class>vwg.skoda.cocafopl.entity.KalkulaceMtZavod</class>
+		
+		
+		<properties>
+			<property name="hibernate.connection.driver_class" value="oracle.jdbc.driver.OracleDriver" />
+			<property name="hibernate.dialect" value="org.hibernate.dialect.Oracle10gDialect" />
+			<!-- <property name="hibernate.default_schema" value="cocafoppl" /> -->
+		</properties>
+
+	</persistence-unit>
+</persistence>
