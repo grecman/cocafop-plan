@@ -111,12 +111,12 @@ public class KalkulaceController {
 		return serviceMtProd.findMtByString(string);
 	}
 
-	@RequestMapping(headers = "Content-Type=application/json", value = "/getMt")
-	@ResponseBody
-	public Mt getMt(@RequestParam long id) {
-		log.debug("\t### getMt:" + id);
-		return serviceMt.getMt(id);
-	}
+	// @RequestMapping(headers = "Content-Type=application/json", value = "/getMt")
+	// @ResponseBody
+	// public Mt getMt(@RequestParam long id) {
+	// log.debug("\t### getMt:" + id);
+	// return serviceMt.getMt(id);
+	// }
 
 	@RequestMapping("/mtDefiniceNovaMt")
 	public String mtDefiniceNovaMt(Mt mt, Model model, HttpServletRequest req, HttpSession session) throws SQLException, UnknownHostException {
@@ -139,23 +139,17 @@ public class KalkulaceController {
 			newMt.setUtime(new Date());
 			serviceMt.addMt(newMt);
 		}
-		
-		// Spoji entity MT a KALKULACE (pres platnost) a vrati IDcka, ktere jeste nejsou v entity MtKalkulace, aby se mohly nasledne vytvorit zatim neexistujici "radky" v entite MtKalkulace :) 
-		// Duvodem tohoto kroku je to, ze MT a kalkulace mohou vznikat nezavisle na sobe a v entite MtKalkulace jsou spojeny.
-		List<String> idKalkMt = serviceKalkulaceMtZavod.getIdKalkulacaAndIdMt();
-		if (!idKalkMt.isEmpty()) {
-			for (String s : idKalkMt) {
-				long idKalkulace = Long.valueOf((s.substring(0, s.indexOf(";"))));
-				long idMt = Long.valueOf(s.substring(s.indexOf(";")+1));
-				//System.out.println("id k a id mt: "+s+"\t"+idKalkulace+" ... "+idMt+"\t"+s.indexOf(";"));
-				MtKalkulace mtk = new MtKalkulace();
-				mtk.setGz39tKalkulace(serviceKalkulace.getKalkulace(idKalkulace));
-				mtk.setGz39tMt(serviceMt.getMt(idMt));
-				mtk.setUtime(new Date());
-				mtk.setUuser(req.getUserPrincipal().getName().toUpperCase());
-				serviceMtKalkulace.setMtKalkulace(mtk);
-			}
-		}
+
+		mtKalkulaceVytvoreni(req);
+
+		Protokol newProtokol = new Protokol();
+		newProtokol.setNetusername(req.getUserPrincipal().getName().toUpperCase());
+		newProtokol.setAction("Nova MT");
+		newProtokol.setInfo("Zalozeni nove MT - " + mt.getModelTr().toUpperCase());
+		newProtokol.setTime(new Date());
+		newProtokol.setSessionid(req.getSession().getId());
+		serviceProtokol.addProtokol(newProtokol);
+
 		return "redirect:/srv/kalkulace/mtDefinice";
 	}
 
@@ -174,32 +168,46 @@ public class KalkulaceController {
 		log.debug("###\t editMtFormSubmit(" + mt.getModelTr() + "," + mt.getZavod() + "," + mt.getKodZeme() + "," + mt.getPlatnostOd() + "-" + mt.getPlatnostDo() + ", " + mt.getPopis() + ")");
 
 		Mt mtEdit = serviceMt.getMt(mt.getId());
+
+		Boolean muzemeEditovatPlatnostOd = true;
+		Integer posledniNeschvalenaKalulace = null;
+		List<MtKalkulace> mtKalkulace = serviceMtKalkulace.getMtKalkulace(mtEdit.getModelTr());
+		for (MtKalkulace mtk : mtKalkulace) {
+			// System.out.println(mtk.getGz39tMt().getPlatnostDo() + " "+ mtk.getGz39tKalkulace().getKalkulace()+"-"+mtk.getGz39tKalkulace().getSchvalil());
+			if (mtk.getGz39tKalkulace().getSchvalil() != null) {
+				muzemeEditovatPlatnostOd = false;
+			} else {
+				if (posledniNeschvalenaKalulace == null)
+					posledniNeschvalenaKalulace = mtk.getGz39tKalkulace().getKalkulace();
+			}
+		}
+
 		mtEdit.setModelTr(mt.getModelTr());
 		mtEdit.setZavod(mt.getZavod());
 		mtEdit.setKodZeme(mt.getKodZeme());
 		mtEdit.setPopis(mt.getPopis());
-		mtEdit.setPlatnostOd(mt.getPlatnostOd());
-		mtEdit.setPlatnostDo(mt.getPlatnostDo());
+		if (muzemeEditovatPlatnostOd) {
+			mtEdit.setPlatnostOd(mt.getPlatnostOd());
+		}
+		if (posledniNeschvalenaKalulace == null) {
+			mtEdit.setPlatnostDo(mt.getPlatnostDo());
+		} else {
+			mtEdit.setPlatnostDo(mt.getPlatnostDo() > posledniNeschvalenaKalulace ? mt.getPlatnostDo() : posledniNeschvalenaKalulace);
+		}
 		mtEdit.setUtime(new Date());
 		mtEdit.setUuser(req.getUserPrincipal().getName().toUpperCase());
 		serviceMt.setMt(mtEdit);
-		
-		// Spoji entity MT a KALKULACE (pres platnost) a vrati IDcka, ktere jeste nejsou v entity MtKalkulace, aby se mohly nasledne vytvorit zatim neexistujici "radky" v entite MtKalkulace :) 
-		// Duvodem tohoto kroku je to, ze MT a kalkulace mohou vznikat nezavisle na sobe a v entite MtKalkulace jsou spojeny.
-		List<String> idKalkMt = serviceKalkulaceMtZavod.getIdKalkulacaAndIdMt();
-		if (!idKalkMt.isEmpty()) {
-			for (String s : idKalkMt) {
-				long idKalkulace = Long.valueOf((s.substring(0, s.indexOf(";"))));
-				long idMt = Long.valueOf(s.substring(s.indexOf(";")+1));
-				//System.out.println("id k a id mt: "+s+"\t"+idKalkulace+" ... "+idMt+"\t"+s.indexOf(";"));
-				MtKalkulace mtk = new MtKalkulace();
-				mtk.setGz39tKalkulace(serviceKalkulace.getKalkulace(idKalkulace));
-				mtk.setGz39tMt(serviceMt.getMt(idMt));
-				mtk.setUtime(new Date());
-				mtk.setUuser(req.getUserPrincipal().getName().toUpperCase());
-				serviceMtKalkulace.setMtKalkulace(mtk);
-			}
-		}
+
+		mtKalkulaceVytvoreni(req);
+		mtKalkulaceMazani(req);
+
+		Protokol newProtokol = new Protokol();
+		newProtokol.setNetusername(req.getUserPrincipal().getName().toUpperCase());
+		newProtokol.setAction("Editace MT");
+		newProtokol.setInfo(mtEdit.getModelTr());
+		newProtokol.setTime(new Date());
+		newProtokol.setSessionid(req.getSession().getId());
+		serviceProtokol.addProtokol(newProtokol);
 
 		return "redirect:/srv/kalkulace/mtDefinice";
 	}
@@ -209,23 +217,36 @@ public class KalkulaceController {
 		log.debug("###\t smazatMt(" + idMt + ")");
 
 		Mt mtRemove = serviceMt.getMt(idMt);
-		String message = mtRemove.getModelTr() + ", " + mtRemove.getZavod() + ", " + mtRemove.getProdukt() + ", " + mtRemove.getKodZeme() + ", " + mtRemove.getPopis() + ", "
-				+ mtRemove.getPlatnostOd() + "-" + mtRemove.getPlatnostDo();
-		serviceMt.removeMt(mtRemove);
 
-		Protokol newProtokol = new Protokol();
-		newProtokol.setNetusername(req.getUserPrincipal().getName().toUpperCase());
-		newProtokol.setAction("Smazani MT");
-		newProtokol.setInfo(message);
-		newProtokol.setTime(new Date());
-		newProtokol.setSessionid(req.getSession().getId());
-		serviceProtokol.addProtokol(newProtokol);
+		Boolean muzemeSmazat = true;
+		List<MtKalkulace> mtKalkulace = serviceMtKalkulace.getMtKalkulace(mtRemove.getModelTr());
+		for (MtKalkulace mtk : mtKalkulace) {
+			if (mtk.getGz39tKalkulace().getSchvalil() != null) {
+				muzemeSmazat = false;
+			}
+		}
+
+		if (muzemeSmazat) {
+			String message = mtRemove.getModelTr() + ", " + mtRemove.getZavod() + ", " + mtRemove.getProdukt() + ", " + mtRemove.getKodZeme() + ", " + mtRemove.getPopis() + ", "
+					+ mtRemove.getPlatnostOd() + "-" + mtRemove.getPlatnostDo();
+			serviceMt.removeMt(mtRemove);
+
+			Protokol newProtokol = new Protokol();
+			newProtokol.setNetusername(req.getUserPrincipal().getName().toUpperCase());
+			newProtokol.setAction("Smazani MT");
+			newProtokol.setInfo(message);
+			newProtokol.setTime(new Date());
+			newProtokol.setSessionid(req.getSession().getId());
+			serviceProtokol.addProtokol(newProtokol);
+		} else {
+			log.debug("###\t\t ... smazani neprobehlo, pac pro "+mtRemove.getModelTr()+" existuje nejaka schvalena kalkulace)");
+		}
+
 		return "redirect:/srv/kalkulace/mtDefinice";
-		
-		// TODO: pokud neudelam vazbu z entity Mt do entity Predstavitel, tak musim zajistit v pripade smazani cele Mt i zmazani postihnutych Predstavitelu. 
 	}
 
 	/* ============================================================================================================= */
+
 	@RequestMapping("/seznam")
 	public String kalkulaceSeznam(UniObj uniObj, Model model, HttpServletRequest req, HttpSession session) throws SQLException, UnknownHostException {
 		log.debug("###\t kalkulaceSeznam(" + uniObj.getRok() + ")");
@@ -240,31 +261,16 @@ public class KalkulaceController {
 		List<Integer> listRoku = serviceKalkulace.getKalkulaceRoky();
 		model.addAttribute("listRoku", listRoku);
 
-		if (uniObj.getRok() == null || uniObj.getRok()=="0") {
+		if (uniObj.getRok() == null || uniObj.getRok() == "0") {
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy");
 			String aktualRok = sdf.format(new Date());
 			uniObj.setRok(aktualRok);
 		}
 
-		// Spoji entity MT a KALKULACE (pres platnost) a vrati IDcka, ktere jeste nejsou v entity MtKalkulace, aby se mohly nasledne vytvorit zatim neexistujici "radky" v entite MtKalkulace :) 
-		// Duvodem tohoto kroku je to, ze MT a kalkulace mohou vznikat nezavisle na sobe a v entite MtKalkulace jsou spojeny.
-		List<String> idKalkMt = serviceKalkulaceMtZavod.getIdKalkulacaAndIdMt();
-		if (!idKalkMt.isEmpty()) {
-			for (String s : idKalkMt) {
-				long idKalkulace = Long.valueOf((s.substring(0, s.indexOf(";"))));
-				long idMt = Long.valueOf(s.substring(s.indexOf(";")+1));
-				//System.out.println("id k a id mt: "+s+"\t"+idKalkulace+" ... "+idMt+"\t"+s.indexOf(";"));
-				MtKalkulace mtk = new MtKalkulace();
-				mtk.setGz39tKalkulace(serviceKalkulace.getKalkulace(idKalkulace));
-				mtk.setGz39tMt(serviceMt.getMt(idMt));
-				mtk.setUtime(new Date());
-				mtk.setUuser(req.getUserPrincipal().getName().toUpperCase());
-				serviceMtKalkulace.setMtKalkulace(mtk);
-			}
-		}
+		mtKalkulaceVytvoreni(req);
 
-		List<KalkulaceMtZavod> kalkulaceProRok = serviceKalkulaceMtZavod.getKalkulaceMtZavod(Integer.valueOf(uniObj.getRok()));
-		model.addAttribute("kalkulaceProRok", kalkulaceProRok);
+		List<KalkulaceMtZavod> kalkulaceProRokProPlatneModeloveTridy = serviceKalkulaceMtZavod.getKalkulaceMtZavod(Integer.valueOf(uniObj.getRok()));
+		model.addAttribute("kalkulaceProRokProPlatneModeloveTridy", kalkulaceProRokProPlatneModeloveTridy);
 
 		return "/kalkulaceSeznam";
 	}
@@ -277,8 +283,7 @@ public class KalkulaceController {
 		Integer lastRok = serviceKalkulace.getKalkulacePosledniRok();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy");
 		String aktualRok = sdf.format(new Date());
-		//model.addAttribute("aktualniRRRRMM", sdf.format(new Date()));
-		
+		// model.addAttribute("aktualniRRRRMM", sdf.format(new Date()));
 
 		if (lastRok == null) {
 			log.debug("###\t Neexistuji zadne kalkulace. Zakladam nove kalkulace dle aktualniho roku: " + aktualRok);
@@ -294,7 +299,7 @@ public class KalkulaceController {
 
 				Kalkulace kal = new Kalkulace();
 				kal.setKalkulace(Integer.valueOf(aktualRok + mesice));
-				//kal.setRok(Integer.valueOf(aktualRok));
+				// kal.setRok(Integer.valueOf(aktualRok));
 				kal.setKalkulacniDatum(aktualRok + mesice + "0" + Integer.toString(monday.get(Calendar.DAY_OF_MONTH)));
 				kal.setUtime(new Date());
 				kal.setUuser(req.getUserPrincipal().getName().toUpperCase());
@@ -307,9 +312,10 @@ public class KalkulaceController {
 					MtKalkulace mtk = new MtKalkulace();
 					mtk.setGz39tKalkulace(kalSaved);
 					mtk.setGz39tMt(mt);
+					mtk.setMrok(Integer.valueOf(aktualRok));
 					mtk.setUtime(new Date());
 					mtk.setUuser(req.getUserPrincipal().getName().toUpperCase());
-					serviceMtKalkulace.setMtKalkulace(mtk);
+					serviceMtKalkulace.addMtKalkulace(mtk);
 				}
 			}
 		} else {
@@ -328,7 +334,7 @@ public class KalkulaceController {
 
 					Kalkulace kal = new Kalkulace();
 					kal.setKalkulace(Integer.valueOf(Integer.toString(lastRok + 1) + mesice));
-					//kal.setRok(Integer.valueOf(Integer.toString(lastRok + 1)));
+					// kal.setRok(Integer.valueOf(Integer.toString(lastRok + 1)));
 					kal.setKalkulacniDatum(Integer.toString(lastRok + 1) + mesice + "0" + Integer.toString(monday.get(Calendar.DAY_OF_MONTH)));
 					kal.setUtime(new Date());
 					kal.setUuser(req.getUserPrincipal().getName().toUpperCase());
@@ -341,9 +347,10 @@ public class KalkulaceController {
 						MtKalkulace mtk = new MtKalkulace();
 						mtk.setGz39tKalkulace(kalSaved);
 						mtk.setGz39tMt(mt);
+						mtk.setMrok(Integer.valueOf(aktualRok));
 						mtk.setUtime(new Date());
 						mtk.setUuser(req.getUserPrincipal().getName().toUpperCase());
-						serviceMtKalkulace.setMtKalkulace(mtk);
+						serviceMtKalkulace.addMtKalkulace(mtk);
 					}
 				}
 			} else
@@ -414,16 +421,22 @@ public class KalkulaceController {
 	}
 
 	@RequestMapping("/detail/{kalukaceRRRRMM}")
-	public String kalkulaceDetailVybranaKalkulace(@PathVariable int kalukaceRRRRMM, Kalkulace kalkulace, Model model, HttpServletRequest req, HttpSession session) throws SQLException,
-			UnknownHostException {
+	public String kalkulaceDetailVybranaKalkulace(@PathVariable int kalukaceRRRRMM, Model model, HttpServletRequest req, HttpSession session) throws SQLException, UnknownHostException {
 		log.debug("###\t kalkulaceDetailVybranaKalkulace(" + kalukaceRRRRMM + ")");
 		session.setAttribute("pageTitle", "Detail kalkulace");
-
 		session.setAttribute("kalukaceRRRRMM", kalukaceRRRRMM);
-		model.addAttribute("kalukaceRRRRMM", kalukaceRRRRMM);
 
-		List<MtKalkulace> mtka = serviceMtKalkulace.getMtKalkulace(kalukaceRRRRMM);
+		Kalkulace kal = serviceKalkulace.getKalkulace(kalukaceRRRRMM);
+		model.addAttribute("kalkulace", kal);
+
+		List<MtKalkulace> mtka = serviceMtKalkulace.getMtKalkulace(kal.getKalkulace());
 		model.addAttribute("mtk", mtka);
+
+		User aktualUser = serviceUser.getUser(req.getUserPrincipal().getName().toUpperCase());
+		if (aktualUser.getUserRole().contains("APPROVERS"))
+			model.addAttribute("moznoEditovat", true);
+		else
+			model.addAttribute("moznoEditovat", false);
 
 		return "/kalkulaceDetail";
 	}
@@ -434,6 +447,55 @@ public class KalkulaceController {
 
 		// TODO: nastavit selectBoxy
 		return "redirect:/srv/kalkulace/detail";
+	}
+
+	/* ============================================================================================================= */
+
+	public void mtKalkulaceVytvoreni(HttpServletRequest req) {
+		log.debug("###\t mtKalkulaceVytvoreni()");
+		// Spoji entity MT a KALKULACE (jen neschvalene!) pres platnost a vrati IDcka, ktere jeste nejsou v entity MtKalkulace,
+		// aby se mohly nasledne vytvorit zatim neexistujici "radky" v entite MtKalkulace
+		// Duvodem tohoto kroku je to, ze MT a kalkulace mohou vznikat nezavisle na sobe a je treba zajistit vzdy spravny stav v entite MtKalkulace, kde jsou MT a Kalkulace
+		// spojeny.
+
+		List<Object[]> idKalkMt = serviceMtKalkulace.getIdKalkulacaAndIdMtForCreate();
+		if (!idKalkMt.isEmpty()) {
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy");
+			for (Object[] s : idKalkMt) {
+				Kalkulace k = serviceKalkulace.getKalkulace((Long) s[0]);
+				Mt mt = serviceMt.getMt((Long) s[1]);
+
+				MtKalkulace mtk = new MtKalkulace();
+				mtk.setGz39tKalkulace(k);
+				mtk.setGz39tMt(mt);
+				mtk.setMrok(Integer.valueOf(sdf.format(new Date())));
+				mtk.setUtime(new Date());
+				mtk.setUuser(req.getUserPrincipal().getName().toUpperCase());
+				serviceMtKalkulace.addMtKalkulace(mtk);
+			}
+		}
+	}
+
+	public void mtKalkulaceMazani(HttpServletRequest req) {
+		log.debug("###\t mtKalkulaceMazani()");
+
+		// Vrati vsechny objekty MtKalkulace, u ktere jiz nemaji existovat, a to z duvodu zkraceni platnostiDo u modelove tridy
+		List<MtKalkulace> mtKalkulace = serviceMtKalkulace.getMtKalkulaceForDelete();
+		for (MtKalkulace mtk : mtKalkulace) {
+
+			String message = "Bylo provedeno na zaklade zkraceni platnostiDo u " + mtk.getGz39tMt().getPlatnostDo() + " pro kalkulace " + mtk.getGz39tKalkulace().getKalkulace();
+			serviceMtKalkulace.removeMtKalkulace(mtk);
+
+			Protokol newProtokol = new Protokol();
+			newProtokol.setNetusername(req.getUserPrincipal().getName().toUpperCase());
+			newProtokol.setAction("Smazani MtKalkulace");
+			newProtokol.setInfo(message);
+			newProtokol.setTime(new Date());
+			newProtokol.setSessionid(req.getSession().getId());
+			serviceProtokol.addProtokol(newProtokol);
+
+		}
+
 	}
 
 }

@@ -41,8 +41,8 @@ public class Predstavitel implements Serializable {
 	@Column(name="MODELOVY_KLIC")
 	private String modelovyKlic;
 
-	@Column(name="MODELOVY_ROK")
-	private Integer modelovyRok;
+//	@Column(name="MODELOVY_ROK")
+//	private Integer modelovyRok;
 
 	private String obsah;
 
@@ -156,13 +156,13 @@ public class Predstavitel implements Serializable {
 		this.modelovyKlic = modelovyKlic;
 	}
 
-	public Integer getModelovyRok() {
-		return this.modelovyRok;
-	}
+//	public Integer getModelovyRok() {
+//		return this.modelovyRok;
+//	}
 
-	public void setModelovyRok(Integer modelovyRok) {
-		this.modelovyRok = modelovyRok;
-	}
+//	public void setModelovyRok(Integer modelovyRok) {
+//		this.modelovyRok = modelovyRok;
+//	}
 
 	public String getObsah() {
 		return this.obsah;

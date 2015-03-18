@@ -96,8 +96,15 @@
 						</TR>
 						<TR>
 							<TD style="width: 190px; height: 30px; font-weight: bold;">Kód země<SPAN style="color: red; font-weight: bold;">*</SPAN></TD>
-							<TD><form:input path="kodZeme" id="kodZeme" value="${modelovaTrida.kodZeme}" class="textovePole" cssStyle="width:30px"></form:input><SPAN
-								style="font-size: x-small; color: gray;">&#160;Přednastavená hodnota z modelové třídy.</SPAN></TD>
+							<TD><c:choose>
+									<c:when test="${empty predInput.kodZeme}">
+										<form:input path="kodZeme" id="kodZeme" value="${modelovaTrida.kodZeme}" class="textovePole" cssStyle="width:30px"></form:input>
+										<SPAN style="font-size: x-small; color: gray;">&#160;Přednastavená hodnota z modelové třídy.</SPAN>
+									</c:when>
+									<c:otherwise>
+										<form:input path="kodZeme" id="kodZeme" value="${predInput.kodZeme}" class="textovePole" cssStyle="width:30px"></form:input>
+									</c:otherwise>
+								</c:choose></TD>
 						</TR>
 						<TR>
 							<TD style="width: 190px; height: 30px; font-weight: bold;">Typ<SPAN style="color: red; font-weight: bold;">*</SPAN></TD>
@@ -134,7 +141,7 @@
 									<c:forEach var="i" items="${mesice}">
 										<form:option value="${i}">${i}</form:option>
 									</c:forEach>
-								</form:select><SPAN style="font-size: x-small; color: gray;">&#160;Platnost představitele bude upravena dle platnosti modelové třídy.</SPAN></TD>
+								</form:select><SPAN style="font-size: x-small; color: gray;"> V případě, že existuje pro tohoto představitele schválaná kalkulace, tak platnost nebude změněna.</SPAN></TD>
 						</TR>
 						<TR>
 							<TD style="width: 190px; height: 30px; font-weight: bold;">Platnost Do</TD>
@@ -143,7 +150,8 @@
 									<c:forEach var="i" items="${mesice}">
 										<form:option value="${i}">${i}</form:option>
 									</c:forEach>
-								</form:select><SPAN style="font-size: x-small; color: gray;">&#160;Platnost představitele bude upravena dle platnosti modelové třídy.</SPAN></TD>
+								</form:select><SPAN style="font-size: x-small; color: gray;"> Minimální hodnota této platnosti je první neschválená kalkulace pro vybranáho představitele. V
+									případě zadání nižší hodnoty proběhne automatická oprava.</SPAN></TD>
 						</TR>
 						<TR>
 							<TD style="width: 190px; height: 30px; font-weight: bold;">Výbavy</TD>

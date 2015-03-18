@@ -10,7 +10,6 @@
   	<module>cocafopl-repository</module>
   </modules>
 
-
 	<parent>
 		<groupId>vwg.skoda.coin</groupId>
 		<artifactId>SAProject</artifactId>

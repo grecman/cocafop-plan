@@ -77,7 +77,7 @@
 					<SPAN style="background-color: white;">&#160;${modelovaTrida.platnostOd}&#160;-&#160;${modelovaTrida.platnostDo}&#160;</SPAN>
 				</div>
 
-				<form:form commandName="predstavitel" id="formPredstavitel" action="${pageContext.servletContext.contextPath}/srv/predstavitel/definice/novySubmit/">
+				<form:form commandName="predstavitel" id="formPredstavitel" action="${pageContext.servletContext.contextPath}/srv/predstavitel/definice/novyPredSubmit/">
 					<form:hidden path="id"></form:hidden>
 					<TABLE style="padding-left: 15px;">
 						<TR>
@@ -139,7 +139,7 @@
 									<c:forEach var="i" items="${mesice}">
 										<form:option value="${i}">${i}</form:option>
 									</c:forEach>
-								</form:select><SPAN style="font-size: x-small; color: gray;">&#160;Platnost představitele bude upravena dle platnosti modelové třídy.</SPAN></TD>
+								</form:select></TD>
 						</TR>
 						<TR>
 							<TD style="width: 190px; height: 30px; font-weight: bold;">Platnost Do</TD>
@@ -148,7 +148,7 @@
 									<c:forEach var="i" items="${mesice}">
 										<form:option value="${i}">${i}</form:option>
 									</c:forEach>
-								</form:select><SPAN style="font-size: x-small; color: gray;">&#160;Platnost představitele bude upravena dle platnosti modelové třídy.</SPAN></TD>
+								</form:select></TD>
 						</TR>
 						<TR>
 							<TD style="width: 190px; height: 30px; font-weight: bold;">Výbavy</TD>

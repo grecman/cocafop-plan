@@ -81,8 +81,20 @@ public class PredstavitelService {
 		}
 		return gre;
 	}
+
+	public Predstavitel getPredstavitel(Integer rok, String mk, String kodZeme) {
+		log.trace("###\t\t getPredstavitel("+rok+", "+mk+", "+kodZeme+");");
+		Predstavitel gre = null;
+		try {
+			gre = entityManager.createQuery("SELECT u FROM Predstavitel u WHERE u.rok=:rok AND u.modelovyKlic=:mk AND u.kodZeme=:kodZeme ", Predstavitel.class)
+					.setParameter("rok", rok).setParameter("mk", mk).setParameter("kodZeme", kodZeme).getSingleResult();
+		} catch (NoResultException e) {
+			return null;
+		}
+		return gre;
+	}
 	
-	public List<Predstavitel> getPredstavitel(int rok, String mt, String zavod) {
+	public List<Predstavitel> getPredstavitele(int rok, String mt, String zavod) {
 		log.trace("###\t\t getPredstavitel("+rok+", "+mt+", "+zavod+");");
 		List<Predstavitel> gre = null;
 		try {

@@ -282,15 +282,17 @@ input.textovePole {
 	width: 100%;
 	background-color: lightgray;
 	height: 38px;
-	/*padding-bottom: 10px;
-	height: 25px;*/
 }
 
 .formBar span {
 	float: left;
-	margin-top: 8px;
+	margin-top: 10px;
 	margin-right: 10px;
 	margin-left: 10px;
+}
+
+.formBar span input {
+	margin-top: -3px;
 }
 
 .heroBtn, .lowLevelBtn {

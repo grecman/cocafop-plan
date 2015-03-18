@@ -21,7 +21,7 @@
 
 	$(document).ready(
 			function() {
-				
+
 				$('#tableId').dataTable({
 					"paging" : false,
 					"ordering" : true,
@@ -46,7 +46,7 @@
 						}
 					}
 				});
-				
+
 				$("#tableId tr").click(function() {
 					// Gre: NACTENI HODNOT ZE RADKU V TABULCE
 					// zde pouzivam jen ID daneho radku (tedy Id Mt) pro mazani.
@@ -90,7 +90,8 @@
 						/*console.log("z-index: " + $(".selector").zIndex());*/
 						var input = request.term;
 						$.ajax({
-							url : "./autocompleteMtProd.json?string=" + input,
+							//url : "./autocompleteMtProd.json?string=" + input,
+							url : "${pageContext.servletContext.contextPath}/srv/kalkulace/autocompleteMtProd.json?string=" + input,
 							dataType : 'json',
 							type : 'POST',
 							contentType : "application/json"
@@ -117,18 +118,19 @@
 			<div class="items">
 				<a class="${selectedSubMenu eq 'mt' ? 'selected' : 'passive'}" href="${pageContext.servletContext.contextPath}/srv/kalkulace/mtDefinice/">Modelové třídy</a>
 				<a class="${selectedSubMenu eq 'kalkulaceSeznam' ? 'selected' : 'passive'}" href="${pageContext.servletContext.contextPath}/srv/kalkulace/seznam">Seznam
-					kalkulací</a> <a class="${selectedSubMenu eq 'kalkulaceDetail' ? 'selected' : 'passive'}" href="${pageContext.servletContext.contextPath}/srv/kalkulace/detail">Kalkulace</a>
+					kalkulací</a> <a class="${selectedSubMenu eq 'kalkulaceDetail' ? 'selected' : 'passive'}" href="${pageContext.servletContext.contextPath}/srv/kalkulace/detail">Detail
+					kalkulace</a>
 			</div>
 		</div>
 
 		<div class="pageBody">
 			<div class="mainAreaWide">
- 
+
 				<div class="formBar">
 					<span><a href="#openModalNovaMt"> <input type="button" value="Nová modelová třída" class="heroBtn" style="width: 160px;" /></a></span> <span><a
 						href="${pageContext.servletContext.contextPath}/srv/kalkulace/mtDefiniceZobrazitVse"> <input type="button" value="Zobrazit vše" class="heroBtn" /></a></span>
 				</div>
-			
+
 				<div class="tableContainer">
 					<table class="dataTable" id="tableId">
 						<col width="100px" />
@@ -230,7 +232,11 @@
 			<div class="modalHeader">
 				<h3>Smazání modelové třídy</h3>
 			</div>
-			<div class="modalContent">Opravdu chcete smazat celou modelovou třídu?</div>
+			<div class="modalContent">
+				<SPAN>Opravdu chcete smazat celou modelovou třídu?</SPAN> <BR /><BR />
+				<SPAN style="font-size: x-small; color: gray;">Pokud pro modelovou třídu existuje kalkulace, která je již schválena, tak smazání modelové třídy nebude
+					provedeno.</SPAN>
+			</div>
 			<div class="modalFooter">
 				<input type="button" id="smazatMtButton" value="Smazat" class="ok"></input>
 			</div>

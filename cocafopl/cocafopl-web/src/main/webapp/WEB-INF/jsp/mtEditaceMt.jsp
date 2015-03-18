@@ -49,16 +49,17 @@
 			<div class="items">
 				<a class="${selectedSubMenu eq 'mt' ? 'selected' : 'passive'}" href="${pageContext.servletContext.contextPath}/srv/kalkulace/mtDefinice/">Modelové třídy</a>
 				<a class="${selectedSubMenu eq 'kalkulaceSeznam' ? 'selected' : 'passive'}" href="${pageContext.servletContext.contextPath}/srv/kalkulace/seznam">Seznam
-					kalkulací</a> <a class="${selectedSubMenu eq 'kalkulaceDetail' ? 'selected' : 'passive'}" href="${pageContext.servletContext.contextPath}/srv/kalkulace/detail">Kalkulace</a>
+					kalkulací</a> <a class="${selectedSubMenu eq 'kalkulaceDetail' ? 'selected' : 'passive'}" href="${pageContext.servletContext.contextPath}/srv/kalkulace/detail">Detail
+					kalkulace</a>
 			</div>
 		</div>
 
 		<div class="pageBody">
 			<div class="mainAreaWide">
 				<form:form commandName="mt" id="formEditMt" action="${pageContext.servletContext.contextPath}/srv/kalkulace/editMtFormSubmit/">
-				<form:hidden path="id" value="${mtInput.id}"></form:hidden>
-				<form:hidden path="modelTr" value="${mtInput.modelTr}"></form:hidden>
-				<form:hidden path="zavod" value="${mtInput.zavod}"></form:hidden>
+					<form:hidden path="id" value="${mtInput.id}"></form:hidden>
+					<form:hidden path="modelTr" value="${mtInput.modelTr}"></form:hidden>
+					<form:hidden path="zavod" value="${mtInput.zavod}"></form:hidden>
 					<TABLE style="padding-left: 15px;">
 						<TR>
 							<TD style="width: 170px; height: 30px; font-weight: bold;">Modelová třída</TD>
@@ -78,11 +79,13 @@
 						</TR>
 						<TR>
 							<TD style="width: 170px; height: 30px; font-weight: bold;">Platnost OD<SPAN style="color: red; font-weight: bold;">*</SPAN></TD>
-							<TD><form:input path="platnostOd" id="platnostOd" value="${mtInput.platnostOd}" class="textovePole" cssStyle="width:60px"></form:input></TD>
+							<TD><form:input  path="platnostOd" id="platnostOd" value="${mtInput.platnostOd}" class="textovePole" cssStyle="width:60px"></form:input><SPAN
+								style="font-size: x-small; color: gray;"> V případě, že existuje pro tuto modelovou třídu schválaná kalkulace, tak platnost nebude změněna.</SPAN></TD>
 						</TR>
 						<TR>
 							<TD style="width: 170px; height: 30px; font-weight: bold;">Platnost DO<SPAN style="color: red; font-weight: bold;">*</SPAN></TD>
-							<TD><form:input path="platnostDo" id="platnostDo" value="${mtInput.platnostDo}" class="textovePole" cssStyle="width:60px"></form:input></TD>
+							<TD><form:input path="platnostDo" id="platnostDo" value="${mtInput.platnostDo}" class="textovePole" cssStyle="width:60px"></form:input><SPAN
+								style="font-size: x-small; color: gray;"> Minimální hodnota této platnosti je první neschválená kalkulace pro vybranou modelovou třídu. V případě zadání nižší hodnoty proběhne automatická oprava.</SPAN></TD>
 						</TR>
 						<TR>
 							<TD colspan="2"><SPAN style="color: red; font-weight: bold;">*</SPAN><SPAN style="font-size: x-small; color: gray;"> povinný údaj</SPAN></TD>

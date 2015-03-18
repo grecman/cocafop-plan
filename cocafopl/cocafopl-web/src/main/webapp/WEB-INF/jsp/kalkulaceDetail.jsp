@@ -10,12 +10,11 @@
 <jsp:include page="lib.jsp" />
 <title>COCAFOP-Plan</title>
 <script>
-
 	$(document).ready(function() {
 		$('#tableId').dataTable({
 			"paging" : false,
 			"bFilter" : false,
-			"ordering" : true,
+			"ordering" : false,
 			"info" : false,
 			"iDisplayLength" : 25,
 			"language" : {
@@ -40,7 +39,6 @@
 			$(this).addClass('selectedTableRow').siblings().removeClass('selectedTableRow');
 		});
 	});
-
 </script>
 </head>
 <body class="pages">
@@ -58,36 +56,45 @@
 			<div class="items">
 				<a class="${selectedSubMenu eq 'mt' ? 'selected' : 'passive'}" href="${pageContext.servletContext.contextPath}/srv/kalkulace/mtDefinice">Modelové třídy</a>
 				<a class="${selectedSubMenu eq 'kalkulaceSeznam' ? 'selected' : 'passive'}" href="${pageContext.servletContext.contextPath}/srv/kalkulace/seznam">Seznam
-					kalkulací</a> <a class="${selectedSubMenu eq 'kalkulaceDetail' ? 'selected' : 'passive'}" href="${pageContext.servletContext.contextPath}/srv/kalkulace/detail">Kalkulace</a>
+					kalkulací</a> <a class="${selectedSubMenu eq 'kalkulaceDetail' ? 'selected' : 'passive'}" href="${pageContext.servletContext.contextPath}/srv/kalkulace/detail">Detail
+					kalkulace</a>
 			</div>
 		</div>
 
 		<div class="pageBody">
 			<div class="mainAreaWide">
-			 
+
 				<div class="formBar">
 					<span style="margin-right: 0px;">&#160;Kalkulace:</span> <span style="margin-top: 3px; margin-left: 2px; margin-right: 2px;"><a
 						href="${pageContext.servletContext.contextPath}/srv/kalkulace/detail/minusMesic"> <img title="Editace"
-							src="${pageContext.servletContext.contextPath}/resources/ico/gre/go_left_30.png" /></a></span> <span
-						style="font-size: 20px; margin-top: 8px; margin-left: 2px; margin-right: 2px;">${kalukaceRRRRMM}</span> <span
-						style="margin-top: 3px; margin-left: 2px; margin-right: 2px;"><a href="${pageContext.servletContext.contextPath}/srv/kalkulace/detail/plusMesic">
-							<img title="Editace" src="${pageContext.servletContext.contextPath}/resources/ico/gre/go_right_30.png" />
+							src="${pageContext.servletContext.contextPath}/resources/ico/gre/go_left_30.png" /></a></span>
+					<c:choose>
+						<c:when test="${empty kalkulace.schvaleno}">
+							<span style="font-size: 16px; margin-left: 0px; margin-right: 0px;">${kalkulace.kalkulace}</span>
+						</c:when>
+						<c:otherwise>
+							<span style="font-size: 16px; margin-left: 0px; margin-right: 0px; color: blue;" title="Schválená kalkulace">${kalkulace.kalkulace}</span>
+						</c:otherwise>
+					</c:choose>
+					<span style="margin-top: 3px; margin-left: 2px; margin-right: 2px;"><a
+						href="${pageContext.servletContext.contextPath}/srv/kalkulace/detail/plusMesic"> <img title="Editace"
+							src="${pageContext.servletContext.contextPath}/resources/ico/gre/go_right_30.png" />
 					</a></span>
 				</div>
-				 
-				 <div class="tableContainer">
+
+				<div class="tableContainer">
 					<table class="dataTable" id="tableId">
-						<col width="100px" />
-						<col width="100px" />
-						<col width="100px" />
+						<col width="80px" />
+						<col width="80px" />
+						<col width="60px" />
 						<col width="*" />
 						<col width="80px" />
-						<col width="150px" />
+						<col width="160px" />
 						<col width="1px" />
-						<col width="170px" />
-						<col width="150px" />
+						<col width="160px" />
+						<col width="160px" />
 						<col width="90px" />
-						<col width="150px" />
+						<col width="160px" />
 						<thead>
 							<tr>
 								<th style="display: none;">Id</th>
@@ -112,30 +119,37 @@
 									<td align="center">${i.gz39tMt.produkt}</td>
 									<td align="center">${i.gz39tMt.zavod}</td>
 									<td align="left">${i.gz39tMt.popis}</td>
-									<td align="center">puntk</td>
+									<td align="center"><img title="Všichni představitelé mají PR-popis" src="${pageContext.servletContext.contextPath}/resources/ico/152.png" /><img
+										title="Část představitelů nemá PR-popis" src="${pageContext.servletContext.contextPath}/resources/ico/154.png" /><img
+										title="Žádný představitel nemá PR-popis" src="${pageContext.servletContext.contextPath}/resources/ico/151.png" /></td>
 									<td align="center" title="${i.posledniEditaceDuvod}"><f:formatDate value="${i.posledniEditace}" pattern="yyyy-MM-dd HH:mm:ss" /></td>
 									<td></td>
-									<td align="center">zpracovano</td>
-									<td align="center">schvaleno</td>
-									<td align="center">schvalil</td>
-									<td align="center"><a href="${pageContext.servletContext.contextPath}/srv/kalkulace/detail/..."> <img title="Detail kalkulace"
-											src="${pageContext.servletContext.contextPath}/resources/ico/browse.png" /></a>&#160; <c:if test="${moznoEditovat and empty(i.schvalil)}">
-											<a href="${pageContext.servletContext.contextPath}/srv/kalkulace/detail/..."><img title="Editace"
-												src="${pageContext.servletContext.contextPath}/resources/ico/edit.png" /></a>&#160;
+									<td align="center"></td>
+									<td align="center"><f:formatDate value="${i.schvaleno}" pattern="yyyy-MM-dd HH:mm:ss" /></td>
+									<td align="center">${i.schvalil}</td>
+									<td align="center"><c:if test="${empty(kalkulace.schvaleno)}">
+											<c:if test="${empty(i.schvalil)}">
+												<a href="${pageContext.servletContext.contextPath}/srv/kalkulace/detail/..."><input type="button" value="Schválit" class="heroBtn"></input></a>
+											</c:if>
+											<c:if test="${moznoEditovat and not(empty(i.schvalil))}">
+												<a href="${pageContext.servletContext.contextPath}/srv/kalkulace/detail/..."><input type="button" value="Zrušit schválení" class="heroBtn"></input></a>
+											</c:if>
 										</c:if></td>
 								</tr>
 							</c:forEach>
 						</tbody>
 					</table>
 				</div>
-			</div>
-			<div class="formBar">
-				<c:if test="${moznoEditovat}">
-					<span><a href="${pageContext.servletContext.contextPath}/srv/kalkulace/kalkulaceNova"><input type="button" id="formEditMtButton"
-							value="Spustit výpočet" class="heroBtn"></input></a></span>
-					<span><a href="${pageContext.servletContext.contextPath}/srv/kalkulace/kalkulaceNova"><input type="button" id="formEditMtButton"
-							value="Schválit kalkulaci" class="heroBtn"></input></a></span>
-				</c:if>
+				<div class="formBar">
+					<c:if test="${empty(kalkulace.schvaleno)}">
+						<span><a href="${pageContext.servletContext.contextPath}/srv/kalkulace/kalkulaceNova"><input type="button" id="formEditMtButton"
+								value="Spustit výpočet" class="heroBtn"></input></a></span>
+						<c:if test="${moznoEditovat}">
+							<span><a href="${pageContext.servletContext.contextPath}/srv/kalkulace/kalkulaceNova"><input type="button" id="formEditMtButton"
+									value="Schválit kalkulaci a archivovat" class="heroBtn" style="width: auto;"></input></a></span>
+						</c:if>
+					</c:if>
+				</div>
 			</div>
 		</div>
 		<div class="pageFooter">

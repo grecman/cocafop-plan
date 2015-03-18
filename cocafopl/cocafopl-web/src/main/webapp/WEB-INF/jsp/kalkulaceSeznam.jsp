@@ -21,30 +21,30 @@
 			IdKalkulaceVRadku = $(this).find("td:nth-child(1)").html();
 			//alert("#tableId tr: "+IdKalkulaceVRadku);
 		});
-		
+
 		$('#tableId').dataTable({
-			"paging":   false,
-	        "ordering": false,
-	        "info":     false,
-	        "bFilter":  true,
-			"iDisplayLength": 25,
-			"language": {
-					// datatables.net/reference/option/language
-		            "lengthMenu": "&#160;Zobrazit _MENU_ řádků na stránce",
-		            "info": "&#160;Stránka: _PAGE_/_PAGES_, načteno _TOTAL_ záznamů.",
-		            "infoEmpty": "Nenalezeny žádné záznamy",
-		            "infoFiltered": "&#160;(filtr: _TOTAL_ / _MAX_)",
-		            "loadingRecords": "Nahrávám...",
-		            "processing":     "Pracuji...",
-		            "search":         "Vyhledat:",
-		            "zeroRecords":    "Nebyly nalezeny žádné záznamy",
-		            "paginate": {
-		                "first":      "První",
-		                "last":       "Poslední",
-		                "next":       "Další",
-		                "previous":   "Předcházející"
-		            }
-		        }
+			"paging" : false,
+			"ordering" : false,
+			"info" : false,
+			"bFilter" : true,
+			"iDisplayLength" : 25,
+			"language" : {
+				// datatables.net/reference/option/language
+				"lengthMenu" : "&#160;Zobrazit _MENU_ řádků na stránce",
+				"info" : "&#160;Stránka: _PAGE_/_PAGES_, načteno _TOTAL_ záznamů.",
+				"infoEmpty" : "Nenalezeny žádné záznamy",
+				"infoFiltered" : "&#160;(filtr: _TOTAL_ / _MAX_)",
+				"loadingRecords" : "Nahrávám...",
+				"processing" : "Pracuji...",
+				"search" : "Vyhledat:",
+				"zeroRecords" : "Nebyly nalezeny žádné záznamy",
+				"paginate" : {
+					"first" : "První",
+					"last" : "Poslední",
+					"next" : "Další",
+					"previous" : "Předcházející"
+				}
+			}
 		});
 
 		$("#schavlitKalkulaciMtButton").click(function() {
@@ -70,29 +70,33 @@
 			<div class="items">
 				<a class="${selectedSubMenu eq 'mt' ? 'selected' : 'passive'}" href="${pageContext.servletContext.contextPath}/srv/kalkulace/mtDefinice">Modelové třídy</a>
 				<a class="${selectedSubMenu eq 'kalkulaceSeznam' ? 'selected' : 'passive'}" href="${pageContext.servletContext.contextPath}/srv/kalkulace/seznam">Seznam
-					kalkulací</a> <a class="${selectedSubMenu eq 'kalkulaceDetail' ? 'selected' : 'passive'}" href="${pageContext.servletContext.contextPath}/srv/kalkulace/detail">Kalkulace</a>
+					kalkulací</a> <a class="${selectedSubMenu eq 'kalkulaceDetail' ? 'selected' : 'passive'}" href="${pageContext.servletContext.contextPath}/srv/kalkulace/detail">Detail
+					kalkulace</a>
 			</div>
 		</div>
 
 		<div class="pageBody">
 			<div class="mainAreaWide">
 				<div class="formBar">
-				<c:if test="${not(empty(listRoku))}">
-					<span> <form:form commandName="uniObj" action="${pageContext.servletContext.contextPath}/srv/kalkulace/seznam">
+					<c:choose>
+						<c:when test="${not(empty(listRoku))}">
+							<span> <form:form commandName="uniObj" action="${pageContext.servletContext.contextPath}/srv/kalkulace/seznam">
 						&#160;Rok:&#160;
                             <form:select onchange="this.form.submit(); return true;" path="rok">
-								<form:option value="0"> . . .  </form:option>
-								<c:forEach var="i" items="${listRoku}">
-									<form:option value="${i}">${i}</form:option>
-								</c:forEach>
-							</form:select>
-						</form:form>
-					</span>
-				</c:if>
-					<c:if test="${moznoEditovat}">
-						<span><a href="${pageContext.servletContext.contextPath}/srv/kalkulace/kalkulaceNova"><input type="button" id="formEditMtButton"
-								value="Přidat rok" class="heroBtn"></input></a></span>
-					</c:if>
+										<form:option value="0"> . . .  </form:option>
+										<c:forEach var="i" items="${listRoku}">
+											<form:option value="${i}">${i}</form:option>
+										</c:forEach>
+									</form:select>
+								</form:form>
+							</span>
+						</c:when>
+						<c:otherwise>
+							<span style="color: red;">Nejsou vytvořeny žádné kalkulace. Tlačítko "Přidat rok" vytvoří kalkulace pro aktuální rok.</span>
+						</c:otherwise>
+
+					</c:choose>
+
 				</div>
 
 
@@ -110,30 +114,38 @@
 								<th>Kalkulace</th>
 								<th>Modelové třídy a závody</th>
 								<th>Kalkulační datum</th>
-								<th>Schváleno</th>
+								<th>Schváleno (archivováno)</th>
 								<th>Schválil</th>
 								<th></th>
 							</tr>
 						</thead>
 						<tbody>
-							<c:forEach items="${kalkulaceProRok}" var="i">
+							<c:forEach items="${kalkulaceProRokProPlatneModeloveTridy}" var="i">
 								<tr>
 									<td align="center" style="display: none;">${i.idKalkulace}</td>
 									<td align="center">${i.kalkulace}</td>
 									<td align="left">&#160; ${i.modZav}</td>
 									<td align="center">${i.kalkulacniDatum}</td>
-									<td align="center"><f:formatDate value="${i.schvaleno}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
+									<td align="center"><f:formatDate value="${i.schvaleno}" pattern="yyyy-MM-dd HH:mm:ss" /></td>
 									<td align="center">${i.schvalil}</td>
 									<td align="center"><a href="${pageContext.servletContext.contextPath}/srv/kalkulace/detail/${i.kalkulace}"> <img title="Detail kalkulace"
-											style="border: 0px;" src="${pageContext.servletContext.contextPath}/resources/ico/browse.png" /></a>&#160; 
-										<c:if test="${moznoEditovat and empty(i.schvalil)}">
-											<a href="${pageContext.servletContext.contextPath}/srv/kalkulace/editKalkulaceForm/${i.idKalkulace}"><img title="Editace" style="border: 0px;" src="${pageContext.servletContext.contextPath}/resources/ico/edit.png" /></a>&#160;
+											style="border: 0px;" src="${pageContext.servletContext.contextPath}/resources/ico/browse.png" /></a>&#160; <c:if
+											test="${moznoEditovat and empty(i.schvalil)}">
+											<a href="${pageContext.servletContext.contextPath}/srv/kalkulace/editKalkulaceForm/${i.idKalkulace}"><img title="Editace" style="border: 0px;"
+												src="${pageContext.servletContext.contextPath}/resources/ico/edit.png" /></a>&#160;
 										</c:if></td>
 								</tr>
 							</c:forEach>
 						</tbody>
 					</table>
 
+				</div>
+
+				<div class="formBar">
+					<c:if test="${moznoEditovat}">
+						<span><a href="${pageContext.servletContext.contextPath}/srv/kalkulace/kalkulaceNova"><input type="button" id="formEditMtButton"
+								value="Přidat rok" class="heroBtn"></input></a></span>
+					</c:if>
 				</div>
 
 				<!-- *****************************  M  O  D  A  L   **********************************-->
