@@ -19,17 +19,22 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import vwg.skoda.cocafopl.entity.ArchKalkulace;
 import vwg.skoda.cocafopl.entity.Kalkulace;
 import vwg.skoda.cocafopl.entity.KalkulaceMtZavod;
 import vwg.skoda.cocafopl.entity.Mt;
 import vwg.skoda.cocafopl.entity.MtKalkulace;
+import vwg.skoda.cocafopl.entity.MtKalkulaceView;
 import vwg.skoda.cocafopl.entity.MtProd;
 import vwg.skoda.cocafopl.entity.Protokol;
 import vwg.skoda.cocafopl.entity.User;
 import vwg.skoda.cocafopl.obj.UniObj;
+import vwg.skoda.cocafopl.service.ArchKalkulaceService;
+import vwg.skoda.cocafopl.service.ArchPredstavitelService;
 import vwg.skoda.cocafopl.service.KalkulaceMtZavodService;
 import vwg.skoda.cocafopl.service.KalkulaceService;
 import vwg.skoda.cocafopl.service.MtKalkulaceService;
+import vwg.skoda.cocafopl.service.MtKalkulaceViewService;
 import vwg.skoda.cocafopl.service.MtProdService;
 import vwg.skoda.cocafopl.service.MtService;
 import vwg.skoda.cocafopl.service.ProtokolService;
@@ -58,9 +63,18 @@ public class KalkulaceController {
 
 	@Autowired
 	private MtKalkulaceService serviceMtKalkulace;
+	
+	@Autowired
+	private MtKalkulaceViewService serviceMtKalkulaceView;
 
 	@Autowired
 	private KalkulaceMtZavodService serviceKalkulaceMtZavod;
+	
+	@Autowired
+	private ArchKalkulaceService serviceArchKalkuace;
+	
+	@Autowired
+	private ArchPredstavitelService serviceArchPredstavitel;
 
 	@RequestMapping("/mtDefinice")
 	public String mtDefinice(Mt mt, Model model, HttpServletRequest req, HttpSession session) throws SQLException, UnknownHostException {
@@ -89,8 +103,7 @@ public class KalkulaceController {
 		session.setAttribute("pageTitle", "Modelová třída");
 
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMM");
-		Date ted = new Date();
-		model.addAttribute("aktualniRRRRMM", sdf.format(ted));
+		model.addAttribute("aktualniRRRRMM", sdf.format(new Date()));
 
 		List<Mt> mtList = serviceMt.getMtAll();
 		model.addAttribute("mtList", mtList);
@@ -126,7 +139,7 @@ public class KalkulaceController {
 		log.debug("###\t\t Dotazeni produktu k modelove tride: " + mt.getModelTr() + " -> " + mtProd.getProdukt());
 
 		// System.out.println("|"+serviceMt.getMt(mt.getModelTr())+"|"+serviceMt.getMt(mt.getModelTr()).getModelTr().length());
-		if (serviceMt.getMt(mt.getModelTr()) == null) {
+		if (serviceMt.getMt(mt.getModelTr(), mt.getZavod()) == null) {
 			Mt newMt = new Mt();
 			newMt.setModelTr(mt.getModelTr().toUpperCase());
 			newMt.setProdukt(mtProd.getProdukt());
@@ -138,6 +151,8 @@ public class KalkulaceController {
 			newMt.setUuser(req.getUserPrincipal().getName().toUpperCase());
 			newMt.setUtime(new Date());
 			serviceMt.addMt(newMt);
+		} else {
+			log.debug("###\t\t ... kombinace MT a zavodu (" + mt.getModelTr() + "-" + mt.getZavod() + ") jiz existuje!!");
 		}
 
 		mtKalkulaceVytvoreni(req);
@@ -166,34 +181,19 @@ public class KalkulaceController {
 	@RequestMapping(value = "/editMtFormSubmit")
 	public String editMtFormSubmit(Mt mt, Model model, HttpServletRequest req, HttpSession session) throws SQLException, UnknownHostException {
 		log.debug("###\t editMtFormSubmit(" + mt.getModelTr() + "," + mt.getZavod() + "," + mt.getKodZeme() + "," + mt.getPlatnostOd() + "-" + mt.getPlatnostDo() + ", " + mt.getPopis() + ")");
+		
+		//ArchPredstavitel ap = serviceArchPredstavitel.get 
 
 		Mt mtEdit = serviceMt.getMt(mt.getId());
-
-		Boolean muzemeEditovatPlatnostOd = true;
-		Integer posledniNeschvalenaKalulace = null;
-		List<MtKalkulace> mtKalkulace = serviceMtKalkulace.getMtKalkulace(mtEdit.getModelTr());
-		for (MtKalkulace mtk : mtKalkulace) {
-			// System.out.println(mtk.getGz39tMt().getPlatnostDo() + " "+ mtk.getGz39tKalkulace().getKalkulace()+"-"+mtk.getGz39tKalkulace().getSchvalil());
-			if (mtk.getGz39tKalkulace().getSchvalil() != null) {
-				muzemeEditovatPlatnostOd = false;
-			} else {
-				if (posledniNeschvalenaKalulace == null)
-					posledniNeschvalenaKalulace = mtk.getGz39tKalkulace().getKalkulace();
-			}
-		}
 
 		mtEdit.setModelTr(mt.getModelTr());
 		mtEdit.setZavod(mt.getZavod());
 		mtEdit.setKodZeme(mt.getKodZeme());
 		mtEdit.setPopis(mt.getPopis());
-		if (muzemeEditovatPlatnostOd) {
-			mtEdit.setPlatnostOd(mt.getPlatnostOd());
-		}
-		if (posledniNeschvalenaKalulace == null) {
-			mtEdit.setPlatnostDo(mt.getPlatnostDo());
-		} else {
-			mtEdit.setPlatnostDo(mt.getPlatnostDo() > posledniNeschvalenaKalulace ? mt.getPlatnostDo() : posledniNeschvalenaKalulace);
-		}
+		// TODO: V případě, že existuje pro tuto modelovou třídu schválaná kalkulace nebo okomunikovaný představitel, tak platnost nebude změněna
+		mtEdit.setPlatnostOd(mt.getPlatnostOd());
+		// TODO: Minimální hodnota této platnosti je první neschválená kalkulace pro vybranou modelovou třídu. V případě zadání nižší hodnoty proběhne automatická oprava
+		mtEdit.setPlatnostDo(mt.getPlatnostDo());
 		mtEdit.setUtime(new Date());
 		mtEdit.setUuser(req.getUserPrincipal().getName().toUpperCase());
 		serviceMt.setMt(mtEdit);
@@ -218,29 +218,18 @@ public class KalkulaceController {
 
 		Mt mtRemove = serviceMt.getMt(idMt);
 
-		Boolean muzemeSmazat = true;
-		List<MtKalkulace> mtKalkulace = serviceMtKalkulace.getMtKalkulace(mtRemove.getModelTr());
-		for (MtKalkulace mtk : mtKalkulace) {
-			if (mtk.getGz39tKalkulace().getSchvalil() != null) {
-				muzemeSmazat = false;
-			}
-		}
+		String message = mtRemove.getModelTr() + ", " + mtRemove.getZavod() + ", " + mtRemove.getProdukt() + ", " + mtRemove.getKodZeme() + ", " + mtRemove.getPopis() + ", "
+				+ mtRemove.getPlatnostOd() + "-" + mtRemove.getPlatnostDo();
 
-		if (muzemeSmazat) {
-			String message = mtRemove.getModelTr() + ", " + mtRemove.getZavod() + ", " + mtRemove.getProdukt() + ", " + mtRemove.getKodZeme() + ", " + mtRemove.getPopis() + ", "
-					+ mtRemove.getPlatnostOd() + "-" + mtRemove.getPlatnostDo();
-			serviceMt.removeMt(mtRemove);
+		serviceMt.removeMt(mtRemove);
 
-			Protokol newProtokol = new Protokol();
-			newProtokol.setNetusername(req.getUserPrincipal().getName().toUpperCase());
-			newProtokol.setAction("Smazani MT");
-			newProtokol.setInfo(message);
-			newProtokol.setTime(new Date());
-			newProtokol.setSessionid(req.getSession().getId());
-			serviceProtokol.addProtokol(newProtokol);
-		} else {
-			log.debug("###\t\t ... smazani neprobehlo, pac pro "+mtRemove.getModelTr()+" existuje nejaka schvalena kalkulace)");
-		}
+		Protokol newProtokol = new Protokol();
+		newProtokol.setNetusername(req.getUserPrincipal().getName().toUpperCase());
+		newProtokol.setAction("Smazani MT");
+		newProtokol.setInfo(message);
+		newProtokol.setTime(new Date());
+		newProtokol.setSessionid(req.getSession().getId());
+		serviceProtokol.addProtokol(newProtokol);
 
 		return "redirect:/srv/kalkulace/mtDefinice";
 	}
@@ -271,6 +260,15 @@ public class KalkulaceController {
 
 		List<KalkulaceMtZavod> kalkulaceProRokProPlatneModeloveTridy = serviceKalkulaceMtZavod.getKalkulaceMtZavod(Integer.valueOf(uniObj.getRok()));
 		model.addAttribute("kalkulaceProRokProPlatneModeloveTridy", kalkulaceProRokProPlatneModeloveTridy);
+		
+		List<ArchKalkulace> archKalk = serviceArchKalkuace.getArchKalkulaceAll();
+		// List archKalk je serazen dle kalkulace DESC
+		for (ArchKalkulace ak : archKalk) {
+			if(ak.getSchvaleno()!=null){
+				model.addAttribute("posledniArchivniKalkulace", ak);
+				break;
+			}
+		}
 
 		return "/kalkulaceSeznam";
 	}
@@ -296,7 +294,7 @@ public class KalkulaceController {
 				// System.out.println(monday.get(Calendar.YEAR) + " - " + (monday.get(Calendar.MONTH)) + " - " + monday.get(Calendar.DAY_OF_MONTH));
 
 				String mesice = (monday.get(Calendar.MONTH) + 1) < 10 ? "0" + Integer.toString((monday.get(Calendar.MONTH) + 1)) : Integer.toString((monday.get(Calendar.MONTH) + 1));
-
+				//System.out.println(aktualRok+"-"+mesice);
 				Kalkulace kal = new Kalkulace();
 				kal.setKalkulace(Integer.valueOf(aktualRok + mesice));
 				// kal.setRok(Integer.valueOf(aktualRok));
@@ -307,6 +305,7 @@ public class KalkulaceController {
 
 				// Naplneni entity MtKalkulace
 				Kalkulace kalSaved = serviceKalkulace.getKalkulace(Integer.valueOf(aktualRok + mesice));
+				//System.out.println("kalkul: "+kalSaved+", "+kalSaved.getKalkulace());
 				List<Mt> mtPlatne = serviceMt.getMtPlatneK(kalSaved.getKalkulace());
 				for (Mt mt : mtPlatne) {
 					MtKalkulace mtk = new MtKalkulace();
@@ -364,7 +363,7 @@ public class KalkulaceController {
 		log.debug("###\t editKalkulaceForm(" + idKalkulace + ");");
 		session.setAttribute("pageTitle", "Editace kalkulace");
 
-		model.addAttribute("kalkulaceInput", serviceKalkulace.getKalkulace(idKalkulace));
+		model.addAttribute("kalkulaceInput", serviceKalkulace.getKalkulaceId(idKalkulace));
 
 		return "/kalkulaceEdit";
 	}
@@ -373,7 +372,7 @@ public class KalkulaceController {
 	public String editKalkulaceFormSubmit(Kalkulace kalkalkulace, Model model, HttpServletRequest req, HttpSession session) throws SQLException, UnknownHostException {
 		log.debug("###\t editKalkulaceFormSubmit(" + kalkalkulace.getId() + ", " + kalkalkulace.getKalkulace() + ", " + kalkalkulace.getKalkulacniDatum() + ")");
 
-		Kalkulace k = serviceKalkulace.getKalkulace(kalkalkulace.getId());
+		Kalkulace k = serviceKalkulace.getKalkulaceId(kalkalkulace.getId());
 		k.setKalkulacniDatum(kalkalkulace.getKalkulacniDatum());
 		k.setUtime(new Date());
 		k.setUuser(req.getUserPrincipal().getName().toUpperCase());
@@ -428,9 +427,20 @@ public class KalkulaceController {
 
 		Kalkulace kal = serviceKalkulace.getKalkulace(kalukaceRRRRMM);
 		model.addAttribute("kalkulace", kal);
+		
+		List<ArchKalkulace> archKalkList = serviceArchKalkuace.getArchKalkulaceAll();
+		// List archKalk je serazen dle kalkulace DESC, takze beru prvni vyskyt
+		for (ArchKalkulace ak : archKalkList) {
+			if(ak.getSchvaleno()!=null){
+				model.addAttribute("posledniArchivniKalkulace", ak);
+				break;
+			}
+		}
 
-		List<MtKalkulace> mtka = serviceMtKalkulace.getMtKalkulace(kal.getKalkulace());
-		model.addAttribute("mtk", mtka);
+		//List<MtKalkulace> mtka = serviceMtKalkulace.getMtKalkulace(kal.getKalkulace());
+		List<MtKalkulaceView> mtkView = serviceMtKalkulaceView.getMtKalkulaceView(kal.getKalkulace());
+		model.addAttribute("mtk", mtkView);
+		
 
 		User aktualUser = serviceUser.getUser(req.getUserPrincipal().getName().toUpperCase());
 		if (aktualUser.getUserRole().contains("APPROVERS"))
@@ -440,13 +450,27 @@ public class KalkulaceController {
 
 		return "/kalkulaceDetail";
 	}
+	
+	@RequestMapping(value = "/spustitVypocet/{kalkulaceRRRRMM}")
+	public String spustitVypocet(@PathVariable int kalkulaceRRRRMM, Kalkulace kalkulace, Model model, HttpServletRequest req, HttpSession session) throws SQLException, UnknownHostException {
+		log.debug("###\t spustitVypocet(" + kalkulaceRRRRMM + ")");
+		
+		Kalkulace k = serviceKalkulace.getKalkulace(kalkulaceRRRRMM);
+		System.out.println("TODO: ... spustit vypocet: "+k.getKalkulace());
+				//TODO: ................
+		
+		return "redirect:/srv/kalkulace/detail/"+k.getKalkulace();
+	}
 
-	@RequestMapping(value = "/schvalit/{idKalukace}")
-	public String schvalitKalkulaci(@PathVariable long idKalukace, Kalkulace kalkulace, Model model, HttpServletRequest req, HttpSession session) throws SQLException, UnknownHostException {
-		log.debug("###\t schvalitKalkulaci(" + idKalukace + ")");
-
-		// TODO: nastavit selectBoxy
-		return "redirect:/srv/kalkulace/detail";
+	@RequestMapping(value = "/schvalit/{kalkulaceRRRRMM}")
+	public String schvalitKalkulaci(@PathVariable int kalkulaceRRRRMM, Kalkulace kalkulace, Model model, HttpServletRequest req, HttpSession session) throws SQLException, UnknownHostException {
+		log.debug("###\t schvalitKalkulaci(" + kalkulaceRRRRMM + ")");
+		
+		Kalkulace k = serviceKalkulace.getKalkulace(kalkulaceRRRRMM);
+		System.out.println("TODO: ... schvalit kalkulaci: "+k.getKalkulace());
+				//TODO: ................
+		
+		return "redirect:/srv/kalkulace/detail/"+k.getKalkulace();
 	}
 
 	/* ============================================================================================================= */
@@ -462,7 +486,7 @@ public class KalkulaceController {
 		if (!idKalkMt.isEmpty()) {
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy");
 			for (Object[] s : idKalkMt) {
-				Kalkulace k = serviceKalkulace.getKalkulace((Long) s[0]);
+				Kalkulace k = serviceKalkulace.getKalkulaceId((Long) s[0]);
 				Mt mt = serviceMt.getMt((Long) s[1]);
 
 				MtKalkulace mtk = new MtKalkulace();
@@ -483,7 +507,7 @@ public class KalkulaceController {
 		List<MtKalkulace> mtKalkulace = serviceMtKalkulace.getMtKalkulaceForDelete();
 		for (MtKalkulace mtk : mtKalkulace) {
 
-			String message = "Bylo provedeno na zaklade zkraceni platnostiDo u " + mtk.getGz39tMt().getPlatnostDo() + " pro kalkulace " + mtk.getGz39tKalkulace().getKalkulace();
+			String message = "Bylo provedeno na zaklade zmeny platnostiOd nebo Do pro mt " + mtk.getGz39tMt().getModelTr() + " pro kalkulaci " + mtk.getGz39tKalkulace().getKalkulace();
 			serviceMtKalkulace.removeMtKalkulace(mtk);
 
 			Protokol newProtokol = new Protokol();

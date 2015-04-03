@@ -9,7 +9,6 @@ import java.util.List;
 
 @Entity
 @Table(name="GZ39T_KALKULACE", schema="COCAFOPPL")
-@NamedQuery(name="Kalkulace.findAll", query="SELECT k FROM Kalkulace k")
 public class Kalkulace implements Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -18,26 +17,11 @@ public class Kalkulace implements Serializable {
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="GZ39T_KALKULACE_ID_GENERATOR")
 	private long id;
 
+	@JoinColumn(insertable = false, updatable = false)
 	private Integer kalkulace;
 	
 	@Column(name="KALKULACNI_DATUM")
 	private String kalkulacniDatum;
-
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="POSLEDNI_VYPOCET")
-	private Date posledniVypocet;
-
-	@Column(name="POSLEDNI_VYPOCET_USER")
-	private String posledniVypocetUser;
-
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date schvaleno;
-
-	private String schvalil;
-
-	private Integer terka;
-
-	private String terkach;
 
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date utime;
@@ -73,55 +57,6 @@ public class Kalkulace implements Serializable {
 
 	public void setKalkulacniDatum(String kalkulacniDatum) {
 		this.kalkulacniDatum = kalkulacniDatum;
-	}
-
-	public Date getPosledniVypocet() {
-		return this.posledniVypocet;
-	}
-
-	public void setPosledniVypocet(Date posledniVypocet) {
-		this.posledniVypocet = posledniVypocet;
-	}
-
-	public String getPosledniVypocetUser() {
-		return this.posledniVypocetUser;
-	}
-
-	public void setPosledniVypocetUser(String posledniVypocetUser) {
-		this.posledniVypocetUser = posledniVypocetUser;
-	}
-
-	public Date getSchvaleno() {
-		return this.schvaleno;
-	}
-
-	public void setSchvaleno(Date schvaleno) {
-		this.schvaleno = schvaleno;
-	}
-
-	public String getSchvalil() {
-		return this.schvalil;
-	}
-
-	public void setSchvalil(String schvalil) {
-		this.schvalil = schvalil;
-	}
-
-	public Integer getTerka() {
-		return this.terka;
-	}
-
-	public void setTerka(Integer terka) {
-		this.terka = terka;
-	}
-	
-	
-	public String getTerkach() {
-		return terkach;
-	}
-
-	public void setTerkach(String terkach) {
-		this.terkach = terkach;
 	}
 
 	public Date getUtime() {

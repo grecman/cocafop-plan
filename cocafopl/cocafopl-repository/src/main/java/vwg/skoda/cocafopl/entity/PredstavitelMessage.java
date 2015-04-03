@@ -4,14 +4,8 @@ import java.io.Serializable;
 import javax.persistence.*;
 import java.util.Date;
 
-
-/**
- * The persistent class for the GZ39T_PREDSTAVITEL_MESSAGE database table.
- * 
- */
 @Entity
 @Table(name="GZ39T_PREDSTAVITEL_MESSAGE", schema="COCAFOPPL")
-@NamedQuery(name="PredstavitelMessage.findAll", query="SELECT p FROM PredstavitelMessage p")
 public class PredstavitelMessage implements Serializable {
 	private static final long serialVersionUID = 1L;
 

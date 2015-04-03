@@ -1,18 +1,14 @@
 package vwg.skoda.cocafopl.entity;
 
 import java.io.Serializable;
+
 import javax.persistence.*;
+
 import java.util.Date;
 import java.util.List;
 
-
-/**
- * The persistent class for the GZ39T_MV_POPIS database table.
- * 
- */
 @Entity
 @Table(name="GZ39T_MV_POPIS", schema="COCAFOPPL")
-@NamedQuery(name="MvPopis.findAll", query="SELECT m FROM MvPopis m")
 public class MvPopis implements Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -21,11 +17,6 @@ public class MvPopis implements Serializable {
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="GZ39T_MV_POPIS_ID_GENERATOR")
 	private long id;
 	
-	//bi-directional many-to-one association to Kalkulace
-	@ManyToOne
-	@JoinColumn(name="ID_USER")
-	private User gz39tMvPopis;
-
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="DATUM_KOMUNIKACE")
 	private Date datumKomunikace;
@@ -60,18 +51,22 @@ public class MvPopis implements Serializable {
 	private String uuser;
 
 	private String vybavy;
+	
+
 
 	//bi-directional many-to-one association to MvPopisMessage
 	@OneToMany(mappedBy="gz39tMvPopis")
 	private List<MvPopisMessage> gz39tMvPopisMessages;
 
-	//bi-directional many-to-one association to MvPopisPaketInfo
-	@OneToMany(mappedBy="gz39tMvPopis")
-	private List<MvPopisPaketInfo> gz39tMvPopisPaketInfos;
-
 	//bi-directional many-to-one association to MvPopisPr
 	@OneToMany(mappedBy="gz39tMvPopis")
 	private List<MvPopisPr> gz39tMvPopisPrs;
+	
+	//bi-directional many-to-one association to Kalkulace
+	@ManyToOne
+	@JoinColumn(name="ID_USER")
+	private User gz39tMvPopis;
+
 
 	public MvPopis() {
 	}
@@ -138,10 +133,6 @@ public class MvPopis implements Serializable {
 
 	public List<MvPopisMessage> getGz39tMvPopisMessages() {
 		return gz39tMvPopisMessages;
-	}
-
-	public List<MvPopisPaketInfo> getGz39tMvPopisPaketInfos() {
-		return gz39tMvPopisPaketInfos;
 	}
 
 	public List<MvPopisPr> getGz39tMvPopisPrs() {
@@ -212,14 +203,8 @@ public class MvPopis implements Serializable {
 		this.gz39tMvPopisMessages = gz39tMvPopisMessages;
 	}
 
-	public void setGz39tMvPopisPaketInfos(List<MvPopisPaketInfo> gz39tMvPopisPaketInfos) {
-		this.gz39tMvPopisPaketInfos = gz39tMvPopisPaketInfos;
-	}
-
 	public void setGz39tMvPopisPrs(List<MvPopisPr> gz39tMvPopisPrs) {
 		this.gz39tMvPopisPrs = gz39tMvPopisPrs;
 	}
-
-
 
 }

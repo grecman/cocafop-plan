@@ -63,11 +63,11 @@
 					<TABLE style="padding-left: 15px;">
 						<TR>
 							<TD style="width: 170px; height: 30px; font-weight: bold;">Modelová třída</TD>
-							<TD>${mtInput.modelTr}</TD>
+							<TD style="font-weight: bold;">${mtInput.modelTr}</TD>
 						</TR>
 						<TR>
 							<TD style="width: 170px; height: 30px; font-weight: bold;">Závod</TD>
-							<TD>${mtInput.zavod}</TD>
+							<TD style="font-weight: bold;">${mtInput.zavod}</TD>
 						</TR>
 						<TR>
 							<TD style="width: 170px; height: 30px; font-weight: bold;">Kód země (výchozí)<SPAN style="color: red; font-weight: bold;">*</SPAN></TD>
@@ -80,7 +80,7 @@
 						<TR>
 							<TD style="width: 170px; height: 30px; font-weight: bold;">Platnost OD<SPAN style="color: red; font-weight: bold;">*</SPAN></TD>
 							<TD><form:input  path="platnostOd" id="platnostOd" value="${mtInput.platnostOd}" class="textovePole" cssStyle="width:60px"></form:input><SPAN
-								style="font-size: x-small; color: gray;"> V případě, že existuje pro tuto modelovou třídu schválaná kalkulace, tak platnost nebude změněna.</SPAN></TD>
+								style="font-size: x-small; color: gray;"> V případě, že existuje pro tuto modelovou třídu schválaná kalkulace nebo okomunikovaný představitel, tak platnost nebude změněna.</SPAN></TD>
 						</TR>
 						<TR>
 							<TD style="width: 170px; height: 30px; font-weight: bold;">Platnost DO<SPAN style="color: red; font-weight: bold;">*</SPAN></TD>

@@ -4,14 +4,8 @@ import java.io.Serializable;
 import javax.persistence.*;
 import java.util.Date;
 
-
-/**
- * The persistent class for the GZ39T_OFFLINE database table.
- * 
- */
 @Entity
 @Table(name="GZ39T_OFFLINE", schema="COCAFOPPL")
-@NamedQuery(name="Offline.findAll", query="SELECT o FROM Offline o")
 public class Offline implements Serializable {
 	private static final long serialVersionUID = 1L;
 

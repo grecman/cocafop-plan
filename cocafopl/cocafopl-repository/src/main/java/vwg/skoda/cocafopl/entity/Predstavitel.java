@@ -7,54 +7,49 @@ import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
 
-
-/**
- * The persistent class for the GZ39T_PREDSTAVITEL database table.
- * 
- */
 @Entity
-@Table(name="GZ39T_PREDSTAVITEL", schema="COCAFOPPL")
+@Table(name = "GZ39T_PREDSTAVITEL", schema = "COCAFOPPL")
 public class Predstavitel implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@SequenceGenerator(name="GZ39T_PREDSTAVITEL_ID_GENERATOR", sequenceName="COCAFOPPL.HIBERNATE_SEQUENCE")
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="GZ39T_PREDSTAVITEL_ID_GENERATOR")
+	@SequenceGenerator(name = "GZ39T_PREDSTAVITEL_ID_GENERATOR", sequenceName = "COCAFOPPL.HIBERNATE_SEQUENCE")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "GZ39T_PREDSTAVITEL_ID_GENERATOR")
 	private long id;
 
 	private Integer cetnost;
 
-	@Column(name="CISLO_PRED")
+	@Column(name = "CISLO_PRED")
 	private Integer cisloPred;
 
-	@Column(name="CISLO_PRED_MIN")
+	@Column(name = "CISLO_PRED_MIN")
 	private Integer cisloPredMin;
 
 	private Boolean comix;
 
-	@Column(name="EU_NORMA")
+	@Column(name = "EU_NORMA")
 	private String euNorma;
 
-	@Column(name="KOD_ZEME")
+	@Column(name = "KOD_ZEME")
 	private String kodZeme;
 
-	@Column(name="MODELOVY_KLIC")
+	@Column(name = "MODELOVY_KLIC")
 	private String modelovyKlic;
 
-//	@Column(name="MODELOVY_ROK")
-//	private Integer modelovyRok;
+	// @Column(name="MODELOVY_ROK")
+	// private Integer modelovyRok;
 
 	private String obsah;
 
-	@Column(name="PLATNOST_DO")
+	@Column(name = "PLATNOST_DO")
 	private Integer platnostDo;
 
-	@Column(name="PLATNOST_OD")
+	@Column(name = "PLATNOST_OD")
 	private Integer platnostOd;
 
 	private String poznamka;
 
-	private Integer rok;
+	// private Integer rok;
 
 	private String rozlozenost;
 
@@ -71,19 +66,17 @@ public class Predstavitel implements Serializable {
 
 	private String vykon;
 
-	//bi-directional many-to-one association to PredstavitelKalkulace
-	@OneToMany(mappedBy="gz39tPredstavitel")
+	// bi-directional many-to-one association to PredstavitelKalkulace
+	@OneToMany(mappedBy = "gz39tPredstavitel")
 	private List<PredstavitelKalkulace> gz39tPredstavitelKalkulaces;
-	
-	//bi-directional many-to-one association to Mt
+
+	// bi-directional many-to-one association to Mt
 	@ManyToOne
-	@JoinColumn(name="ID_MT")
+	@JoinColumn(name = "ID_MT")
 	private Mt gz39tMt;
 
-	public Predstavitel() {
-	}
+	public Predstavitel() {}
 
-		
 	public Mt getGz39tMt() {
 		return gz39tMt;
 	}
@@ -156,13 +149,13 @@ public class Predstavitel implements Serializable {
 		this.modelovyKlic = modelovyKlic;
 	}
 
-//	public Integer getModelovyRok() {
-//		return this.modelovyRok;
-//	}
+	// public Integer getModelovyRok() {
+	// return this.modelovyRok;
+	// }
 
-//	public void setModelovyRok(Integer modelovyRok) {
-//		this.modelovyRok = modelovyRok;
-//	}
+	// public void setModelovyRok(Integer modelovyRok) {
+	// this.modelovyRok = modelovyRok;
+	// }
 
 	public String getObsah() {
 		return this.obsah;
@@ -196,13 +189,13 @@ public class Predstavitel implements Serializable {
 		this.poznamka = poznamka;
 	}
 
-	public Integer getRok() {
-		return this.rok;
-	}
+	// public Integer getRok() {
+	// return this.rok;
+	// }
 
-	public void setRok(Integer rok) {
-		this.rok = rok;
-	}
+	// public void setRok(Integer rok) {
+	// this.rok = rok;
+	// }
 
 	public String getRozlozenost() {
 		return this.rozlozenost;

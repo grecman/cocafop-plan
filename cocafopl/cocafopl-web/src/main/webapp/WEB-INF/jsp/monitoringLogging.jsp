@@ -20,6 +20,7 @@
 		$('#tableId').dataTable({
 			"paging":   true,
 	        "ordering": true,
+	        "order": [[ 2, "desc" ]],
 	        "info":     true,
 	        "bFilter":  true,
 			"iDisplayLength": 25,

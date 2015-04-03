@@ -71,34 +71,34 @@ public class PredstavitelService {
 		return gre;
 	}
 	
-	public Predstavitel getPredstavitel(Integer rok, String mt, Integer cisloPred) {
-		log.trace("###\t\t getPredstavitel("+rok+", "+mt+", "+cisloPred+");");
+	public Predstavitel getPredstavitel(String mt, Integer cisloPred) {
+		log.trace("###\t\t getPredstavitel("+mt+", "+cisloPred+");");
 		Predstavitel gre = null;
 		try {
-			gre = entityManager.createQuery("SELECT u FROM Predstavitel u WHERE u.rok=:rok AND u.gz39tMt.modelTr=:mt AND u.cisloPred=:cisloPred ", Predstavitel.class).setParameter("rok", rok).setParameter("mt", mt).setParameter("cisloPred", cisloPred).getSingleResult();
+			gre = entityManager.createQuery("SELECT u FROM Predstavitel u WHERE u.gz39tMt.modelTr=:mt AND u.cisloPred=:cisloPred ", Predstavitel.class).setParameter("mt", mt).setParameter("cisloPred", cisloPred).getSingleResult();
 		} catch (NoResultException e) {
 			return null;
 		}
 		return gre;
 	}
 
-	public Predstavitel getPredstavitel(Integer rok, String mk, String kodZeme) {
-		log.trace("###\t\t getPredstavitel("+rok+", "+mk+", "+kodZeme+");");
+	public Predstavitel getPredstavitel(String mk, String kodZeme) {
+		log.trace("###\t\t getPredstavitel("+mk+", "+kodZeme+");");
 		Predstavitel gre = null;
 		try {
-			gre = entityManager.createQuery("SELECT u FROM Predstavitel u WHERE u.rok=:rok AND u.modelovyKlic=:mk AND u.kodZeme=:kodZeme ", Predstavitel.class)
-					.setParameter("rok", rok).setParameter("mk", mk).setParameter("kodZeme", kodZeme).getSingleResult();
+			gre = entityManager.createQuery("SELECT u FROM Predstavitel u WHERE u.modelovyKlic=:mk AND u.kodZeme=:kodZeme ", Predstavitel.class)
+					.setParameter("mk", mk).setParameter("kodZeme", kodZeme).getSingleResult();
 		} catch (NoResultException e) {
 			return null;
 		}
 		return gre;
 	}
 	
-	public List<Predstavitel> getPredstavitele(int rok, String mt, String zavod) {
-		log.trace("###\t\t getPredstavitel("+rok+", "+mt+", "+zavod+");");
+	public List<Predstavitel> getPredstavitele(String mt, String zavod) {
+		log.trace("###\t\t getPredstavitel("+mt+", "+zavod+");");
 		List<Predstavitel> gre = null;
 		try {
-			gre = entityManager.createQuery("SELECT u FROM Predstavitel u WHERE u.rok=:rok AND u.gz39tMt.modelTr=:mt AND u.gz39tMt.zavod=:zavod ORDER BY u.cisloPred ", Predstavitel.class).setParameter("rok", rok).setParameter("mt", mt).setParameter("zavod", zavod).getResultList();
+			gre = entityManager.createQuery("SELECT u FROM Predstavitel u WHERE u.gz39tMt.modelTr=:mt AND u.gz39tMt.zavod=:zavod ORDER BY u.cisloPred ", Predstavitel.class).setParameter("mt", mt).setParameter("zavod", zavod).getResultList();
 		} catch (NoResultException e) {
 			return null;
 		}

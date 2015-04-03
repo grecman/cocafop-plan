@@ -55,11 +55,11 @@ public class MtService {
 		return entityManager.createQuery("SELECT u FROM Mt u WHERE u.platnostDo >= to_char(sysdate,'RRRRMM') ORDER BY u.modelTr, u.zavod ", Mt.class).getResultList();
 	}
 	
-	public Mt getMt(String mt) {
-		log.trace("###\t\t getMt(" + mt + ");");
+	public Mt getMt(String mt, String zavod) {
+		log.trace("###\t\t getMt(" + mt+"-"+zavod + ");");
 		Mt gre;
 		try {
-			gre = entityManager.createQuery("SELECT u FROM Mt u WHERE u.modelTr=:modetTr", Mt.class).setParameter("modetTr", mt).getSingleResult();
+			gre = entityManager.createQuery("SELECT u FROM Mt u WHERE u.modelTr=:modetTr AND u.zavod=:zavod ", Mt.class).setParameter("modetTr", mt).setParameter("zavod", zavod).getSingleResult();
 		} catch (NoResultException e) {
 			return null;
 		}

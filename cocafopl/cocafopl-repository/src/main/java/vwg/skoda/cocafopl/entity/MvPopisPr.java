@@ -1,17 +1,13 @@
 package vwg.skoda.cocafopl.entity;
 
 import java.io.Serializable;
+
 import javax.persistence.*;
+
 import java.util.Date;
 
-
-/**
- * The persistent class for the GZ39T_MV_POPIS_PR database table.
- * 
- */
 @Entity
 @Table(name="GZ39T_MV_POPIS_PR", schema="COCAFOPPL")
-@NamedQuery(name="MvPopisPr.findAll", query="SELECT m FROM MvPopisPr m")
 public class MvPopisPr implements Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -33,6 +29,8 @@ public class MvPopisPr implements Serializable {
 	private Date utime;
 
 	private String uuser;
+	
+	private String paket;
 
 	//bi-directional many-to-one association to MvPopis
 	@ManyToOne
@@ -96,6 +94,14 @@ public class MvPopisPr implements Serializable {
 
 	public void setUuser(String uuser) {
 		this.uuser = uuser;
+	}
+	
+	public String getPaket() {
+		return paket;
+	}
+
+	public void setPaket(String paket) {
+		this.paket = paket;
 	}
 
 	public MvPopis getGz39tMvPopis() {

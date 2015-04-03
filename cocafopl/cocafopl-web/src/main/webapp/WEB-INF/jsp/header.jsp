@@ -30,7 +30,7 @@
 		<div class="menu">
 			<a class="${selectedMenu eq 'kalkulace' ? 'selected' : 'passive'}" href="${pageContext.servletContext.contextPath}/srv/kalkulace/detail">Kalkulace a modely</a>
 			<a class="${selectedMenu eq 'predstavitel' ? 'selected' : 'passive'}" href="${pageContext.servletContext.contextPath}/srv/predstavitel/seznam">Představitelé</a>
-			<a class="${selectedMenu eq 'archiv' ? 'selected' : 'passive'}" href="${pageContext.servletContext.contextPath}/srv/archiv/kusyNaProvedeni">Archív</a>
+			<a class="${selectedMenu eq 'archiv' ? 'selected' : 'passive'}" href="${pageContext.servletContext.contextPath}/srv/archiv/kalkulace">Archív</a>
 			<a class="${selectedMenu eq 'mv' ? 'selected' : 'passive'}" href="${pageContext.servletContext.contextPath}/srv/mv/uvodniZobrazeni">MV</a>
 			<a class="${selectedMenu eq 'offline' ? 'selected' : 'passive'}" href="${pageContext.servletContext.contextPath}/srv/offline">Off-line</a>
  			<a class="${selectedMenu eq 'monitoring' ? 'selected' : 'passive'}" href="${pageContext.servletContext.contextPath}/srv/monitoring/serviceDesk">Monitoring</a>  

@@ -69,7 +69,6 @@
 
 .modalWindow .modalFooter {
 	padding: 8px 20px 8px 20px;
-	height: 30px;
 }
 
 .modalWindow .modalFooter, .modalWindow .modalHeader {
@@ -84,7 +83,6 @@
 .modalWindow .ok, .modalWindow .cancel {
 	background-color: #4ba82e;
 	color: #FFFFFF;
-	line-height: 25px;
 	text-align: center;
 	text-decoration: none;
 	font-weight: bold;
@@ -92,7 +90,9 @@
 	-moz-border-radius: 2px;
 	-moz-box-shadow: 1px 1px 3px #000;
 	-webkit-box-shadow: 1px 1px 3px #000;
-	width: 80px;
+	width: 140px;
+	height: 24px;
+	
 	float: right;
 	margin-left: 20px;
 }

@@ -20,9 +20,20 @@ public class KalkulaceService {
 	@PersistenceContext(name = "KalkulaceService")
 	private EntityManager entityManager;
 
-	public Kalkulace getKalkulace(long id) {
-		log.trace("###\t\t getKalkulace(" + id + ");");
+	public Kalkulace getKalkulaceId(long id) {
+		log.trace("###\t\t getKalkulaceId(" + id + ");");
 		return entityManager.find(Kalkulace.class, id);
+	}
+	
+	public Kalkulace getKalkulace(int kalkulace) {
+		log.trace("###\t\t getKalkulaceOne(" + kalkulace + ");");
+		Kalkulace gre;
+		try {
+			gre = entityManager.createQuery("SELECT u FROM Kalkulace u WHERE u.kalkulace=:kalkulace", Kalkulace.class).setParameter("kalkulace", kalkulace).getSingleResult();
+		} catch (NoResultException e) {
+			return null;
+		}
+		return gre;
 	}
 
 	@Transactional
@@ -40,7 +51,7 @@ public class KalkulaceService {
 	@Transactional
 	public void removeKalkulace(Kalkulace kalkulace) {
 		log.trace("###\t\t removeKalkulace(" + kalkulace + ")");
-		Kalkulace u = getKalkulace(kalkulace.getId());
+		Kalkulace u = getKalkulaceId(kalkulace.getId());
 		entityManager.remove(u);
 	}
 
@@ -71,12 +82,13 @@ public class KalkulaceService {
 		}
 		return gre;
 	}
+	
 
-	public Kalkulace getKalkulace(int kalkulace) {
-		log.trace("###\t\t getKalkulace(" + kalkulace + ");");
-		Kalkulace gre;
+	public List<Kalkulace> getKalkulaceRok(String rok) {
+		log.trace("###\t\t getKalkulace(" + rok + ");");
+		List<Kalkulace> gre;
 		try {
-			gre = entityManager.createQuery("SELECT u FROM Kalkulace u WHERE u.kalkulace=:kalkulace", Kalkulace.class).setParameter("kalkulace", kalkulace).getSingleResult();
+			gre = entityManager.createQuery("SELECT u FROM Kalkulace u WHERE substring(u.kalkulace,1,4)=:rok ORDER BY u.kalkulace", Kalkulace.class).setParameter("rok", rok).getResultList();
 		} catch (NoResultException e) {
 			return null;
 		}
@@ -109,15 +121,5 @@ public class KalkulaceService {
 		return gre;
 	}
 
-	public List<Kalkulace> getKalkulaceRok(String rok) {
-		log.trace("###\t\t getKalkulace(" + rok + ");");
-		List<Kalkulace> gre;
-		try {
-			gre = entityManager.createQuery("SELECT u FROM Kalkulace u WHERE substring(u.kalkulace,1,4)=:rok ORDER BY u.kalkulace", Kalkulace.class).setParameter("rok", rok).getResultList();
-		} catch (NoResultException e) {
-			return null;
-		}
-		return gre;
-	}
 
 }

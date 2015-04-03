@@ -4,14 +4,8 @@ import java.io.Serializable;
 import javax.persistence.*;
 import java.util.Date;
 
-
-/**
- * The persistent class for the GZ39T_PROTOKOL_SECURITY database table.
- * 
- */
 @Entity
 @Table(name="GZ39T_PROTOKOL_SECURITY", schema="COCAFOPPL")
-@NamedQuery(name="ProtokolSecurity.findAll", query="SELECT p FROM ProtokolSecurity p")
 public class ProtokolSecurity implements Serializable {
 	private static final long serialVersionUID = 1L;
 

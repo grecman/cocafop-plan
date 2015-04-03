@@ -13,9 +13,9 @@ import vwg.skoda.cocafopl.entity.KalkulaceMtZavod;
 @Service
 public class KalkulaceMtZavodService {
 	
-	static Logger log = Logger.getLogger(KalkulaceMtZavodService.class);
+	private static Logger log = Logger.getLogger(KalkulaceMtZavodService.class);
 	
-	@PersistenceContext(name = "KalkulaceService")
+	@PersistenceContext(name = "KalkulaceMtZavod")
 	private EntityManager entityManager;
 	
 	

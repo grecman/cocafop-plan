@@ -6,10 +6,8 @@
 	<jsp:directive.page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" />
 	<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-
 <jsp:include page="lib.jsp" />
 <title>COCAFOP-Plan</title>
-
 <script>
 	var IdMtVRadku = 0;
 	var MtMtVRadku = "";
@@ -102,35 +100,35 @@
 				});
 			});
 </script>
-
 </head>
 <body class="pages">
-
 	<div class="page basePage">
-
 		<c:set scope="request" var="selectedMenu" value="kalkulace" />
 		<c:set scope="request" var="selectedSubMenu" value="mt" />
-
-
 		<jsp:include page="header.jsp" />
-
 		<div class="submenu">
 			<div class="items">
 				<a class="${selectedSubMenu eq 'mt' ? 'selected' : 'passive'}" href="${pageContext.servletContext.contextPath}/srv/kalkulace/mtDefinice/">Modelové třídy</a>
 				<a class="${selectedSubMenu eq 'kalkulaceSeznam' ? 'selected' : 'passive'}" href="${pageContext.servletContext.contextPath}/srv/kalkulace/seznam">Seznam
-					kalkulací</a> <a class="${selectedSubMenu eq 'kalkulaceDetail' ? 'selected' : 'passive'}" href="${pageContext.servletContext.contextPath}/srv/kalkulace/detail">Detail
+					kalkulací</a>
+				<a class="${selectedSubMenu eq 'kalkulaceDetail' ? 'selected' : 'passive'}" href="${pageContext.servletContext.contextPath}/srv/kalkulace/detail">Detail
 					kalkulace</a>
 			</div>
 		</div>
-
 		<div class="pageBody">
 			<div class="mainAreaWide">
-
 				<div class="formBar">
-					<span><a href="#openModalNovaMt"> <input type="button" value="Nová modelová třída" class="heroBtn" style="width: 160px;" /></a></span> <span><a
-						href="${pageContext.servletContext.contextPath}/srv/kalkulace/mtDefiniceZobrazitVse"> <input type="button" value="Zobrazit vše" class="heroBtn" /></a></span>
+					<span>
+						<a href="#openModalNovaMt">
+							<input type="button" value="Nová modelová třída" class="heroBtn" style="width: 160px;" />
+						</a>
+					</span>
+					<span>
+						<a href="${pageContext.servletContext.contextPath}/srv/kalkulace/mtDefiniceZobrazitVse">
+							<input type="button" value="Zobrazit vše" class="heroBtn" />
+						</a>
+					</span>
 				</div>
-
 				<div class="tableContainer">
 					<table class="dataTable" id="tableId">
 						<col width="100px" />
@@ -166,9 +164,12 @@
 									<td align="center">${i.platnostOd}</td>
 									<td align="center">${i.platnostDo}</td>
 									<td align="center"><c:if test="${moznoEditovat}">
-											<a href="${pageContext.servletContext.contextPath}/srv/kalkulace/editMtForm/${i.id}"> <img title="Editovat" style="border: 0px;"
-												src="${pageContext.servletContext.contextPath}/resources/ico/edit.png" /></a>&#160;
-											<a href="#openModalSmazatMt"><img title="Smazat" style="border: 0px;" src="${pageContext.servletContext.contextPath}/resources/ico/smazat.png" /></a>
+											<a href="${pageContext.servletContext.contextPath}/srv/kalkulace/editMtForm/${i.id}">
+												<img title="Editovat" style="border: 0px;" src="${pageContext.servletContext.contextPath}/resources/ico/edit.png" />
+											</a>&#160;
+											<a href="#openModalSmazatMt">
+												<img title="Smazat" style="border: 0px;" src="${pageContext.servletContext.contextPath}/resources/ico/smazat.png" />
+											</a>
 										</c:if></td>
 								</tr>
 							</c:forEach>
@@ -181,7 +182,6 @@
 			<jsp:include page="footerInfo.jsp" />
 		</div>
 	</div>
-
 	<!-- *****************************  M  O  D  A  L   **********************************-->
 	<div id="openModalNovaMt" class="modalWindow">
 		<div class="obalovak">
@@ -194,12 +194,13 @@
 					<TABLE>
 						<TR>
 							<TD style="width: 150px;">Modelová třída<SPAN style="color: red; font-weight: bold;">*</SPAN></TD>
-							<TD><form:input path="modelTr" id="modelTr" class="modelTr textovePole" cssStyle="width:30px;"></form:input><SPAN
-								style="font-size: x-small; color: gray;"> Funkce automatického dokončování.</SPAN></TD>
+							<TD><form:input path="modelTr" id="modelTr" class="modelTr textovePole" cssStyle="width:30px;"></form:input>
+								<SPAN style="font-size: x-small; color: gray;"> Funkce automatického dokončování.</SPAN></TD>
 						</TR>
 						<TR>
 							<TD>Závod<SPAN style="color: red; font-weight: bold;">*</SPAN></TD>
-							<TD><form:input path="zavod" id="zavod" class="zavod textovePole" cssStyle="width:20px"></form:input></TD>
+							<TD><form:input path="zavod" id="zavod" class="zavod textovePole" cssStyle="width:20px"></form:input>
+								<SPAN style="color: red; font-weight: bold;">!</SPAN></TD>
 						</TR>
 						<TR>
 							<TD>Kód země (výchozí)<SPAN style="color: red; font-weight: bold;">*</SPAN></TD>
@@ -217,12 +218,21 @@
 							<TD>Platnost DO<SPAN style="color: red; font-weight: bold;">*</SPAN></TD>
 							<TD><form:input path="platnostDo" id="platnostDo" value="999912" class="textovePole" cssStyle="width:60px"></form:input></TD>
 						</TR>
+						<TR>
+							<TD colspan="2"><SPAN style="color: red; font-weight: bold;">!</SPAN>
+								<SPAN style="font-size: x-small; color: gray;"> Modelová třída a závod musí být unikátní, pokud toto nebude splněno, tak formulář nebude uložen!</SPAN></TD>
+						</TR>
 					</TABLE>
 				</form:form>
 			</div>
 			<div class="modalFooter">
-				<SPAN style="color: red; font-weight: bold;">*</SPAN><SPAN style="font-size: x-small; color: gray;"> povinný údaj</SPAN><input type="button"
-					id="formNovaMtButton" value="Uložit" class="ok"></input>
+				<TABLE style="width: 100%;">
+					<TR>
+						<TD><SPAN style="color: red; font-weight: bold;">*</SPAN>
+							<SPAN style="font-size: x-small; color: gray;"> povinný údaj</SPAN></TD>
+						<TD align="right"><input type="button" id="formNovaMtButton" value="Uložit" class="heroBtn"></input></TD>
+					</TR>
+				</TABLE>
 			</div>
 		</div>
 	</div>
@@ -233,17 +243,16 @@
 				<h3>Smazání modelové třídy</h3>
 			</div>
 			<div class="modalContent">
-				<SPAN>Opravdu chcete smazat celou modelovou třídu?</SPAN> <BR /><BR />
-				<SPAN style="font-size: x-small; color: gray;">Pokud pro modelovou třídu existuje kalkulace, která je již schválena, tak smazání modelové třídy nebude
-					provedeno.</SPAN>
+				<SPAN>Opravdu chcete smazat celou modelovou třídu?</SPAN>
+				<BR /> <BR />
+				<SPAN style="font-size: x-small; color: gray;">POZOR: budou smazáni i všichni přerdtavitelé nadefinováni pro tuto modelovou třídu! </SPAN>
 			</div>
 			<div class="modalFooter">
-				<input type="button" id="smazatMtButton" value="Smazat" class="ok"></input>
+				<input type="button" id="smazatMtButton" value="Smazat" class="heroBtn"></input>
 			</div>
 		</div>
 	</div>
 	<!-- * E N D **************************  M  O  D  A  L   **********************************-->
-
 </body>
 	</html>
 </jsp:root>

@@ -94,9 +94,11 @@
 						<c:otherwise>
 							<span style="color: red;">Nejsou vytvořeny žádné kalkulace. Tlačítko "Přidat rok" vytvoří kalkulace pro aktuální rok.</span>
 						</c:otherwise>
-
 					</c:choose>
-
+					<span style="padding-left: 865px;">Poslední schválená
+							kalkulace:</span>
+					<a href="${pageContext.servletContext.contextPath}/srv/archiv/kalkulace"> <span style="color: #4BA82E; font-weight: bold;">${posledniArchivniKalkulace.kalkulace}</span>
+					</a>
 				</div>
 
 
@@ -105,8 +107,6 @@
 						<col width="100px" />
 						<col width="*" />
 						<col width="200px" />
-						<col width="200px" />
-						<col width="150px" />
 						<col width="90px" />
 						<thead>
 							<tr>
@@ -114,8 +114,6 @@
 								<th>Kalkulace</th>
 								<th>Modelové třídy a závody</th>
 								<th>Kalkulační datum</th>
-								<th>Schváleno (archivováno)</th>
-								<th>Schválil</th>
 								<th></th>
 							</tr>
 						</thead>
@@ -126,11 +124,9 @@
 									<td align="center">${i.kalkulace}</td>
 									<td align="left">&#160; ${i.modZav}</td>
 									<td align="center">${i.kalkulacniDatum}</td>
-									<td align="center"><f:formatDate value="${i.schvaleno}" pattern="yyyy-MM-dd HH:mm:ss" /></td>
-									<td align="center">${i.schvalil}</td>
 									<td align="center"><a href="${pageContext.servletContext.contextPath}/srv/kalkulace/detail/${i.kalkulace}"> <img title="Detail kalkulace"
 											style="border: 0px;" src="${pageContext.servletContext.contextPath}/resources/ico/browse.png" /></a>&#160; <c:if
-											test="${moznoEditovat and empty(i.schvalil)}">
+											test="${moznoEditovat}">
 											<a href="${pageContext.servletContext.contextPath}/srv/kalkulace/editKalkulaceForm/${i.idKalkulace}"><img title="Editace" style="border: 0px;"
 												src="${pageContext.servletContext.contextPath}/resources/ico/edit.png" /></a>&#160;
 										</c:if></td>

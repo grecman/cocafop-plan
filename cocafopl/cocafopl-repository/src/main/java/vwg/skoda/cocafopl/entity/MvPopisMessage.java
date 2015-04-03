@@ -4,14 +4,8 @@ import java.io.Serializable;
 import javax.persistence.*;
 import java.util.Date;
 
-
-/**
- * The persistent class for the GZ39T_MV_POPIS_MESSAGE database table.
- * 
- */
 @Entity
 @Table(name="GZ39T_MV_POPIS_MESSAGE", schema="COCAFOPPL")
-@NamedQuery(name="MvPopisMessage.findAll", query="SELECT m FROM MvPopisMessage m")
 public class MvPopisMessage implements Serializable {
 	private static final long serialVersionUID = 1L;
 

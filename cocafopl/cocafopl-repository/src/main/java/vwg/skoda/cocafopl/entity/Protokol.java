@@ -4,11 +4,6 @@ import java.io.Serializable;
 import javax.persistence.*;
 import java.util.Date;
 
-
-/**
- * The persistent class for the GZ39T_PROTOKOL database table.
- * 
- */
 @Entity
 @Table(name="GZ39T_PROTOKOL", schema="COCAFOPPL")
 public class Protokol implements Serializable {

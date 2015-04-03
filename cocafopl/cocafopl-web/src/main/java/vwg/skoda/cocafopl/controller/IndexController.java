@@ -207,7 +207,7 @@ public class IndexController {
 			return "redirect:/srv/monitoring/logging";
 		}
 
-		return "redirect:/srv/predstavitel/definice";
+		return "redirect:/srv/kalkulace/seznam";
 	}
 
 }

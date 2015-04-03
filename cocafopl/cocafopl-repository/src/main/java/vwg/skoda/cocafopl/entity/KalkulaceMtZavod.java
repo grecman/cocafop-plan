@@ -1,14 +1,12 @@
 package vwg.skoda.cocafopl.entity;
 
 import java.io.Serializable;
-import javax.persistence.*;
-import java.util.Date;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
-/**
- * The persistent class for the GZ39V_KALKULACE_MT_ZAVOD database table.
- * 
- */
 @Entity
 @Table(name="GZ39V_KALKULACE_MT_ZAVOD", schema="COCAFOPPL")
 public class KalkulaceMtZavod implements Serializable {
@@ -27,11 +25,6 @@ public class KalkulaceMtZavod implements Serializable {
 	private String modZav;
 
 	private int rok;
-
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date schvaleno;
-
-	private String schvalil;
 
 	public KalkulaceMtZavod() {
 	}
@@ -55,51 +48,5 @@ public class KalkulaceMtZavod implements Serializable {
 	public int getRok() {
 		return rok;
 	}
-
-
-	public Date getSchvaleno() {
-		return schvaleno;
-	}
-
-
-	public String getSchvalil() {
-		return schvalil;
-	}
-
-
-	public void setIdKalkulace(long idKalkulace) {
-		this.idKalkulace = idKalkulace;
-	}
-
-
-	public void setKalkulace(int kalkulace) {
-		this.kalkulace = kalkulace;
-	}
-
-
-	public void setKalkulacniDatum(String kalkulacniDatum) {
-		this.kalkulacniDatum = kalkulacniDatum;
-	}
-
-
-	public void setModZav(String modZav) {
-		this.modZav = modZav;
-	}
-
-
-	public void setRok(int rok) {
-		this.rok = rok;
-	}
-
-
-	public void setSchvaleno(Date schvaleno) {
-		this.schvaleno = schvaleno;
-	}
-
-
-	public void setSchvalil(String schvalil) {
-		this.schvalil = schvalil;
-	}
-
 
 }

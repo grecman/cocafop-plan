@@ -17,6 +17,7 @@ import vwg.skoda.cocafopl.entity.MvPopis;
 import vwg.skoda.cocafopl.entity.User;
 import vwg.skoda.cocafopl.service.MvPopisService;
 import vwg.skoda.cocafopl.service.UserService;
+import vwg.skoda.favas.mbv.VehicleOrder;
 
 @Controller
 @RequestMapping("/mv")

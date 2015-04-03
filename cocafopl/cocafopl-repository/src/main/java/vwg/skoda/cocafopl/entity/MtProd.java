@@ -1,6 +1,7 @@
 package vwg.skoda.cocafopl.entity;
 
 import java.io.Serializable;
+
 import javax.persistence.*;
 
 @Entity
@@ -13,6 +14,9 @@ public class MtProd implements Serializable {
 	private String modelovaTrida;
 
 	private String produkt;
+	
+	@Column(name="POPIS_PRODUKTU")
+	private String popisProduktu;
 
 	public MtProd() {}
 
@@ -23,4 +27,11 @@ public class MtProd implements Serializable {
 	public String getProdukt() {
 		return this.produkt;
 	}
+	
+	
+	public String getPopisProduktu() {
+		return popisProduktu;
+	}
+
+
 }

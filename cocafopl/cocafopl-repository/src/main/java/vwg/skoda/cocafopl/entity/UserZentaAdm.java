@@ -4,11 +4,6 @@ import java.io.Serializable;
 import javax.persistence.*;
 import java.util.Date;
 
-
-/**
- * The persistent class for the GZ09T52 database table.
- * 
- */
 @Entity
 @Table(name="GZ09T52", schema="zentaadm")
 public class UserZentaAdm implements Serializable {

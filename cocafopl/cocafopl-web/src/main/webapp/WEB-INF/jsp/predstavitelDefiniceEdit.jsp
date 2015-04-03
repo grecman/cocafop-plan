@@ -26,9 +26,13 @@
 									+ "\n\tNejspíše obsahuje nepovolené znaky nebo je prázdný.\n\tPovolené znaky: a-z A-Z 0-9 áäéëěíóöôúůüýčďňřšťžĺľĚŠČŘŽÝÁÍÉ-,." + "\n" : "");
 							var vykon = (!$("#vykon").val().match(/^[-,.a-zA-Z0-9áäéëěíóöôúůüýčďňřšťžĺľĚŠČŘŽÝÁÍÉ\u0020]{0,29}$/) ? "Výkon je špatně zadán: " + $("#vykon").val()
 									+ "\n\tNejspíše obsahuje nepovolené znaky nebo je prázdný.\n\tPovolené znaky: a-z A-Z 0-9 áäéëěíóöôúůüýčďňřšťžĺľĚŠČŘŽÝÁÍÉ-,." + "\n" : "");
+							var platnostOd = (!$("#platnostOd").val().match(/^[0-9]{6}$/) ? "Platnost OD je špatně zadáná: " + $("#platnostOd").val()
+									+ "\n\t Očekává se formát RRRRMM (př:201502)." : "");
+							var platnostDo = (!$("#platnostDo").val().match(/^[0-9]{6}$/) ? "Platnost DO je špatně zadáná: " + $("#platnostDo").val()
+									+ "\n\t Očekává se formát RRRRMM (př:203812)." : "");
 							var vybavy = (!$("#vybavy").val().match(/^((([/+]{1})([A-Za-z0-9]{3}))+){0,20}$/) ? "Výbavy jsou špatně zadány: " + $("#vybavy").val()
 									+ "\n\tJe třeba dodržet požadovaný formát (bez mezer): +L0L+A8G+3FE" + "\n" : "");
-							var result = mt + typ + vybava + obsah + vykon + vybavy;
+							var result = mt + typ + vybava + obsah + vykon + platnostOd + platnostDo + vybavy;
 							if (result.length == 0) {
 								$("#formPredstavitel").submit();
 							} else {
@@ -89,9 +93,9 @@
 								style="font-size: x-small; color: gray;">&#160;Pokud je hodnota vyplněna, tak se jedná o číslo představitele z prosince předchozího roku.</SPAN></TD>
 						</TR>
 						<TR>
-							<TD style="width: 190px; height: 30px; font-weight: bold;">Modelový klíč (závod)<SPAN style="color: red; font-weight: bold;">*</SPAN></TD>
+							<TD style="width: 190px; height: 30px; font-weight: bold;">Modelový klíč<SPAN style="color: red; font-weight: bold;">*</SPAN></TD>
 							<TD><SPAN style="font-size: 15px;">${modelovaTrida.modelTr}</SPAN> <form:input path="modelovyKlic" id="modelovyKlic4"
-									value="${fn:substring(predInput.modelovyKlic, 2, 6)}" class="textovePole" cssStyle="width:45px"></form:input><SPAN style="font-size: 15px;">(${modelovaTrida.zavod})</SPAN><SPAN
+									value="${fn:substring(predInput.modelovyKlic, 2, 6)}" class="textovePole" cssStyle="width:45px"></form:input><SPAN style="color: red; font-weight: bold;">!</SPAN><SPAN
 								style="font-size: x-small; color: gray;">&#160; Zadat pouze poslední čtyři znaky modelového klíče.</SPAN></TD>
 						</TR>
 						<TR>
@@ -99,10 +103,10 @@
 							<TD><c:choose>
 									<c:when test="${empty predInput.kodZeme}">
 										<form:input path="kodZeme" id="kodZeme" value="${modelovaTrida.kodZeme}" class="textovePole" cssStyle="width:30px"></form:input>
-										<SPAN style="font-size: x-small; color: gray;">&#160;Přednastavená hodnota z modelové třídy.</SPAN>
+										<SPAN style="color: red; font-weight: bold;">!</SPAN><SPAN style="font-size: x-small; color: gray;">&#160;Přednastavená hodnota z modelové třídy.</SPAN>
 									</c:when>
 									<c:otherwise>
-										<form:input path="kodZeme" id="kodZeme" value="${predInput.kodZeme}" class="textovePole" cssStyle="width:30px"></form:input>
+										<form:input path="kodZeme" id="kodZeme" value="${predInput.kodZeme}" class="textovePole" cssStyle="width:30px"></form:input><SPAN style="color: red; font-weight: bold;">!</SPAN>
 									</c:otherwise>
 								</c:choose></TD>
 						</TR>
@@ -134,24 +138,14 @@
 							<TD style="width: 190px; height: 30px; font-weight: bold;">Poznámka</TD>
 							<TD><form:input path="poznamka" id="poznamka" value="${predInput.poznamka}" class="textovePole" cssStyle="width:300px"></form:input></TD>
 						</TR>
+						
 						<TR>
-							<TD style="width: 190px; height: 30px; font-weight: bold;">Platnost Od</TD>
-							<TD><SPAN style="font-size: 15px;">${vybranyRok}</SPAN> <form:select path="platnostOd">
-									<form:option value="${fn:substring(predInput.platnostOd, 4, 6)}">${fn:substring(predInput.platnostOd, 4, 6)}</form:option>
-									<c:forEach var="i" items="${mesice}">
-										<form:option value="${i}">${i}</form:option>
-									</c:forEach>
-								</form:select><SPAN style="font-size: x-small; color: gray;"> V případě, že existuje pro tohoto představitele schválaná kalkulace, tak platnost nebude změněna.</SPAN></TD>
+							<TD style="width: 190px; height: 30px; font-weight: bold;">Platnost Od<SPAN style="color: red; font-weight: bold;">*</SPAN></TD>
+							<TD><form:input path="platnostOd" id="platnostOd" value="${predInput.platnostOd}" class="textovePole" cssStyle="width:60px"></form:input></TD>
 						</TR>
 						<TR>
-							<TD style="width: 190px; height: 30px; font-weight: bold;">Platnost Do</TD>
-							<TD><SPAN style="font-size: 15px;">${vybranyRok}</SPAN> <form:select path="platnostDo">
-									<form:option value="${fn:substring(predInput.platnostDo, 4, 6)}">${fn:substring(predInput.platnostDo, 4, 6)}</form:option>
-									<c:forEach var="i" items="${mesice}">
-										<form:option value="${i}">${i}</form:option>
-									</c:forEach>
-								</form:select><SPAN style="font-size: x-small; color: gray;"> Minimální hodnota této platnosti je první neschválená kalkulace pro vybranáho představitele. V
-									případě zadání nižší hodnoty proběhne automatická oprava.</SPAN></TD>
+							<TD style="width: 190px; height: 30px; font-weight: bold;">Platnost Do<SPAN style="color: red; font-weight: bold;">*</SPAN></TD>
+							<TD><form:input path="platnostDo" id="platnostDo" value="${predInput.platnostDo}" class="textovePole" cssStyle="width:60px"></form:input></TD>
 						</TR>
 						<TR>
 							<TD style="width: 190px; height: 30px; font-weight: bold;">Výbavy</TD>
@@ -175,6 +169,9 @@
 						</TR>
 						<TR>
 							<TD colspan="2"><SPAN style="color: red; font-weight: bold;">*</SPAN><SPAN style="font-size: x-small; color: gray;"> povinný údaj</SPAN></TD>
+						</TR>
+						<TR>
+							<TD colspan="2"><SPAN style="color: red; font-weight: bold;">!</SPAN><SPAN style="font-size: x-small; color: gray;"> Modelový klíč a kód země musí být unikátní, pokud toto nebude splněno, tak formulář nebude uložen!</SPAN></TD>
 						</TR>
 					</TABLE>
 				</form:form>

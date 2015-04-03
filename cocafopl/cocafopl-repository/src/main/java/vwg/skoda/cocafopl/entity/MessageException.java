@@ -5,13 +5,8 @@ import javax.persistence.*;
 import java.util.Date;
 
 
-/**
- * The persistent class for the GZ39T_MESSAGE_EXCEPTIONS database table.
- * 
- */
 @Entity
 @Table(name="GZ39T_MESSAGE_EXCEPTIONS", schema="COCAFOPPL")
-@NamedQuery(name="MessageException.findAll", query="SELECT m FROM MessageException m")
 public class MessageException implements Serializable {
 	private static final long serialVersionUID = 1L;
 

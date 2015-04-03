@@ -1,17 +1,13 @@
 package vwg.skoda.cocafopl.entity;
 
 import java.io.Serializable;
+
 import javax.persistence.*;
+
 import java.util.Date;
 
-
-/**
- * The persistent class for the GZ39T_PREDSTAVITEL_PR database table.
- * 
- */
 @Entity
 @Table(name="GZ39T_PREDSTAVITEL_PR", schema="COCAFOPPL")
-@NamedQuery(name="PredstavitelPr.findAll", query="SELECT p FROM PredstavitelPr p")
 public class PredstavitelPr implements Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -28,6 +24,16 @@ public class PredstavitelPr implements Serializable {
 	private String rodina;
 
 	private String typ;
+	
+	private String paket;
+
+	public String getPaket() {
+		return this.paket;
+	}
+
+	public void setPaket(String paket) {
+		this.paket = paket;
+	}
 
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date utime;

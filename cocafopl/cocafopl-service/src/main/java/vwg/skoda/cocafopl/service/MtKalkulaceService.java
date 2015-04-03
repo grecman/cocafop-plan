@@ -20,8 +20,8 @@ public class MtKalkulaceService {
 	@PersistenceContext(name = "MtKalkulaceService")
 	private EntityManager entityManager;
 
-	public MtKalkulace getMtKalkulaceOne(long id) {
-		log.trace("###\t\t getMtMtKalkulaceOne(" + id + ");");
+	public MtKalkulace getMtKalkulaceId(long id) {
+		log.trace("###\t\t getMtMtKalkulaceId(" + id + ");");
 		return entityManager.find(MtKalkulace.class, id);
 	}
 
@@ -40,7 +40,7 @@ public class MtKalkulaceService {
 	@Transactional
 	public void removeMtKalkulace(MtKalkulace mtKalkulace) {
 		log.trace("###\t\t removeMtKalkulace(" + mtKalkulace + ")");
-		MtKalkulace u = getMtKalkulaceOne(mtKalkulace.getId());
+		MtKalkulace u = getMtKalkulaceId(mtKalkulace.getId());
 		entityManager.remove(u);
 	}
 	
@@ -54,18 +54,6 @@ public class MtKalkulaceService {
 		}
 		return gre;
 	}
-	
-	public List<String> getMtKalkulaceMtZavod(String rok) {
-		log.trace("###\t\t getMtKalkulaceMtZavod("+rok+");");
-		List<String> gre = null;
-		try {
-			gre = entityManager.createQuery("SELECT mtk.gz39tMt.modelTr||'-'||mtk.gz39tMt.zavod FROM MtKalkulace mtk WHERE substring(mtk.gz39tKalkulace.kalkulace,1,4)=:rok GROUP BY mtk.gz39tMt.modelTr,mtk.gz39tMt.zavod ORDER BY mtk.gz39tMt.modelTr ", String.class).setParameter("rok", rok).getResultList();
-		} catch (NoResultException e) {
-			return null;
-		}
-		return gre;
-	}
-	
 	
 	public List<MtKalkulace> getMtKalkulace(String mt) {
 		log.trace("###\t\t getMtKalkulace("+mt+");");
@@ -89,36 +77,30 @@ public class MtKalkulaceService {
 		return gre;
 	}
 	
-	public MtKalkulace getMtKalkulace(int kalkulace, String mt) {
-		log.trace("###\t\t getMtKalkulace("+kalkulace+", "+mt+");");
+	public MtKalkulace getMtKalkulace(int kalkulace, String mt, String zavod) {
+		log.trace("###\t\t getMtKalkulace("+kalkulace+", "+mt+"-"+zavod+");");
 		MtKalkulace gre = null;
 		try {
-			gre = entityManager.createQuery("SELECT mtk FROM MtKalkulace mtk WHERE mtk.gz39tKalkulace.kalkulace=:kalkulace AND mtk.gz39tMt.modelTr=:mt ", MtKalkulace.class).setParameter("kalkulace", kalkulace).setParameter("mt", mt).getSingleResult();
+			gre = entityManager.createQuery("SELECT mtk FROM MtKalkulace mtk WHERE mtk.gz39tKalkulace.kalkulace=:kalkulace AND mtk.gz39tMt.modelTr=:mt AND mtk.gz39tMt.zavod=:zavod ", MtKalkulace.class).setParameter("kalkulace", kalkulace).setParameter("mt", mt).setParameter("zavod", zavod).getSingleResult();
 		} catch (NoResultException e) {
 			return null;
 		}
 		return gre;
 	}
 	
-	public List<String> getIdKalkulacaAndIdMtForCreate_() {
-		// Spoji entity MT a KALKULACE (jen neschvalene!) pres platnost a vrati IDcka, ktere jeste nejsou v entity MtKalkulace, 
-		// aby se mohly nasledne vytvorit zatim neexistujici "radky" v entite MtKalkulace
-		// Duvodem tohoto kroku je to, ze MT a kalkulace mohou vznikat nezavisle na sobe a je treba zajistit vzdy spravny stav v entite MtKalkulace, kde jsou MT a Kalkulace spojeny.
-		log.trace("###\t\t getIdKalkulacaAndIdMtForCreate_()");
-		List<String> gre;
-		try {
-			gre = entityManager
-					.createQuery(
-							"select k.id||';'||m.id FROM Kalkulace k, Mt m WHERE k.schvaleno IS NULL AND m.platnostOd <= k.kalkulace AND m.platnostDo >= k.kalkulace AND m.id||k.id NOT IN (SELECT mk.gz39tMt.id || mk.gz39tKalkulace.id FROM MtKalkulace mk)",
-							String.class).getResultList();
-		} catch (NoResultException e) {
-			return null;
-		}
-		return gre;
-	}
+//	public MtKalkulace getMtKalkulace(int kalkulace, String mt) {
+//		log.trace("###\t\t getMtKalkulace("+kalkulace+", "+mt+");");
+//		MtKalkulace gre = null;
+//		try {
+//			gre = entityManager.createQuery("SELECT mtk FROM MtKalkulace mtk WHERE mtk.gz39tKalkulace.kalkulace=:kalkulace AND mtk.gz39tMt.modelTr=:mt ", MtKalkulace.class).setParameter("kalkulace", kalkulace).setParameter("mt", mt).getSingleResult();
+//		} catch (NoResultException e) {
+//			return null;
+//		}
+//		return gre;
+//	}
 	
 	public List<Object[]> getIdKalkulacaAndIdMtForCreate() {
-		// Spoji entity MT a KALKULACE (jen neschvalene!) pres platnost a vrati IDcka, ktere jeste nejsou v entity MtKalkulace, 
+		// Spoji entity MT a KALKULACE pres platnost a vrati IDcka, ktere jeste nejsou v entity MtKalkulace vytvoreny, 
 		// aby se mohly nasledne vytvorit zatim neexistujici "radky" v entite MtKalkulace
 		// Duvodem tohoto kroku je to, ze MT a kalkulace mohou vznikat nezavisle na sobe a je treba zajistit vzdy spravny stav v entite MtKalkulace, kde jsou MT a Kalkulace spojeny.
 		log.trace("###\t\t getIdKalkulacaAndIdMtForCreate()");
@@ -126,7 +108,7 @@ public class MtKalkulaceService {
 		try {
 			gre = entityManager
 					.createQuery(
-							"select k.id, m.id FROM Kalkulace k, Mt m WHERE k.schvaleno IS NULL AND m.platnostOd <= k.kalkulace AND m.platnostDo >= k.kalkulace AND m.id||k.id NOT IN (SELECT mk.gz39tMt.id || mk.gz39tKalkulace.id FROM MtKalkulace mk)",
+							"select k.id, m.id FROM Kalkulace k, Mt m WHERE m.platnostOd <= k.kalkulace AND m.platnostDo >= k.kalkulace AND m.id||k.id NOT IN (SELECT mk.gz39tMt.id || mk.gz39tKalkulace.id FROM MtKalkulace mk)",
 							Object[].class).getResultList();
 		} catch (NoResultException e) {
 			return null;
@@ -135,13 +117,13 @@ public class MtKalkulaceService {
 	}
 	
 	public List<MtKalkulace> getMtKalkulaceForDelete() {
-		// Vrati vsechny objekty MtKalkulace, u ktere jiz nemaji existovat, a to z duvodu zkraceni platnostiDo u modelove tridy
+		// Vrati vsechny objekty MtKalkulace, u ktere jiz nemaji existovat, a to z duvodu zmeny platnostiOd no DO u modelove tridy. Tyto objekty nasledne budou smazany.
 		log.trace("###\t\t getMtKalkulaceForDelete()");
 		List<MtKalkulace> gre;
 		try {
 			gre = entityManager
 					.createQuery(
-							"select mtk FROM MtKalkulace mtk WHERE mtk.gz39tKalkulace.schvaleno IS NULL AND mtk.gz39tMt.platnostDo < mtk.gz39tKalkulace.kalkulace",
+							"select mtk FROM MtKalkulace mtk WHERE (mtk.gz39tMt.platnostOd > mtk.gz39tKalkulace.kalkulace OR mtk.gz39tMt.platnostDo < mtk.gz39tKalkulace.kalkulace)",
 							MtKalkulace.class).getResultList();
 		} catch (NoResultException e) {
 			return null;

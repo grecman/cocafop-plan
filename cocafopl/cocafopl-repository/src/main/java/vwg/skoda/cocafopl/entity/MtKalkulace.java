@@ -7,14 +7,8 @@ import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
 
-
-/**
- * The persistent class for the GZ39T_MT_KALKULACE database table.
- * 
- */
 @Entity
 @Table(name="GZ39T_MT_KALKULACE", schema="COCAFOPPL")
-@NamedQuery(name="MtKalkulace.findAll", query="SELECT m FROM MtKalkulace m")
 public class MtKalkulace implements Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -36,6 +30,13 @@ public class MtKalkulace implements Serializable {
 	private Date schvaleno;
 
 	private String schvalil;
+	
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name="POSLEDNI_VYPOCET")
+	private Date posledniVypocet;
+
+	@Column(name="POSLEDNI_VYPOCET_USER")
+	private String posledniVypocetUser;
 
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date utime;
@@ -106,6 +107,23 @@ public class MtKalkulace implements Serializable {
 
 	public void setSchvalil(String schvalil) {
 		this.schvalil = schvalil;
+	}
+	
+	
+	public Date getPosledniVypocet() {
+		return posledniVypocet;
+	}
+
+	public String getPosledniVypocetUser() {
+		return posledniVypocetUser;
+	}
+
+	public void setPosledniVypocet(Date posledniVypocet) {
+		this.posledniVypocet = posledniVypocet;
+	}
+
+	public void setPosledniVypocetUser(String posledniVypocetUser) {
+		this.posledniVypocetUser = posledniVypocetUser;
 	}
 
 	public Date getUtime() {

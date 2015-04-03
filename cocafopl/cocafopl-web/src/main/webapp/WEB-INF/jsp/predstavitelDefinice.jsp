@@ -18,7 +18,7 @@
 		$('#tableId').dataTable({
 			"paging" : false,
 			"ordering" : false,
-			"info" : true,
+			"info" : false,
 			"bFilter" : true,
 			"iDisplayLength" : 25,
 			"language" : {
@@ -47,11 +47,6 @@
 		$("#smazatButton").click(function() {
 			$(window.location).attr('href', '${pageContext.servletContext.contextPath}/srv/predstavitel/definice/smazatPredstavitele/' + IdVRadku);
 		});
-
-// 		$("#doplnitMinCisloButton").click(function() {
-// 			$(window.location).attr('href', '${pageContext.servletContext.contextPath}/srv/predstavitel/definice/doplnitMinuleCisloPredstavitele/${vybranyRok}/${vybranaMt}');
-// 		});
-
 	});
 </script>
 </head>
@@ -62,9 +57,7 @@
 		<c:set scope="request" var="selectedMenu" value="predstavitel" />
 		<c:set scope="request" var="selectedSubMenu" value="definice" />
 
-
 		<jsp:include page="header.jsp" />
-
 
 		<div class="submenu">
 			<div class="items">
@@ -76,50 +69,28 @@
 
 		<div class="pageBody">
 			<div class="mainAreaWide">
-
 				<div class="formBar">
 					<c:choose>
-						<c:when test="${(empty(vybranyRok))}">
-							<span> <form:form commandName="uniObj" action="${pageContext.servletContext.contextPath}/srv/predstavitel/definice/zadatMt">
-						&#160;Rok:&#160;
-                            <form:select onchange="this.form.submit(); return true;" path="rok">
+						<c:when test="${(empty(mt.modelTr))}">
+							<span> <form:form commandName="mt" action="${pageContext.servletContext.contextPath}/srv/predstavitel/definice/list">
+						&#160;Modelová třída a závod:&#160;
+                            <form:select onchange="this.form.submit(); return true;" path="id">
 										<form:option value="0"> . . .  </form:option>
-										<c:forEach var="i" items="${listRoku}">
-											<form:option value="${i}">${i}</form:option>
+										<c:forEach var="i" items="${listMt}">
+											<form:option value="${i.id}">${i.modelTr}-${i.zavod}</form:option>
 										</c:forEach>
 									</form:select>
 								</form:form>
 							</span>
 						</c:when>
 						<c:otherwise>
-							<a href="${pageContext.servletContext.contextPath}/srv/predstavitel/definice"> <SPAN>&#160;Rok:&#160;</SPAN><span
-								style="color: #4BA82E; font-weight: bold;">${vybranyRok}</span>
+							<a href="${pageContext.servletContext.contextPath}/srv/predstavitel/definice"> <SPAN>&#160;Modelová třída a závod:&#160;</SPAN><span
+								style="color: #4BA82E; font-weight: bold;">${mt.modelTr}-${mt.zavod}</span>
 							</a>
 						</c:otherwise>
 					</c:choose>
 
-					<c:if test="${(not(empty(vybranyRok)))}">
-						<c:choose>
-							<c:when test="${(empty(vybranaMtZavod))}">
-								<span> <form:form commandName="uniObj" action="${pageContext.servletContext.contextPath}/srv/predstavitel/definice/list">
-						&#160;Modelová třída a závod:&#160;
-                            <form:select onchange="this.form.submit(); return true;" path="mtZavod">
-											<form:option value="0"> . . .  </form:option>
-											<c:forEach var="i" items="${listMtZavod}">
-												<form:option value="${i}">${i}</form:option>
-											</c:forEach>
-										</form:select>
-									</form:form>
-								</span>
-							</c:when>
-							<c:otherwise>
-								<a href="${pageContext.servletContext.contextPath}/srv/predstavitel/definice"> <SPAN>&#160;Modelová třída a závod:&#160;</SPAN><span
-									style="color: #4BA82E; font-weight: bold;">${vybranaMtZavod}</span>
-								</a>
-							</c:otherwise>
-						</c:choose>
-					</c:if>
-					<c:if test="${not(empty(vybranaMtZavod))}">
+					<c:if test="${not(empty(mt.modelTr))}">
 						<SPAN style="margin-left: 50px; margin-right: 0px;">Produkt:</SPAN>
 						<SPAN style="background-color: white;">&#160;${mt.produkt}&#160;</SPAN>
 						<SPAN style="margin-left: 20px; margin-right: 0px;">Popis modelové třídy:</SPAN>
@@ -140,8 +111,8 @@
 
 							<col width="120px" />
 							<col width="120px" />
-							<col width="50px" />
-							<col width="55px" />
+							<col width="100px" />
+							<col width="85px" />
 							<col width="50px" />
 
 							<col width="*" />
@@ -230,7 +201,7 @@
 					</div>
 				</c:if>
 
-				<c:if test="${(not(empty(vybranaMtZavod)))}">
+				<c:if test="${not(empty(mt.modelTr))}">
 					<div class="formBar">
 
 						<span><a href="${pageContext.servletContext.contextPath}/srv/predstavitel/definice/novyPredForm"><input type="button" value="Nový"
@@ -279,8 +250,8 @@
 			<div class="modalContent">Po potvrzení, aplikace doplní "Minulé číslo představitele" z prosince předchozího roku (vyhledávat se bude dle stejného
 				modelového klíče a kódu země), a to pouze u představitelů, kde je toto pole prazdné.</div>
 			<div class="modalFooter">
-				<a href="${pageContext.servletContext.contextPath}/srv/predstavitel/definice/doplnitMinuleCisloPredstavitele"> <input
-					type="button" id="doplnitMinCisloButton" value="Doplnit" class="ok"></input></a>
+				<a href="${pageContext.servletContext.contextPath}/srv/predstavitel/definice/doplnitMinuleCisloPredstavitele"> <input type="button"
+					id="doplnitMinCisloButton" value="Doplnit" class="ok"></input></a>
 			</div>
 		</div>
 	</div>

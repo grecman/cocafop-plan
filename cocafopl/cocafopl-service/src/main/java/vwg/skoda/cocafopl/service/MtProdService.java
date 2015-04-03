@@ -27,7 +27,7 @@ public class MtProdService {
 		log.debug("\t### findMtProdByString("+string.toUpperCase()+")");
 		Iterable<String> gre = entityManager
 				.createQuery(
-						"select u.modelovaTrida from MtProd u where u.modelovaTrida like :string AND u.modelovaTrida NOT IN (select b.modelTr FROM Mt b)",
+						"select u.modelovaTrida from MtProd u where u.modelovaTrida like :string ",
 						String.class).setParameter("string", "%"+ string.toUpperCase() + "%")
 				.getResultList();
 		log.debug("\t### findMtProdByString("+gre.toString()+")");
