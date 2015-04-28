@@ -1,19 +1,8 @@
 package vwg.skoda.cocafopl.entity;
 
 import java.io.Serializable;
+import javax.persistence.*;
 import java.util.Set;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
-
 
 @Entity
 @Table(name="GZ40T_PREDSTAVITEL", schema="COCAFOPPL_ARCH")
@@ -21,7 +10,7 @@ public class ArchPredstavitel implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@SequenceGenerator(name="GZ40T_PREDSTAVITEL_ID_GENERATOR", sequenceName="HIBERNATE_SEQUENCE")
+	@SequenceGenerator(name="GZ40T_PREDSTAVITEL_ID_GENERATOR", sequenceName="COCAFOPPL_ARCH.HIBERNATE_SEQUENCE")
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="GZ40T_PREDSTAVITEL_ID_GENERATOR")
 	private long id;
 
@@ -29,7 +18,9 @@ public class ArchPredstavitel implements Serializable {
 	private int cisloPred;
 
 	@Column(name="CISLO_PRED_MIN")
-	private int cisloPredMin;
+	private Integer cisloPredMin;
+
+	private Boolean comix;
 
 	@Column(name="EU_NORMA")
 	private String euNorma;
@@ -72,18 +63,14 @@ public class ArchPredstavitel implements Serializable {
 
 	private String zavod;
 
+	//bi-directional many-to-one association to ArchKalkulace
 	@ManyToOne
-	@JoinColumn(name="kalkulace")
-	private ArchKalkulace archKalkulace;
-	
-	@OneToMany(mappedBy="archPredstavitel")
-	private Set<ArchPredstavitelPr> archPredstavitelPrs;
-	
-	@OneToMany(mappedBy="archPredstavitel")
-	private Set<ArchKalkcd> archKalkcds;
-	
-	@OneToMany(mappedBy="archPredstavitel")
-	private Set<ArchKusyProv> archKusyProvs;
+	@JoinColumn(name="KALKULACE")
+	private ArchKalkulace gz40tKalkulace;
+
+	//bi-directional many-to-one association to ArchPredstavitelPr
+	@OneToMany(mappedBy="gz40tPredstavitel")
+	private Set<ArchPredstavitelPr> gz40tPredstavitelPrs;
 
 	public ArchPredstavitel() {
 	}
@@ -97,19 +84,51 @@ public class ArchPredstavitel implements Serializable {
 	}
 
 	public int getCisloPred() {
-		return this.cisloPred;
+		return cisloPred;
+	}
+
+	public Integer getCisloPredMin() {
+		return cisloPredMin;
+	}
+
+	public int getModelovyRok() {
+		return modelovyRok;
+	}
+
+	public int getPlatnostDo() {
+		return platnostDo;
+	}
+
+	public int getPlatnostOd() {
+		return platnostOd;
 	}
 
 	public void setCisloPred(int cisloPred) {
 		this.cisloPred = cisloPred;
 	}
 
-	public int getCisloPredMin() {
-		return this.cisloPredMin;
+	public void setCisloPredMin(Integer cisloPredMin) {
+		this.cisloPredMin = cisloPredMin;
 	}
 
-	public void setCisloPredMin(int cisloPredMin) {
-		this.cisloPredMin = cisloPredMin;
+	public void setModelovyRok(int modelovyRok) {
+		this.modelovyRok = modelovyRok;
+	}
+
+	public void setPlatnostDo(int platnostDo) {
+		this.platnostDo = platnostDo;
+	}
+
+	public void setPlatnostOd(int platnostOd) {
+		this.platnostOd = platnostOd;
+	}
+
+	public Boolean getComix() {
+		return this.comix;
+	}
+
+	public void setComix(Boolean comix) {
+		this.comix = comix;
 	}
 
 	public String getEuNorma() {
@@ -119,8 +138,6 @@ public class ArchPredstavitel implements Serializable {
 	public void setEuNorma(String euNorma) {
 		this.euNorma = euNorma;
 	}
-
-	
 
 	public String getKodZeme() {
 		return this.kodZeme;
@@ -146,13 +163,6 @@ public class ArchPredstavitel implements Serializable {
 		this.modelovyKlic = modelovyKlic;
 	}
 
-	public int getModelovyRok() {
-		return this.modelovyRok;
-	}
-
-	public void setModelovyRok(int modelovyRok) {
-		this.modelovyRok = modelovyRok;
-	}
 
 	public String getObsah() {
 		return this.obsah;
@@ -160,22 +170,6 @@ public class ArchPredstavitel implements Serializable {
 
 	public void setObsah(String obsah) {
 		this.obsah = obsah;
-	}
-
-	public int getPlatnostDo() {
-		return this.platnostDo;
-	}
-
-	public void setPlatnostDo(int platnostDo) {
-		this.platnostDo = platnostDo;
-	}
-
-	public int getPlatnostOd() {
-		return this.platnostOd;
-	}
-
-	public void setPlatnostOd(int platnostOd) {
-		this.platnostOd = platnostOd;
 	}
 
 	public String getPoznamka() {
@@ -251,18 +245,33 @@ public class ArchPredstavitel implements Serializable {
 	}
 
 	public ArchKalkulace getGz40tKalkulace() {
-		return archKalkulace;
+		return this.gz40tKalkulace;
+	}
+
+	public void setGz40tKalkulace(ArchKalkulace gz40tKalkulace) {
+		this.gz40tKalkulace = gz40tKalkulace;
 	}
 
 	public Set<ArchPredstavitelPr> getGz40tPredstavitelPrs() {
-		return archPredstavitelPrs;
+		return this.gz40tPredstavitelPrs;
 	}
 
-	public void setGz40tKalkulace(ArchKalkulace archKalkulace) {
-		this.archKalkulace = archKalkulace;
+	public void setGz40tPredstavitelPrs(Set<ArchPredstavitelPr> gz40tPredstavitelPrs) {
+		this.gz40tPredstavitelPrs = gz40tPredstavitelPrs;
 	}
 
-	public void setGz40tPredstavitelPrs(Set<ArchPredstavitelPr> archPredstavitelPrs) {
-		this.archPredstavitelPrs = archPredstavitelPrs;
+	public ArchPredstavitelPr addGz40tPredstavitelPr(ArchPredstavitelPr gz40tPredstavitelPr) {
+		getGz40tPredstavitelPrs().add(gz40tPredstavitelPr);
+		gz40tPredstavitelPr.setGz40tPredstavitel(this);
+
+		return gz40tPredstavitelPr;
 	}
+
+	public ArchPredstavitelPr removeGz40tPredstavitelPr(ArchPredstavitelPr gz40tPredstavitelPr) {
+		getGz40tPredstavitelPrs().remove(gz40tPredstavitelPr);
+		gz40tPredstavitelPr.setGz40tPredstavitel(null);
+
+		return gz40tPredstavitelPr;
+	}
+
 }

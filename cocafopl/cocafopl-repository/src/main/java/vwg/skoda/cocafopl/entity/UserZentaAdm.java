@@ -50,7 +50,7 @@ public class UserZentaAdm implements Serializable {
 
 	private String title;
 
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="USER_END_DATE")
 	private Date userEndDate;
 

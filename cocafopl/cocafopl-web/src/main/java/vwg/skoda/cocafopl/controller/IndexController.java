@@ -98,7 +98,7 @@ public class IndexController {
 			session.setAttribute("errorMesage", "Přihlašovaný uživatel " + req.getUserPrincipal().getName().toUpperCase() + " nenalezen v db ZentaAdm.GZ09T52!");
 			return "redirect:/srv/errorPage";
 		} else {
-			log.error("###\t Přihlašovaný uživatel " + req.getUserPrincipal().getName().toUpperCase() + " již v aplikaci existuje.");
+			log.trace("###\t ... přihlašovaný uživatel " + req.getUserPrincipal().getName().toUpperCase() + " již v aplikaci existuje.");
 		}
 
 		// zalozeni noveho uzivatele pokud jeste neexistuje v entite USER !!!
@@ -206,8 +206,13 @@ public class IndexController {
 			log.debug("###\t Uzivatel s roli ADMINS ->- presmerovavam na prislusnou stranku.");
 			return "redirect:/srv/monitoring/logging";
 		}
+		
+		// inicializace sessinovych promennych (abych nemusel resit NULLy a mohl se ptat jen na isEmpty)
+		session.setAttribute("kalkulaceRRRRMM", "");
+		session.setAttribute("vybranaMt", "");
+		session.setAttribute("vybranyZavod", "");
 
-		return "redirect:/srv/kalkulace/seznam";
+		return "redirect:/srv/kalkulace/detail";
 	}
 
 }

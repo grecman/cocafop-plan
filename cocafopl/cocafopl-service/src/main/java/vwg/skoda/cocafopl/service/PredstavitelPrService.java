@@ -45,11 +45,29 @@ public class PredstavitelPrService {
 		entityManager.remove(u);
 	}
 	
+	@Transactional
+	public void removePredstavitelPrAll(long idPredstavitelKalkulace) {
+		log.trace("###\t\t removePredstavitelPrAll(" + idPredstavitelKalkulace + ")");
+		entityManager.createQuery("DELETE FROM PredstavitelPr a WHERE a.gz39tPredstavitelKalkulace.id = :idPk ").setParameter("idPk", idPredstavitelKalkulace).executeUpdate();
+	}
+	
 	public List<PredstavitelPr> getPredstavitelPr(long idPredstavitelKalkulace) {
 		log.trace("###\t\t getPredstavitelPr(" + idPredstavitelKalkulace+");");
 		List<PredstavitelPr> gre;
 		try {
 			gre = entityManager.createQuery("SELECT u FROM PredstavitelPr u WHERE u.gz39tPredstavitelKalkulace.id=:idPredstavitelKalkulace ORDER BY u.rodina ", PredstavitelPr.class).setParameter("idPredstavitelKalkulace", idPredstavitelKalkulace).getResultList();
+		} catch (NoResultException e) {
+			return null;
+		}
+		return gre;
+	}
+	
+	public String getPredstavitelPrNudle(long idPredstavitelKalkulace) {
+		log.trace("###\t\t getPredstavitelPrNudle(" + idPredstavitelKalkulace+");");
+		String gre;
+		try {
+			StringBuffer sql = new StringBuffer("SELECT '+'||LISTAGG(decode(pr_editovane,null,pr,pr_editovane),'+') within group (order by rodina) FROM cocafoppl.GZ39T_PREDSTAVITEL_PR WHERE id_predstavitel_kalkulace="+idPredstavitelKalkulace);
+			gre =  (String) entityManager.createNativeQuery(sql.toString()).getSingleResult();
 		} catch (NoResultException e) {
 			return null;
 		}

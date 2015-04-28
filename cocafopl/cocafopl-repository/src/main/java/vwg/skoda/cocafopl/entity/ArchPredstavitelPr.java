@@ -3,13 +3,18 @@ package vwg.skoda.cocafopl.entity;
 import java.io.Serializable;
 import javax.persistence.*;
 
+
+/**
+ * The persistent class for the GZ40T_PREDSTAVITEL_PR database table.
+ * 
+ */
 @Entity
 @Table(name="GZ40T_PREDSTAVITEL_PR", schema="COCAFOPPL_ARCH")
 public class ArchPredstavitelPr implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@SequenceGenerator(name="GZ40T_PREDSTAVITEL_PR_ID_GENERATOR", sequenceName="HIBERNATE_SEQUENCE")
+	@SequenceGenerator(name="GZ40T_PREDSTAVITEL_PR_ID_GENERATOR", sequenceName="COCAFOPPL_ARCH.HIBERNATE_SEQUENCE")
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="GZ40T_PREDSTAVITEL_PR_ID_GENERATOR")
 	private long id;
 
@@ -24,10 +29,10 @@ public class ArchPredstavitelPr implements Serializable {
 
 	private String typ;
 
-	//bi-directional many-to-one association to Gz40tPredstavitel
+	//bi-directional many-to-one association to ArchPredstavitel
 	@ManyToOne
 	@JoinColumn(name="ID_PREDSTAVITEL")
-	private ArchPredstavitel archPredstavitel;
+	private ArchPredstavitel gz40tPredstavitel;
 
 	public ArchPredstavitelPr() {
 	}
@@ -78,6 +83,14 @@ public class ArchPredstavitelPr implements Serializable {
 
 	public void setTyp(String typ) {
 		this.typ = typ;
+	}
+
+	public ArchPredstavitel getGz40tPredstavitel() {
+		return this.gz40tPredstavitel;
+	}
+
+	public void setGz40tPredstavitel(ArchPredstavitel gz40tPredstavitel) {
+		this.gz40tPredstavitel = gz40tPredstavitel;
 	}
 
 }

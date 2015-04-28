@@ -22,9 +22,20 @@
 	</entity>
 
 	<entity>
+		<entity-name>vwg.skoda.cocafopl.entity.ArchKusyProvPK</entity-name>
+		<entity-width>120</entity-width>
+		<entity-height>170</entity-height>
+		<entity-X-Coordinate>920</entity-X-Coordinate>
+		<entity-Y-Coordinate>888</entity-Y-Coordinate>
+		<primary-collapsed>false</primary-collapsed>
+		<relation-collapsed>false</relation-collapsed>
+		<basic-collapsed>false</basic-collapsed>
+	</entity>
+
+	<entity>
 		<entity-name>vwg.skoda.cocafopl.entity.ArchKusyProv</entity-name>
 		<entity-width>120</entity-width>
-		<entity-height>346</entity-height>
+		<entity-height>226</entity-height>
 		<entity-X-Coordinate>774</entity-X-Coordinate>
 		<entity-Y-Coordinate>810</entity-Y-Coordinate>
 		<primary-collapsed>false</primary-collapsed>
@@ -36,8 +47,8 @@
 		<entity-name>vwg.skoda.cocafopl.entity.MtProd</entity-name>
 		<entity-width>120</entity-width>
 		<entity-height>128</entity-height>
-		<entity-X-Coordinate>920</entity-X-Coordinate>
-		<entity-Y-Coordinate>231</entity-Y-Coordinate>
+		<entity-X-Coordinate>598</entity-X-Coordinate>
+		<entity-Y-Coordinate>659</entity-Y-Coordinate>
 		<primary-collapsed>false</primary-collapsed>
 		<relation-collapsed>false</relation-collapsed>
 		<basic-collapsed>false</basic-collapsed>
@@ -58,7 +69,7 @@
 		<entity-name>vwg.skoda.cocafopl.entity.MvPopisMessage</entity-name>
 		<entity-width>128</entity-width>
 		<entity-height>206</entity-height>
-		<entity-X-Coordinate>770</entity-X-Coordinate>
+		<entity-X-Coordinate>916</entity-X-Coordinate>
 		<entity-Y-Coordinate>375</entity-Y-Coordinate>
 		<primary-collapsed>false</primary-collapsed>
 		<relation-collapsed>false</relation-collapsed>
@@ -69,8 +80,8 @@
 		<entity-name>vwg.skoda.cocafopl.entity.MvPopisPr</entity-name>
 		<entity-width>120</entity-width>
 		<entity-height>266</entity-height>
-		<entity-X-Coordinate>600</entity-X-Coordinate>
-		<entity-Y-Coordinate>555</entity-Y-Coordinate>
+		<entity-X-Coordinate>757</entity-X-Coordinate>
+		<entity-Y-Coordinate>511</entity-Y-Coordinate>
 		<primary-collapsed>false</primary-collapsed>
 		<relation-collapsed>false</relation-collapsed>
 		<basic-collapsed>false</basic-collapsed>
@@ -88,11 +99,22 @@
 	</entity>
 
 	<entity>
+		<entity-name>vwg.skoda.cocafopl.entity.ArchKalkcdPK</entity-name>
+		<entity-width>120</entity-width>
+		<entity-height>190</entity-height>
+		<entity-X-Coordinate>920</entity-X-Coordinate>
+		<entity-Y-Coordinate>1086</entity-Y-Coordinate>
+		<primary-collapsed>false</primary-collapsed>
+		<relation-collapsed>false</relation-collapsed>
+		<basic-collapsed>false</basic-collapsed>
+	</entity>
+
+	<entity>
 		<entity-name>vwg.skoda.cocafopl.entity.ArchKalkcd</entity-name>
 		<entity-width>120</entity-width>
-		<entity-height>486</entity-height>
-		<entity-X-Coordinate>930</entity-X-Coordinate>
-		<entity-Y-Coordinate>1144</entity-Y-Coordinate>
+		<entity-height>346</entity-height>
+		<entity-X-Coordinate>774</entity-X-Coordinate>
+		<entity-Y-Coordinate>1046</entity-Y-Coordinate>
 		<primary-collapsed>false</primary-collapsed>
 		<relation-collapsed>false</relation-collapsed>
 		<basic-collapsed>false</basic-collapsed>
@@ -124,8 +146,19 @@
 		<entity-name>vwg.skoda.cocafopl.entity.User</entity-name>
 		<entity-width>120</entity-width>
 		<entity-height>306</entity-height>
-		<entity-X-Coordinate>767</entity-X-Coordinate>
-		<entity-Y-Coordinate>51</entity-Y-Coordinate>
+		<entity-X-Coordinate>930</entity-X-Coordinate>
+		<entity-Y-Coordinate>52</entity-Y-Coordinate>
+		<primary-collapsed>false</primary-collapsed>
+		<relation-collapsed>false</relation-collapsed>
+		<basic-collapsed>false</basic-collapsed>
+	</entity>
+
+	<entity>
+		<entity-name>vwg.skoda.cocafopl.entity.PrView</entity-name>
+		<entity-width>120</entity-width>
+		<entity-height>268</entity-height>
+		<entity-X-Coordinate>1070</entity-X-Coordinate>
+		<entity-Y-Coordinate>754</entity-Y-Coordinate>
 		<primary-collapsed>false</primary-collapsed>
 		<relation-collapsed>false</relation-collapsed>
 		<basic-collapsed>false</basic-collapsed>
@@ -136,7 +169,7 @@
 		<entity-width>120</entity-width>
 		<entity-height>168</entity-height>
 		<entity-X-Coordinate>1070</entity-X-Coordinate>
-		<entity-Y-Coordinate>754</entity-Y-Coordinate>
+		<entity-Y-Coordinate>1250</entity-Y-Coordinate>
 		<primary-collapsed>false</primary-collapsed>
 		<relation-collapsed>false</relation-collapsed>
 		<basic-collapsed>false</basic-collapsed>
@@ -147,7 +180,7 @@
 		<entity-width>120</entity-width>
 		<entity-height>488</entity-height>
 		<entity-X-Coordinate>1070</entity-X-Coordinate>
-		<entity-Y-Coordinate>51</entity-Y-Coordinate>
+		<entity-Y-Coordinate>52</entity-Y-Coordinate>
 		<primary-collapsed>false</primary-collapsed>
 		<relation-collapsed>false</relation-collapsed>
 		<basic-collapsed>false</basic-collapsed>
@@ -158,7 +191,7 @@
 		<entity-width>120</entity-width>
 		<entity-height>188</entity-height>
 		<entity-X-Coordinate>1070</entity-X-Coordinate>
-		<entity-Y-Coordinate>555</entity-Y-Coordinate>
+		<entity-Y-Coordinate>1046</entity-Y-Coordinate>
 		<primary-collapsed>false</primary-collapsed>
 		<relation-collapsed>false</relation-collapsed>
 		<basic-collapsed>false</basic-collapsed>
@@ -167,9 +200,9 @@
 	<entity>
 		<entity-name>vwg.skoda.cocafopl.entity.PredstavitelKalkulace</entity-name>
 		<entity-width>176</entity-width>
-		<entity-height>246</entity-height>
-		<entity-X-Coordinate>198</entity-X-Coordinate>
-		<entity-Y-Coordinate>447</entity-Y-Coordinate>
+		<entity-height>266</entity-height>
+		<entity-X-Coordinate>223</entity-X-Coordinate>
+		<entity-Y-Coordinate>460</entity-Y-Coordinate>
 		<primary-collapsed>false</primary-collapsed>
 		<relation-collapsed>false</relation-collapsed>
 		<basic-collapsed>false</basic-collapsed>
@@ -191,7 +224,7 @@
 		<entity-width>120</entity-width>
 		<entity-height>268</entity-height>
 		<entity-X-Coordinate>920</entity-X-Coordinate>
-		<entity-Y-Coordinate>580</entity-Y-Coordinate>
+		<entity-Y-Coordinate>601</entity-Y-Coordinate>
 		<primary-collapsed>false</primary-collapsed>
 		<relation-collapsed>false</relation-collapsed>
 		<basic-collapsed>false</basic-collapsed>
@@ -200,9 +233,9 @@
 	<entity>
 		<entity-name>vwg.skoda.cocafopl.entity.ArchKusovnik</entity-name>
 		<entity-width>120</entity-width>
-		<entity-height>506</entity-height>
-		<entity-X-Coordinate>780</entity-X-Coordinate>
-		<entity-Y-Coordinate>1393</entity-Y-Coordinate>
+		<entity-height>526</entity-height>
+		<entity-X-Coordinate>774</entity-X-Coordinate>
+		<entity-Y-Coordinate>1400</entity-Y-Coordinate>
 		<primary-collapsed>false</primary-collapsed>
 		<relation-collapsed>false</relation-collapsed>
 		<basic-collapsed>false</basic-collapsed>
@@ -213,7 +246,7 @@
 		<entity-width>120</entity-width>
 		<entity-height>566</entity-height>
 		<entity-X-Coordinate>609</entity-X-Coordinate>
-		<entity-Y-Coordinate>880</entity-Y-Coordinate>
+		<entity-Y-Coordinate>855</entity-Y-Coordinate>
 		<primary-collapsed>false</primary-collapsed>
 		<relation-collapsed>false</relation-collapsed>
 		<basic-collapsed>false</basic-collapsed>
@@ -225,6 +258,17 @@
 		<entity-height>226</entity-height>
 		<entity-X-Coordinate>437</entity-X-Coordinate>
 		<entity-Y-Coordinate>971</entity-Y-Coordinate>
+		<primary-collapsed>false</primary-collapsed>
+		<relation-collapsed>false</relation-collapsed>
+		<basic-collapsed>false</basic-collapsed>
+	</entity>
+
+	<entity>
+		<entity-name>vwg.skoda.cocafopl.entity.MtKalkulaceView</entity-name>
+		<entity-width>120</entity-width>
+		<entity-height>388</entity-height>
+		<entity-X-Coordinate>604</entity-X-Coordinate>
+		<entity-Y-Coordinate>46</entity-Y-Coordinate>
 		<primary-collapsed>false</primary-collapsed>
 		<relation-collapsed>false</relation-collapsed>
 		<basic-collapsed>false</basic-collapsed>
@@ -245,8 +289,8 @@
 		<entity-name>vwg.skoda.cocafopl.entity.MessageException</entity-name>
 		<entity-width>140</entity-width>
 		<entity-height>168</entity-height>
-		<entity-X-Coordinate>920</entity-X-Coordinate>
-		<entity-Y-Coordinate>400</entity-Y-Coordinate>
+		<entity-X-Coordinate>1060</entity-X-Coordinate>
+		<entity-Y-Coordinate>569</entity-Y-Coordinate>
 		<primary-collapsed>false</primary-collapsed>
 		<relation-collapsed>false</relation-collapsed>
 		<basic-collapsed>false</basic-collapsed>
@@ -255,7 +299,7 @@
 	<entity>
 		<entity-name>vwg.skoda.cocafopl.entity.ArchKalkulace</entity-name>
 		<entity-width>120</entity-width>
-		<entity-height>346</entity-height>
+		<entity-height>326</entity-height>
 		<entity-X-Coordinate>437</entity-X-Coordinate>
 		<entity-Y-Coordinate>1241</entity-Y-Coordinate>
 		<primary-collapsed>false</primary-collapsed>
@@ -267,8 +311,8 @@
 		<entity-name>vwg.skoda.cocafopl.entity.KalkulaceMtZavod</entity-name>
 		<entity-width>131</entity-width>
 		<entity-height>168</entity-height>
-		<entity-X-Coordinate>924</entity-X-Coordinate>
-		<entity-Y-Coordinate>51</entity-Y-Coordinate>
+		<entity-X-Coordinate>598</entity-X-Coordinate>
+		<entity-Y-Coordinate>465</entity-Y-Coordinate>
 		<primary-collapsed>false</primary-collapsed>
 		<relation-collapsed>false</relation-collapsed>
 		<basic-collapsed>false</basic-collapsed>
@@ -300,19 +344,8 @@
 		<entity-name>vwg.skoda.cocafopl.entity.MvPopis</entity-name>
 		<entity-width>120</entity-width>
 		<entity-height>426</entity-height>
-		<entity-X-Coordinate>600</entity-X-Coordinate>
-		<entity-Y-Coordinate>51</entity-Y-Coordinate>
-		<primary-collapsed>false</primary-collapsed>
-		<relation-collapsed>false</relation-collapsed>
-		<basic-collapsed>false</basic-collapsed>
-	</entity>
-
-	<entity>
-		<entity-name>vwg.skoda.cocafopl.entity.PrView</entity-name>
-		<entity-width>120</entity-width>
-		<entity-height>268</entity-height>
-		<entity-X-Coordinate>1070</entity-X-Coordinate>
-		<entity-Y-Coordinate>934</entity-Y-Coordinate>
+		<entity-X-Coordinate>757</entity-X-Coordinate>
+		<entity-Y-Coordinate>49</entity-Y-Coordinate>
 		<primary-collapsed>false</primary-collapsed>
 		<relation-collapsed>false</relation-collapsed>
 		<basic-collapsed>false</basic-collapsed>

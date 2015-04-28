@@ -110,9 +110,9 @@
 							<col width="45px" />
 
 							<col width="120px" />
+							<col width="125px" />
+							<col width="65px" />
 							<col width="120px" />
-							<col width="100px" />
-							<col width="85px" />
 							<col width="50px" />
 
 							<col width="*" />

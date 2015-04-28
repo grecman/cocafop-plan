@@ -32,11 +32,6 @@ public class Offline implements Serializable {
 
 	private String status;
 
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date utime;
-
-	private String uuser;
-
 	private String uzivatel;
 
 	public Offline() {
@@ -96,22 +91,6 @@ public class Offline implements Serializable {
 
 	public void setStatus(String status) {
 		this.status = status;
-	}
-
-	public Date getUtime() {
-		return this.utime;
-	}
-
-	public void setUtime(Date utime) {
-		this.utime = utime;
-	}
-
-	public String getUuser() {
-		return this.uuser;
-	}
-
-	public void setUuser(String uuser) {
-		this.uuser = uuser;
 	}
 
 	public String getUzivatel() {

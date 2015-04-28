@@ -60,6 +60,9 @@
 							<TD style="width: 170px; height: 30px; font-weight: bold;">Kalkulační datum</TD>
 							<TD><form:input path="kalkulacniDatum" id="kalkulacniDatum" value="${kalkulaceInput.kalkulacniDatum}" class="textovePole" cssStyle="width:80px"></form:input></TD>
 						</TR>
+						<TR style="height: 40px;">
+							<TD colspan="2"><SPAN style="color: red; font-weight: bold;">!&#160;</SPAN><SPAN style="font-size: x-small; color: gray;"> Po uložení bude u všech představitelů dané kalkulace smazán stávající PR popis.</SPAN></TD>
+						</TR>
 					</TABLE>
 				</form:form>
 				<BR />

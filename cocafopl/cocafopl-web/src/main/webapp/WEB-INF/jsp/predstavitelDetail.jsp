@@ -157,7 +157,7 @@
 							</td>
 						</tr>
 						<tr>
-							<td style="background-color: white; font-family: monospace;" colspan="7"><c:forEach items="${pp}" var="i">
+							<td style="background-color: white; font-family: monospace;" colspan="7"><c:forEach items="${prPodminky}" var="i">
 									<c:choose>
 										<c:when test="${empty i.prEditovane}">
 											<a href="${pageContext.servletContext.contextPath}/srv/predstavitel/detailPr/${pk.id}/${i.pr}" class="popup">
@@ -177,7 +177,7 @@
 							<td>PR popis korigovaný</td>
 						</tr>
 						<tr>
-							<td style="background-color: white; font-family: monospace;" colspan="7"><c:forEach items="${pp}" var="i">
+							<td style="background-color: white; font-family: monospace;" colspan="7"><c:forEach items="${prPodminky}" var="i">
 									<c:choose>
 										<c:when test="${(empty i.prEditovane)}">
 											<a href="${pageContext.servletContext.contextPath}/srv/predstavitel/detailPr/${pk.id}/${i.pr}" class="popup">
@@ -195,18 +195,22 @@
 						<tr style="height: 10px;" />
 						<tr>
 							<td>Chyby MBV/FAVAS</td>
+							<td />
+							<td />
+							<td />
+							<td align="right" colspan="3" style="font-size: xx-small; color: grey;" title="${prMessageException}">Chyby MBV/FAVAS nadefinované ve vyjímkách.</td>
 						</tr>
 						<tr>
-							<td style="background-color: white; font-family: monospace;" colspan="7"><c:forEach items="${pm}" var="i">
+							<td style="background-color: white; font-family: monospace;" colspan="7"><c:forEach items="${prMessage}" var="i">
 									<div class="boxPR" style="display: inline-block; padding-right: 7px; padding-bottom: 1px;">${i.kod}-${i.text}</div>
 								</c:forEach></td>
 						</tr>
 					</c:if>
 				</table>
-				<BR />
+				<BR /><DIV style="color: red; font-weight: bold;">${errorMesage}</DIV>
 				<div class="formBar">
 					<span>
-						<a href="${pageContext.servletContext.contextPath}/srv/predstavitel/detail/komunikaceFavas/0/${pk.id}">
+						<a href="${pageContext.servletContext.contextPath}/srv/komunikaceFavas/0/${pk.id}/vse">
 							<input type="button" value="Prověřit MBV/Favas" class="heroBtn" style="width: auto;"></input>
 						</a>
 					</span>

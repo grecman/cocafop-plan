@@ -2,8 +2,7 @@ package vwg.skoda.cocafopl.controller;
 
 import java.net.UnknownHostException;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Date;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -15,8 +14,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import vwg.skoda.cocafopl.entity.Offline;
 import vwg.skoda.cocafopl.entity.User;
-import vwg.skoda.cocafopl.obj.OfflineObj;
+import vwg.skoda.cocafopl.service.OfflineService;
 import vwg.skoda.cocafopl.service.UserService;
 
 @Controller
@@ -27,6 +27,9 @@ public class OfflineController {
 	
 	@Autowired
 	private UserService serviceUser;
+	
+	@Autowired
+	private OfflineService serviceOffline;
 
 	@RequestMapping
 	public String offline(Model model, HttpSession session, HttpServletRequest req, HttpServletResponse res) throws SQLException, UnknownHostException {
@@ -39,36 +42,8 @@ public class OfflineController {
 			return "redirect:/srv/monitoring/serviceDesk";
 		}  
 
-		ArrayList<OfflineObj> offlineObj = new ArrayList<OfflineObj>();
-		
-		OfflineObj g2 = new OfflineObj();
-		g2.setUser(req.getUserPrincipal().getName().toUpperCase());
-		g2.setCasZadani(new Date());
-		g2.setCasSpusteni(null);
-		g2.setCasUkonceni(null);
-		g2.setPopis("Komunikace FAVAS pro MT: 5J");
-		g2.setStatus("Ve vrontě");
-		offlineObj.add(g2);
-
-		OfflineObj g = new OfflineObj();
-		g.setUser(req.getUserPrincipal().getName().toUpperCase());
-		g.setCasZadani(new Date());
-		g.setCasSpusteni(new Date());
-		g.setCasUkonceni(null);
-		g.setPopis("Komunikace FAVAS pro MT: 5E, KG");
-		g.setStatus("V procesu");
-		offlineObj.add(g);
-	
-		OfflineObj g1 = new OfflineObj();
-		g1.setUser(req.getUserPrincipal().getName().toUpperCase());
-		g1.setCasZadani(new Date());
-		g1.setCasSpusteni(new Date());
-		g1.setCasUkonceni(new Date());
-		g1.setPopis("Komunikace FAVAS pro MT: 3T");
-		g1.setStatus("HOTOVO");
-		offlineObj.add(g1);
-
-		model.addAttribute("off", offlineObj);
+		List<Offline> offlineList = serviceOffline.getOffline();
+		model.addAttribute("off", offlineList);
 
 		return "/offline";
 	}

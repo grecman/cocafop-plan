@@ -12,7 +12,7 @@ public class PredstavitelPr implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@SequenceGenerator(name="GZ39T_PREDSTAVITEL_PR_ID_GENERATOR", sequenceName="COCAFOPPL.HIBERNATE_SEQUENCE")
+	@SequenceGenerator(name="GZ39T_PREDSTAVITEL_PR_ID_GENERATOR", sequenceName="COCAFOPPL.HIBERNATE_SEQUENCE_PR")
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="GZ39T_PREDSTAVITEL_PR_ID_GENERATOR")
 	private long id;
 

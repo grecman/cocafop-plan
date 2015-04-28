@@ -14,10 +14,38 @@
 
 <script>
 	$(document).ready(function() {
-		$("#tableActiveRow").on('click', 'tr', function() {
+
+		$('#tableId').dataTable({
+			"paging":   true,
+	        "ordering": true,
+	        "order": [[ 2, "desc" ]],
+	        "info":     true,
+	        "bFilter":  true,
+			"iDisplayLength": 25,
+			"language": {
+					// datatables.net/reference/option/language
+		            "lengthMenu": "&#160;Zobrazit _MENU_ řádků na stránce.",
+		            "info": "&#160;Stránka: _PAGE_/_PAGES_, načteno _TOTAL_ záznamů.",
+		            "infoEmpty": "Nenalezeny žádné záznamy.",
+		            "infoFiltered": "&#160;(filtr: _TOTAL_ / _MAX_)",
+		            "loadingRecords": "Nahrávám...",
+		            "processing":     "Pracuji...",
+		            "search":         "Vyhledat:",
+		            "zeroRecords":    "Nebyly nalezeny žádné záznamy.",
+		            "paginate": {
+		                "first":      "První",
+		                "last":       "Poslední",
+		                "next":       "Další",
+		                "previous":   "Předcházející"
+		            }
+		        }
+		});
+
+		$("#tableId").on('click', 'tr', function() {
 			$(this).addClass('selectedTableRow').siblings().removeClass('selectedTableRow');
 		});
 	});
+
 </script>
 
 </head>
@@ -31,16 +59,18 @@
 		<div class="pageBody">
 			<div class="mainAreaWide">
 				<div class="tableContainer">
-					<table class="dataTable" id="tableActiveRow">
-						<col width="100px" />
-						<col width="170px" />
-						<col width="170px" />
-						<col width="170px" />
+					<table class="dataTable"  id="tableId">
+						<col width="80px" />
+						<col width="180px" />
+						<col width="160px" />
+						<col width="160px" />
+						<col width="160px" />
 						<col width="*" />
 						<col width="100px" />
 						<thead>
 							<tr>
 								<th>User</th>
+								<th>Agenda</th>
 								<th>Čas zadání</th>
 								<th>Čas spuštění</th>
 								<th>Čas ukonční</th>
@@ -51,7 +81,8 @@
 						<tbody>
 							<c:forEach items="${off}" var="off">
 								<tr>
-									<td>${off.user}</td>
+									<td>${off.uzivatel}</td>
+									<td>${off.agenda}</td>
 									<td><f:formatDate value="${off.casZadani}" pattern="yyyy-MM-dd HH:mm:ss" /></td>
 									<td><f:formatDate value="${off.casSpusteni}" pattern="yyyy-MM-dd HH:mm:ss" /></td>
 									<td><f:formatDate value="${off.casUkonceni}" pattern="yyyy-MM-dd HH:mm:ss" /></td>

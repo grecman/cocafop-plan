@@ -4,24 +4,18 @@ import java.io.Serializable;
 
 import javax.persistence.*;
 
+
+/**
+ * The persistent class for the GZ40T_KALKCD database table.
+ * 
+ */
 @Entity
 @Table(name="GZ40T_KALKCD", schema="COCAFOPPL_ARCH")
 public class ArchKalkcd implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	@Id
-	@SequenceGenerator(name="GZ40T_KALKCD_ID_GENERATOR", sequenceName="HIBERNATE_SEQUENCE")
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="GZ40T_KALKCD_ID_GENERATOR")
-	private long id;
-
-	private String cdilu;
-
-	@Column(name="CISLO_PRED")
-	private int cisloPred;
-
-	private String cizav;
-
-	private int kalkulace;
+	@EmbeddedId
+	private ArchKalkcdPK id;
 
 	private int kalvar;
 
@@ -41,62 +35,23 @@ public class ArchKalkcd implements Serializable {
 
 	private float matsbce;
 
-	@Column(name="MODEL_TR")
-	private String modelTr;
 
-	private String prpoz;
-
-	private int terka;
-
-	private String verze;
-
-	private String zavod;
-	
 	@ManyToOne
-	@JoinColumn(name="ID_PREDSTAVITEL")
-	private ArchPredstavitel archPredstavitel;
+	@JoinColumns({ @JoinColumn(name = "kalkulace", referencedColumnName = "kalkulace", updatable = false, insertable = false),
+			@JoinColumn(name = "model_Tr", referencedColumnName = "model_tr", updatable = false, insertable = false),
+			@JoinColumn(name = "zavod", referencedColumnName = "zavod", updatable = false, insertable = false),
+			@JoinColumn(name = "cislo_Pred", referencedColumnName = "cislo_pred", updatable = false, insertable = false) })
+	ArchPredstavitel archPredstavitel;
 
 	public ArchKalkcd() {
 	}
 
-	public long getId() {
+	public ArchKalkcdPK getId() {
 		return this.id;
 	}
 
-	public void setId(long id) {
+	public void setId(ArchKalkcdPK id) {
 		this.id = id;
-	}
-
-	public String getCdilu() {
-		return this.cdilu;
-	}
-
-	public void setCdilu(String cdilu) {
-		this.cdilu = cdilu;
-	}
-
-	public int getCisloPred() {
-		return this.cisloPred;
-	}
-
-	public void setCisloPred(int cisloPred) {
-		this.cisloPred = cisloPred;
-	}
-
-	public String getCizav() {
-		return this.cizav;
-	}
-
-	public void setCizav(String cizav) {
-		this.cizav = cizav;
-	}
-
-	public int getKalkulace() {
-		return this.kalkulace;
-	}
-
-	public void setKalkulace(int kalkulace) {
-		this.kalkulace = kalkulace;
 	}
 
 	public int getKalvar() {
@@ -171,44 +126,5 @@ public class ArchKalkcd implements Serializable {
 		this.matsbce = matsbce;
 	}
 
-	public String getModelTr() {
-		return this.modelTr;
-	}
-
-	public void setModelTr(String modelTr) {
-		this.modelTr = modelTr;
-	}
-
-	public String getPrpoz() {
-		return this.prpoz;
-	}
-
-	public void setPrpoz(String prpoz) {
-		this.prpoz = prpoz;
-	}
-
-	public int getTerka() {
-		return this.terka;
-	}
-
-	public void setTerka(int terka) {
-		this.terka = terka;
-	}
-
-	public String getVerze() {
-		return this.verze;
-	}
-
-	public void setVerze(String verze) {
-		this.verze = verze;
-	}
-
-	public String getZavod() {
-		return this.zavod;
-	}
-
-	public void setZavod(String zavod) {
-		this.zavod = zavod;
-	}
 
 }

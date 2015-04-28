@@ -14,9 +14,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import vwg.skoda.cocafopl.entity.ArchKalkulace;
+import vwg.skoda.cocafopl.entity.ArchKalkulaceView;
 import vwg.skoda.cocafopl.entity.User;
-import vwg.skoda.cocafopl.service.ArchKalkulaceService;
+import vwg.skoda.cocafopl.service.ArchKalkulaceViewService;
 import vwg.skoda.cocafopl.service.UserService;
 
 @Controller
@@ -29,7 +29,7 @@ public class ArchivController {
 	private UserService serviceUser;
 	
 	@Autowired
-	private ArchKalkulaceService serviceArchKalkuace;
+	private ArchKalkulaceViewService serviceArchKalkuaceView;
 	
 	@RequestMapping("/kalkulace")
 	public String archivKalkulace(Model model, HttpServletRequest req, HttpServletResponse res, HttpSession session) throws SQLException, UnknownHostException {
@@ -45,8 +45,7 @@ public class ArchivController {
 			return "redirect:/srv/monitoring/logging";
 		}
 		
-		List<ArchKalkulace> ak = serviceArchKalkuace.getArchKalkulaceAll();
-		// TODO: ... toto asi nepujde, pac zase potrebuji mit v jednom rakdu seznam MT-zavod ... a nejlepe tady po jednotlivych letech!
+		List<ArchKalkulaceView> ak = serviceArchKalkuaceView.getArchKalkulaceViewAll();
 		model.addAttribute("archKalkulace", ak);
 		
 		return "/archivKalkulace";

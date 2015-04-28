@@ -19,8 +19,8 @@
 			"paging" : true,
 			"iDisplayLength" : 25,
 			"ordering" : true,
-			"order": [[ 1, "desc" ]],
-			"info" : true,
+			"order": [[ 0, "desc" ]],
+			"info" : false,
 			"bFilter" : true,
 			"language" : {
 				// datatables.net/reference/option/language
@@ -80,7 +80,6 @@
 						<col width="100px" />
 						<thead>
 							<tr>
-								<th style="display: none;">Id</th>
 								<th>Kalkulace</th>
 								<th>Modelové třídy a závody</th>
 								<th>Kalkulační datum</th>
@@ -92,9 +91,8 @@
 						<tbody>
 							<c:forEach items="${archKalkulace}" var="i">
 								<tr>
-									<td align="center" style="display: none;">${i.id}</td>
 									<td align="center" title="TERKA:${i.terka} TERKACH:${i.terkach}">${i.kalkulace}</td>
-									<td align="left">dodělat !!! asi zase přes nějaké view</td>
+									<td align="left">${i.modZav}</td>
 									<td align="center">${i.kalkulacniDatum}</td>
 									<td align="center"><f:formatDate value="${i.posledniVypocet}" pattern="yyyy-MM-dd HH:mm" /></td>
 									<td align="center"><f:formatDate value="${i.schvaleno}" pattern="yyyy-MM-dd HH:mm" /></td>

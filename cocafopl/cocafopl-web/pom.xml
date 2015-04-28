@@ -1,9 +1,8 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>cocafopl-web</artifactId>
+	<groupId>vwg.skoda.cocafopl-web</groupId>
 	<packaging>war</packaging>
-
 
 	<parent>
 		<groupId>vwg.skoda.cocafopl</groupId>
@@ -34,8 +33,6 @@
 			<scope>provided</scope>
 		</dependency>
 
-		<!-- View Dependencies -->
-
 		<dependency>
 			<groupId>jstl</groupId>
 			<artifactId>jstl</artifactId>
@@ -50,31 +47,18 @@
 
 	</dependencies>
 
-<!-- 
 	<build>
 		<plugins>
 			<plugin>
-				<groupId>vwg.skoda.coin.maven.git</groupId>
-				<artifactId>gitinfo-maven-plugin</artifactId>
-				<version>1.0</version>
-				<executions>
-					<execution>
-						<phase>compile</phase>
-						<goals>
-							<goal>gitinfo</goal>
-						</goals>
-					</execution>
-				</executions>
+				<artifactId>maven-war-plugin</artifactId>
+				<version>2.4</version>
+				
 				<configuration>
-					<repository>${basedir}/..</repository>
-					<path>
-						<includes>
-							<include>cocafopl-web</include>
-						</includes>
-					</path>
+						<manifest><addClasspath>true</addClasspath></manifest>
+				
+					<failOnMissingWebXml>false</failOnMissingWebXml>
 				</configuration>
 			</plugin>
 		</plugins>
 	</build>
- -->
 </project>

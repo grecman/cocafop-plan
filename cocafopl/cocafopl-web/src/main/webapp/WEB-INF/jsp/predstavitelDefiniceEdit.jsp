@@ -171,7 +171,10 @@
 							<TD colspan="2"><SPAN style="color: red; font-weight: bold;">*</SPAN><SPAN style="font-size: x-small; color: gray;"> povinný údaj</SPAN></TD>
 						</TR>
 						<TR>
-							<TD colspan="2"><SPAN style="color: red; font-weight: bold;">!</SPAN><SPAN style="font-size: x-small; color: gray;"> Modelový klíč a kód země musí být unikátní, pokud toto nebude splněno, tak formulář nebude uložen!</SPAN></TD>
+							<TD colspan="2"><SPAN style="color: red; font-weight: bold;">!&#160;</SPAN><SPAN style="font-size: x-small; color: gray;"> Modelový klíč a kód země musí být unikátní, pokud toto nebude splněno, tak formulář nebude uložen!</SPAN></TD>
+						</TR>
+						<TR>
+							<TD colspan="2"><SPAN style="color: red; font-weight: bold;">!&#160;</SPAN><SPAN style="font-size: x-small; color: gray;"> V případě editace modelového klíče nebo kódu země, budou následně smazány všechny stávající PR čísla k vybranému představiteli ve všech aktivních kalkulacích.</SPAN></TD>
 						</TR>
 					</TABLE>
 				</form:form>

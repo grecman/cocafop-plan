@@ -9,11 +9,7 @@
 
 <jsp:include page="lib.jsp" />
 
-
-
 <title>COCAFOP-Plan</title>
-
-
 <script>
 	$(document).ready(function() {
 

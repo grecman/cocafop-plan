@@ -1,84 +1,89 @@
 package vwg.skoda.cocafopl.entity;
 
 import java.io.Serializable;
-
 import javax.persistence.*;
+import java.math.BigDecimal;
 
+
+/**
+ * The persistent class for the GZ40T_CENIK_SAP database table.
+ * 
+ */
 @Entity
-@Table(name="GZ40T_CENIK_SAP", schema="COCAFOPPL_ARCH")
+@Table(name="GZ40T_CENIK", schema="COCAFOPPL_ARCH")
 public class ArchCenikSap implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@SequenceGenerator(name="GZ40T_CENIK_SAP_ID_GENERATOR", sequenceName="HIBERNATE_SEQUENCE")
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="GZ40T_CENIK_SAP_ID_GENERATOR")
+//	@SequenceGenerator(name="GZ40T_CENIK_SAP_ID_GENERATOR", sequenceName="COCAFOPPL_ARCH.HIBERNATE_SEQUENCE")
+//	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="GZ40T_CENIK_SAP_ID_GENERATOR")
 	private long id;
 
 	private String cdilu;
 
-	private float ceniak;
+	private BigDecimal ceniak;
 
-	private float ceniake;
+	private BigDecimal ceniake;
 
-	private float cenias;
+	private BigDecimal cenias;
 
-	private float ceniase;
+	private BigDecimal ceniase;
 
-	private float cenibk;
+	private BigDecimal cenibk;
 
-	private float cenibke;
+	private BigDecimal cenibke;
 
-	private float cenibs;
+	private BigDecimal cenibs;
 
-	private float cenibse;
+	private BigDecimal cenibse;
 
-	private float cenmak;
+	private BigDecimal cenmak;
 
-	private float cenmake;
+	private BigDecimal cenmake;
 
-	private float cenmas;
+	private BigDecimal cenmas;
 
-	private float cenmase;
+	private BigDecimal cenmase;
 
-	private float cenmbk;
+	private BigDecimal cenmbk;
 
-	private float cenmbke;
+	private BigDecimal cenmbke;
 
-	private float cenmbs;
+	private BigDecimal cenmbs;
 
-	private float cenmbse;
+	private BigDecimal cenmbse;
 
-	private float censak;
+	private BigDecimal censak;
 
-	private float censake;
+	private BigDecimal censake;
 
-	private float censas;
+	private BigDecimal censas;
 
-	private float censase;
+	private BigDecimal censase;
 
-	private float censbk;
+	private BigDecimal censbk;
 
-	private float censbke;
+	private BigDecimal censbke;
 
-	private float censbs;
+	private BigDecimal censbs;
 
-	private float censbse;
+	private BigDecimal censbse;
 
-	private float cenzak;
+	private BigDecimal cenzak;
 
-	private float cenzake;
+	private BigDecimal cenzake;
 
-	private float cenzas;
+	private BigDecimal cenzas;
 
-	private float cenzase;
+	private BigDecimal cenzase;
 
-	private float cenzbk;
+	private BigDecimal cenzbk;
 
-	private float cenzbke;
+	private BigDecimal cenzbke;
 
-	private float cenzbs;
+	private BigDecimal cenzbs;
 
-	private float cenzbse;
+	private BigDecimal cenzbse;
 
 	private String cizav;
 
@@ -114,20 +119,21 @@ public class ArchCenikSap implements Serializable {
 	private String sapNazev;
 
 	@Column(name="SAP_PEINH")
-	private int sapPeinh;
+	private BigDecimal sapPeinh;
 
 	@Column(name="SAP_POCRS")
-	private int sapPocrs;
+	private BigDecimal sapPocrs;
 
 	@Column(name="UPDATE_DATE")
 	private String updateDate;
 
 	@Column(name="UPDATE_USER")
 	private String updateUser;
-	
+
+	//bi-directional many-to-one association to ArchKalkulace
 	@ManyToOne
-	@JoinColumn(name="kalkulace")
-	private ArchKalkulace archKalkulace;
+	@JoinColumn(name="KALKULACE")
+	private ArchKalkulace gz40tKalkulace;
 
 	public ArchCenikSap() {
 	}
@@ -148,259 +154,259 @@ public class ArchCenikSap implements Serializable {
 		this.cdilu = cdilu;
 	}
 
-	public float getCeniak() {
-		return ceniak;
+	public BigDecimal getCeniak() {
+		return this.ceniak;
 	}
 
-	public float getCeniake() {
-		return ceniake;
-	}
-
-	public float getCenias() {
-		return cenias;
-	}
-
-	public float getCeniase() {
-		return ceniase;
-	}
-
-	public float getCenibk() {
-		return cenibk;
-	}
-
-	public float getCenibke() {
-		return cenibke;
-	}
-
-	public float getCenibs() {
-		return cenibs;
-	}
-
-	public float getCenibse() {
-		return cenibse;
-	}
-
-	public float getCenmak() {
-		return cenmak;
-	}
-
-	public float getCenmake() {
-		return cenmake;
-	}
-
-	public float getCenmas() {
-		return cenmas;
-	}
-
-	public float getCenmase() {
-		return cenmase;
-	}
-
-	public float getCenmbk() {
-		return cenmbk;
-	}
-
-	public float getCenmbke() {
-		return cenmbke;
-	}
-
-	public float getCenmbs() {
-		return cenmbs;
-	}
-
-	public float getCenmbse() {
-		return cenmbse;
-	}
-
-	public float getCensak() {
-		return censak;
-	}
-
-	public float getCensake() {
-		return censake;
-	}
-
-	public float getCensas() {
-		return censas;
-	}
-
-	public float getCensase() {
-		return censase;
-	}
-
-	public float getCensbk() {
-		return censbk;
-	}
-
-	public float getCensbke() {
-		return censbke;
-	}
-
-	public float getCensbs() {
-		return censbs;
-	}
-
-	public float getCensbse() {
-		return censbse;
-	}
-
-	public float getCenzak() {
-		return cenzak;
-	}
-
-	public float getCenzake() {
-		return cenzake;
-	}
-
-	public float getCenzas() {
-		return cenzas;
-	}
-
-	public float getCenzase() {
-		return cenzase;
-	}
-
-	public float getCenzbk() {
-		return cenzbk;
-	}
-
-	public float getCenzbke() {
-		return cenzbke;
-	}
-
-	public float getCenzbs() {
-		return cenzbs;
-	}
-
-	public float getCenzbse() {
-		return cenzbse;
-	}
-
-	public void setCeniak(float ceniak) {
+	public void setCeniak(BigDecimal ceniak) {
 		this.ceniak = ceniak;
 	}
 
-	public void setCeniake(float ceniake) {
+	public BigDecimal getCeniake() {
+		return this.ceniake;
+	}
+
+	public void setCeniake(BigDecimal ceniake) {
 		this.ceniake = ceniake;
 	}
 
-	public void setCenias(float cenias) {
+	public BigDecimal getCenias() {
+		return this.cenias;
+	}
+
+	public void setCenias(BigDecimal cenias) {
 		this.cenias = cenias;
 	}
 
-	public void setCeniase(float ceniase) {
+	public BigDecimal getCeniase() {
+		return this.ceniase;
+	}
+
+	public void setCeniase(BigDecimal ceniase) {
 		this.ceniase = ceniase;
 	}
 
-	public void setCenibk(float cenibk) {
+	public BigDecimal getCenibk() {
+		return this.cenibk;
+	}
+
+	public void setCenibk(BigDecimal cenibk) {
 		this.cenibk = cenibk;
 	}
 
-	public void setCenibke(float cenibke) {
+	public BigDecimal getCenibke() {
+		return this.cenibke;
+	}
+
+	public void setCenibke(BigDecimal cenibke) {
 		this.cenibke = cenibke;
 	}
 
-	public void setCenibs(float cenibs) {
+	public BigDecimal getCenibs() {
+		return this.cenibs;
+	}
+
+	public void setCenibs(BigDecimal cenibs) {
 		this.cenibs = cenibs;
 	}
 
-	public void setCenibse(float cenibse) {
+	public BigDecimal getCenibse() {
+		return this.cenibse;
+	}
+
+	public void setCenibse(BigDecimal cenibse) {
 		this.cenibse = cenibse;
 	}
 
-	public void setCenmak(float cenmak) {
+	public BigDecimal getCenmak() {
+		return this.cenmak;
+	}
+
+	public void setCenmak(BigDecimal cenmak) {
 		this.cenmak = cenmak;
 	}
 
-	public void setCenmake(float cenmake) {
+	public BigDecimal getCenmake() {
+		return this.cenmake;
+	}
+
+	public void setCenmake(BigDecimal cenmake) {
 		this.cenmake = cenmake;
 	}
 
-	public void setCenmas(float cenmas) {
+	public BigDecimal getCenmas() {
+		return this.cenmas;
+	}
+
+	public void setCenmas(BigDecimal cenmas) {
 		this.cenmas = cenmas;
 	}
 
-	public void setCenmase(float cenmase) {
+	public BigDecimal getCenmase() {
+		return this.cenmase;
+	}
+
+	public void setCenmase(BigDecimal cenmase) {
 		this.cenmase = cenmase;
 	}
 
-	public void setCenmbk(float cenmbk) {
+	public BigDecimal getCenmbk() {
+		return this.cenmbk;
+	}
+
+	public void setCenmbk(BigDecimal cenmbk) {
 		this.cenmbk = cenmbk;
 	}
 
-	public void setCenmbke(float cenmbke) {
+	public BigDecimal getCenmbke() {
+		return this.cenmbke;
+	}
+
+	public void setCenmbke(BigDecimal cenmbke) {
 		this.cenmbke = cenmbke;
 	}
 
-	public void setCenmbs(float cenmbs) {
+	public BigDecimal getCenmbs() {
+		return this.cenmbs;
+	}
+
+	public void setCenmbs(BigDecimal cenmbs) {
 		this.cenmbs = cenmbs;
 	}
 
-	public void setCenmbse(float cenmbse) {
+	public BigDecimal getCenmbse() {
+		return this.cenmbse;
+	}
+
+	public void setCenmbse(BigDecimal cenmbse) {
 		this.cenmbse = cenmbse;
 	}
 
-	public void setCensak(float censak) {
+	public BigDecimal getCensak() {
+		return this.censak;
+	}
+
+	public void setCensak(BigDecimal censak) {
 		this.censak = censak;
 	}
 
-	public void setCensake(float censake) {
+	public BigDecimal getCensake() {
+		return this.censake;
+	}
+
+	public void setCensake(BigDecimal censake) {
 		this.censake = censake;
 	}
 
-	public void setCensas(float censas) {
+	public BigDecimal getCensas() {
+		return this.censas;
+	}
+
+	public void setCensas(BigDecimal censas) {
 		this.censas = censas;
 	}
 
-	public void setCensase(float censase) {
+	public BigDecimal getCensase() {
+		return this.censase;
+	}
+
+	public void setCensase(BigDecimal censase) {
 		this.censase = censase;
 	}
 
-	public void setCensbk(float censbk) {
+	public BigDecimal getCensbk() {
+		return this.censbk;
+	}
+
+	public void setCensbk(BigDecimal censbk) {
 		this.censbk = censbk;
 	}
 
-	public void setCensbke(float censbke) {
+	public BigDecimal getCensbke() {
+		return this.censbke;
+	}
+
+	public void setCensbke(BigDecimal censbke) {
 		this.censbke = censbke;
 	}
 
-	public void setCensbs(float censbs) {
+	public BigDecimal getCensbs() {
+		return this.censbs;
+	}
+
+	public void setCensbs(BigDecimal censbs) {
 		this.censbs = censbs;
 	}
 
-	public void setCensbse(float censbse) {
+	public BigDecimal getCensbse() {
+		return this.censbse;
+	}
+
+	public void setCensbse(BigDecimal censbse) {
 		this.censbse = censbse;
 	}
 
-	public void setCenzak(float cenzak) {
+	public BigDecimal getCenzak() {
+		return this.cenzak;
+	}
+
+	public void setCenzak(BigDecimal cenzak) {
 		this.cenzak = cenzak;
 	}
 
-	public void setCenzake(float cenzake) {
+	public BigDecimal getCenzake() {
+		return this.cenzake;
+	}
+
+	public void setCenzake(BigDecimal cenzake) {
 		this.cenzake = cenzake;
 	}
 
-	public void setCenzas(float cenzas) {
+	public BigDecimal getCenzas() {
+		return this.cenzas;
+	}
+
+	public void setCenzas(BigDecimal cenzas) {
 		this.cenzas = cenzas;
 	}
 
-	public void setCenzase(float cenzase) {
+	public BigDecimal getCenzase() {
+		return this.cenzase;
+	}
+
+	public void setCenzase(BigDecimal cenzase) {
 		this.cenzase = cenzase;
 	}
 
-	public void setCenzbk(float cenzbk) {
+	public BigDecimal getCenzbk() {
+		return this.cenzbk;
+	}
+
+	public void setCenzbk(BigDecimal cenzbk) {
 		this.cenzbk = cenzbk;
 	}
 
-	public void setCenzbke(float cenzbke) {
+	public BigDecimal getCenzbke() {
+		return this.cenzbke;
+	}
+
+	public void setCenzbke(BigDecimal cenzbke) {
 		this.cenzbke = cenzbke;
 	}
 
-	public void setCenzbs(float cenzbs) {
+	public BigDecimal getCenzbs() {
+		return this.cenzbs;
+	}
+
+	public void setCenzbs(BigDecimal cenzbs) {
 		this.cenzbs = cenzbs;
 	}
 
-	public void setCenzbse(float cenzbse) {
+	public BigDecimal getCenzbse() {
+		return this.cenzbse;
+	}
+
+	public void setCenzbse(BigDecimal cenzbse) {
 		this.cenzbse = cenzbse;
 	}
 
@@ -500,19 +506,19 @@ public class ArchCenikSap implements Serializable {
 		this.sapNazev = sapNazev;
 	}
 
-	public int getSapPeinh() {
+	public BigDecimal getSapPeinh() {
 		return this.sapPeinh;
 	}
 
-	public void setSapPeinh(int sapPeinh) {
+	public void setSapPeinh(BigDecimal sapPeinh) {
 		this.sapPeinh = sapPeinh;
 	}
 
-	public int getSapPocrs() {
+	public BigDecimal getSapPocrs() {
 		return this.sapPocrs;
 	}
 
-	public void setSapPocrs(int sapPocrs) {
+	public void setSapPocrs(BigDecimal sapPocrs) {
 		this.sapPocrs = sapPocrs;
 	}
 
@@ -530,6 +536,14 @@ public class ArchCenikSap implements Serializable {
 
 	public void setUpdateUser(String updateUser) {
 		this.updateUser = updateUser;
+	}
+
+	public ArchKalkulace getGz40tKalkulace() {
+		return this.gz40tKalkulace;
+	}
+
+	public void setGz40tKalkulace(ArchKalkulace gz40tKalkulace) {
+		this.gz40tKalkulace = gz40tKalkulace;
 	}
 
 }

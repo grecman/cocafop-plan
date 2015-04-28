@@ -2,13 +2,10 @@ package vwg.skoda.cocafopl.controller;
 
 import java.net.UnknownHostException;
 import java.sql.SQLException;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -45,10 +42,6 @@ import vwg.skoda.cocafopl.service.PredstavitelPrService;
 import vwg.skoda.cocafopl.service.PredstavitelService;
 import vwg.skoda.cocafopl.service.ProtokolService;
 import vwg.skoda.cocafopl.service.UserService;
-import vwg.skoda.favas.mbv.Equipment;
-import vwg.skoda.favas.mbv.Message;
-import vwg.skoda.favas.mbv.VehicleOrder;
-import vwg.skoda.favas.mbv.VehicleOrder.Favas;
 
 @Controller
 @RequestMapping("/predstavitel")
@@ -203,17 +196,15 @@ public class PredstavitelController {
 			servicePredstavitel.addPredstavitel(pred);
 
 			log.debug("###\t Novy predstavitel - ulozeni posledni editace do MT_KALKULACE.");
-			List<MtKalkulace> mtKalkulace = serviceMtKalkulace.getMtKalkulace(pred.getGz39tMt().getModelTr());
-			for (MtKalkulace mtkx : mtKalkulace) {
-				if (mtkx.getSchvaleno() == null) {
-					mtkx.setPosledniEditace(new Date());
-					mtkx.setPosledniEditaceDuvod("Nový představitel číslo " + p.getCisloPred() + ", " + mt.getModelTr() + p.getModelovyKlic().toUpperCase() + " - " + mt.getZavod());
-					serviceMtKalkulace.setMtKalkulace(mtkx);
-				}
+			List<MtKalkulace> mtKalkulacePoslEdit = serviceMtKalkulace.getMtKalkulace(pred.getGz39tMt().getModelTr());
+			for (MtKalkulace mtkx : mtKalkulacePoslEdit) {
+				mtkx.setPosledniEditace(new Date());
+				mtkx.setPosledniEditaceDuvod("Nový představitel číslo " + p.getCisloPred() + ", " + mt.getModelTr() + p.getModelovyKlic().toUpperCase() + " - " + mt.getZavod());
+				serviceMtKalkulace.setMtKalkulace(mtkx);
 			}
 
-			//Predstavitel prrr = servicePredstavitel.getPredstavitel((String) session.getAttribute("vybranaMt"), p.getCisloPred());
-			//predstavitelKalkulaceSmazani(req, prrr.getId());
+			// Predstavitel prrr = servicePredstavitel.getPredstavitel((String) session.getAttribute("vybranaMt"), p.getCisloPred());
+			// predstavitelKalkulaceSmazani(req, prrr.getId());
 
 		} else {
 			log.debug("###\t\t ... predstavitel se stejnym MK a kodeZeme jiz existuje!");
@@ -265,9 +256,25 @@ public class PredstavitelController {
 
 	@RequestMapping("/definice/editSubmit")
 	public String predstavitelDefiniceRditSubmit(Predstavitel p, Model model, HttpSession session, HttpServletRequest req) throws SQLException, UnknownHostException {
-		log.debug("###\t predstavitelDefiniceEditsubmit(" + p.getCisloPred() + ", " + p.getModelovyKlic() + ", " + p.getKodZeme() + ", " + p.getPlatnostOd() + "-" + p.getPlatnostDo() + ")");
+		log.debug("###\t predstavitelDefiniceEditsubmit(" + p.getId() + ", " + p.getCisloPred() + ", " + p.getModelovyKlic() + ", " + p.getKodZeme() + ", " + p.getPlatnostOd() + "-"
+				+ p.getPlatnostDo() + ")");
 
 		Predstavitel pred = servicePredstavitel.getPredstavitel(p.getId());
+
+		if (!pred.getKodZeme().startsWith(p.getKodZeme().toUpperCase()) || !pred.getModelovyKlic().startsWith(pred.getGz39tMt().getModelTr() + p.getModelovyKlic().toUpperCase())) {
+			log.debug("###\t ...zmenil se modelovy klic nebo kod zeme - mazu PR cisla a PR messages a to pro vsechny aktivni kalkulace.");
+
+			List<PredstavitelKalkulace> pk = servicePredstavitelKalkulace.getPredstaviteleKalkulace(p.getId());
+			for (PredstavitelKalkulace predstavitelKalk : pk) {
+				
+				servicePredstavitelPr.removePredstavitelPrAll(predstavitelKalk.getId());
+				servicePredstavitelMessage.removePredstavitelMessageAll(predstavitelKalk.getId());
+				predstavitelKalk.setExistsPr(null);
+				servicePredstavitelKalkulace.setPredstavitelKalkulace(predstavitelKalk);
+
+			}
+		}
+
 		pred.setCetnost(p.getCetnost());
 		pred.setCisloPred(p.getCisloPred());
 		pred.setCisloPredMin(p.getCisloPredMin());
@@ -288,15 +295,13 @@ public class PredstavitelController {
 		pred.setUuser(req.getUserPrincipal().getName().toUpperCase());
 		servicePredstavitel.setPredstavitel(pred);
 
-		log.debug("###\t Editace predstavitele - ulozeni posledni editace do MT_KALKULACE.");
-		List<MtKalkulace> mtKalkulace = serviceMtKalkulace.getMtKalkulace(pred.getGz39tMt().getModelTr());
-		for (MtKalkulace mtk : mtKalkulace) {
-			if (mtk.getSchvaleno() == null) {
-				mtk.setPosledniEditace(new Date());
-				mtk.setPosledniEditaceDuvod("Editace představitele číslo " + p.getCisloPred() + ", " + mtk.getGz39tMt().getModelTr() + p.getModelovyKlic().toUpperCase() + " - "
-						+ mtk.getGz39tMt().getZavod());
-				serviceMtKalkulace.setMtKalkulace(mtk);
-			}
+		log.debug("###\t  editace predstavitele - ulozeni posledni editace do MT_KALKULACE.");
+		List<MtKalkulace> mtKalkulacePoslEdit = serviceMtKalkulace.getMtKalkulace(pred.getGz39tMt().getModelTr());
+		for (MtKalkulace mtkx : mtKalkulacePoslEdit) {
+			mtkx.setPosledniEditace(new Date());
+			mtkx.setPosledniEditaceDuvod("Editace představitele číslo " + p.getCisloPred() + ", " + mtkx.getGz39tMt().getModelTr() + p.getModelovyKlic().toUpperCase() + " - "
+					+ mtkx.getGz39tMt().getZavod());
+			serviceMtKalkulace.setMtKalkulace(mtkx);
 		}
 
 		predstavitelKalkulaceSmazani(req, pred.getId());
@@ -348,7 +353,6 @@ public class PredstavitelController {
 
 		session.setAttribute("vybranaMt", "");
 		session.setAttribute("vybranyZavod", "");
-		session.setAttribute("kalukaceRRRRMM", "");
 
 		User aktualUser = serviceUser.getUser(req.getUserPrincipal().getName().toUpperCase());
 		if (aktualUser.getUserRole().equals("SERVICEDESK".trim())) {
@@ -358,48 +362,62 @@ public class PredstavitelController {
 			log.debug("###\t Uzivatel s roli ADMINS ->- presmerovavam na prislusnou stranku.");
 			return "redirect:/srv/monitoring/logging";
 		}
-
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMM");
-		Kalkulace kalkulace = serviceKalkulace.getKalkulace(Integer.valueOf(sdf.format(new Date())));
-
-		if (kalkulace == null) {
-			log.debug("###\t Neexistuji zadne kalkulace! Je nutne je nejdrive zadat.");
-			return "redirect:/srv/kalkulace/seznam";
-		}
 		
 		predstavitelKalkulaceVytvoreni(req);
 
-		session.setAttribute("kalukaceRRRRMM", kalkulace.getKalkulace());
-		return "redirect:/srv/predstavitel/seznam/" + kalkulace.getKalkulace();
+		if (session.getAttribute("kalkulaceRRRRMM").toString().isEmpty()) {
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyyMM");
+			Kalkulace kalkulace = serviceKalkulace.getKalkulace(Integer.valueOf(sdf.format(new Date())));
+
+			if (kalkulace == null) {
+				log.debug("###\t Neexistuji zadne kalkulace! Je nutne je nejdrive zadat.");
+				return "redirect:/srv/kalkulace/seznam";
+			}
+			
+			session.setAttribute("kalkulaceRRRRMM", kalkulace.getKalkulace());
+			return "redirect:/srv/predstavitel/seznam/" + kalkulace.getKalkulace();
+		} else {
+			return "redirect:/srv/predstavitel/seznam/" + session.getAttribute("kalkulaceRRRRMM");
+		}
+
 	}
 
-	@RequestMapping("/seznam/{kalukaceRRRRMM}")
-	public String predstavitelSeznamSKalkulaci(@PathVariable int kalukaceRRRRMM, Mt mt, MtKalkulace mtKalkulace, Model model, HttpServletRequest req, HttpSession session) throws SQLException,
+	@RequestMapping("/seznam/{kalkulaceRRRRMM}")
+	public String predstavitelSeznamSKalkulaci(@PathVariable int kalkulaceRRRRMM, Mt mt, MtKalkulace mtKalkulace, Model model, HttpServletRequest req, HttpSession session) throws SQLException,
 			UnknownHostException {
-		log.debug("###\t predstavitelSeznamSKalkulaci(" + session.getAttribute("kalukaceRRRRMM") + ", " + session.getAttribute("vybranaMt") + "-" + session.getAttribute("vybranyZavod") + ")");
+		log.debug("###\t predstavitelSeznamSKalkulaci(" + session.getAttribute("kalkulaceRRRRMM") + ", " + session.getAttribute("vybranaMt") + "-" + session.getAttribute("vybranyZavod") + ")");
 
 		if (session.getAttribute("vybranaMt").toString().isEmpty() && session.getAttribute("vybranyZavod").toString().isEmpty()) {
-			List<MtKalkulace> mtList = serviceMtKalkulace.getMtKalkulace((Integer) session.getAttribute("kalukaceRRRRMM"));
+			List<MtKalkulace> mtList = serviceMtKalkulace.getMtKalkulace((Integer) session.getAttribute("kalkulaceRRRRMM"));
 			model.addAttribute("mtList", mtList);
 		} else {
-			MtKalkulace mtk = serviceMtKalkulace.getMtKalkulace((Integer) session.getAttribute("kalukaceRRRRMM"), session.getAttribute("vybranaMt").toString(), session.getAttribute("vybranyZavod")
+			MtKalkulace mtk = serviceMtKalkulace.getMtKalkulace((Integer) session.getAttribute("kalkulaceRRRRMM"), session.getAttribute("vybranaMt").toString(), session.getAttribute("vybranyZavod")
 					.toString());
 			model.addAttribute("mtk", mtk);
-			// List<PredstavitelKalkulaceView> pkView = servicePredstavitelKalkulaceView.getPredstavitelKalkulaceView((Integer) session.getAttribute("kalukaceRRRRMM"),
-			// session.getAttribute("vybranaMt")
-			// .toString(), session.getAttribute("vybranyZavod").toString());
-			// model.addAttribute("pkView", pkView);
-			List<PredstavitelKalkulace> pk = servicePredstavitelKalkulace.getPredstaviteleKalkulace(session.getAttribute("vybranaMt").toString(), (Integer) session.getAttribute("kalukaceRRRRMM"));
+			List<PredstavitelKalkulace> pk = servicePredstavitelKalkulace.getPredstaviteleKalkulace(session.getAttribute("vybranaMt").toString(), session.getAttribute("vybranyZavod").toString(),
+					(Integer) session.getAttribute("kalkulaceRRRRMM"));
 			model.addAttribute("pk", pk);
 		}
 		return "/predstavitelSeznam";
 	}
 
+	@RequestMapping("/seznam/{kalkulaceRRRRMM}/{modelTr}/{zavod}")
+	public String predstavitelSeznamSKalkulaciPom(@PathVariable int kalkulaceRRRRMM, @PathVariable String modelTr, @PathVariable String zavod, Mt mt, MtKalkulace mtKalkulace, Model model,
+			HttpServletRequest req, HttpSession session) throws SQLException, UnknownHostException {
+		log.debug("###\t predstavitelSeznamSKalkulaciPom(" + kalkulaceRRRRMM + ", " + modelTr + "-" + zavod + ")");
+		// GRE: tuto metodu jsem dodelaval az zpetne, abych mohl skocit primo z tabulky "detail kalkulace" (z barevneho puntiku) na "seznam predstavitelu"
+		session.setAttribute("kalkulaceRRRRMM", kalkulaceRRRRMM);
+		session.setAttribute("vybranaMt", modelTr);
+		session.setAttribute("vybranyZavod", zavod);
+
+		return "redirect:/srv/predstavitel/seznam/" + kalkulaceRRRRMM;
+	}
+
 	@RequestMapping("/seznam/plusMesic")
 	public String predstavitelSeznamPlusMesic(Mt mt, Model model, HttpServletRequest req, HttpSession session) throws SQLException, UnknownHostException {
-		log.debug("###\t predstavitelSeznamPlusMesic(" + session.getAttribute("kalukaceRRRRMM") + ", " + session.getAttribute("vybranaMt") + "-" + session.getAttribute("vybranyZavod") + ")");
-		Kalkulace k = serviceKalkulace.getKalkulacePlusMesic((Integer) session.getAttribute("kalukaceRRRRMM"));
-		session.setAttribute("kalukaceRRRRMM", k.getKalkulace());
+		log.debug("###\t predstavitelSeznamPlusMesic(" + session.getAttribute("kalkulaceRRRRMM") + ", " + session.getAttribute("vybranaMt") + "-" + session.getAttribute("vybranyZavod") + ")");
+		Kalkulace k = serviceKalkulace.getKalkulacePlusMesic((Integer) session.getAttribute("kalkulaceRRRRMM"));
+		session.setAttribute("kalkulaceRRRRMM", k.getKalkulace());
 
 		if (!session.getAttribute("vybranaMt").toString().isEmpty() && !session.getAttribute("vybranyZavod").toString().isEmpty()) {
 			MtKalkulace mtKalkulace = serviceMtKalkulace.getMtKalkulace(k.getKalkulace(), session.getAttribute("vybranaMt").toString(), session.getAttribute("vybranyZavod").toString());
@@ -416,9 +434,9 @@ public class PredstavitelController {
 
 	@RequestMapping("/seznam/minusMesic")
 	public String predstavitelSeznamMinusMesic(Mt mt, Model model, HttpServletRequest req, HttpSession session) throws SQLException, UnknownHostException {
-		log.debug("###\t predstavitelSeznamPlusMesic(" + session.getAttribute("kalukaceRRRRMM") + ", " + session.getAttribute("vybranaMt") + "-" + session.getAttribute("vybranyZavod") + ")");
-		Kalkulace k = serviceKalkulace.getKalkulaceMinusMesic((Integer) session.getAttribute("kalukaceRRRRMM"));
-		session.setAttribute("kalukaceRRRRMM", k.getKalkulace());
+		log.debug("###\t predstavitelSeznamPlusMesic(" + session.getAttribute("kalkulaceRRRRMM") + ", " + session.getAttribute("vybranaMt") + "-" + session.getAttribute("vybranyZavod") + ")");
+		Kalkulace k = serviceKalkulace.getKalkulaceMinusMesic((Integer) session.getAttribute("kalkulaceRRRRMM"));
+		session.setAttribute("kalkulaceRRRRMM", k.getKalkulace());
 
 		if (!session.getAttribute("vybranaMt").toString().isEmpty() && !session.getAttribute("vybranyZavod").toString().isEmpty()) {
 			MtKalkulace mtKalkulace = serviceMtKalkulace.getMtKalkulace(k.getKalkulace(), session.getAttribute("vybranaMt").toString(), session.getAttribute("vybranyZavod").toString());
@@ -435,25 +453,43 @@ public class PredstavitelController {
 
 	@RequestMapping("/seznam/vyberMt")
 	public String predstavitelSeznamVyberMt(Mt mt, Model model, HttpServletRequest req, HttpSession session) throws SQLException, UnknownHostException {
-		log.debug("###\t predstavitelSeznamVyberMt(" + session.getAttribute("kalukaceRRRRMM") + ", " + mt.getId() + ")");
+		log.debug("###\t predstavitelSeznamVyberMt(" + session.getAttribute("kalkulaceRRRRMM") + ", " + mt.getId() + ")");
 		Mt mtx = serviceMt.getMt(mt.getId());
 		session.setAttribute("vybranaMt", mtx.getModelTr());
 		session.setAttribute("vybranyZavod", mtx.getZavod());
-		return "redirect:/srv/predstavitel/seznam/" + session.getAttribute("kalukaceRRRRMM");
+		return "redirect:/srv/predstavitel/seznam/" + session.getAttribute("kalkulaceRRRRMM");
 	}
 
 	@RequestMapping("/seznam/zmenaModelovehoRoku")
 	public String predstavitelSeznamZmenaModelovehoRoku(MtKalkulace mtKalkulace, Model model, HttpServletRequest req, HttpSession session) throws SQLException, UnknownHostException {
-		log.debug("###\t predstavitelSeznamZmenaModelovehoRoku(" + mtKalkulace.getMrok() + ", " + session.getAttribute("kalukaceRRRRMM") + ", " + session.getAttribute("vybranaMt") + ")");
+		log.debug("###\t predstavitelSeznamZmenaModelovehoRoku(" + mtKalkulace.getMrok() + ", " + session.getAttribute("kalkulaceRRRRMM") + ", " + session.getAttribute("vybranaMt") + ")");
 
-		MtKalkulace mtk = serviceMtKalkulace.getMtKalkulace((Integer) session.getAttribute("kalukaceRRRRMM"), session.getAttribute("vybranaMt").toString(), session.getAttribute("vybranyZavod")
+		MtKalkulace mtk = serviceMtKalkulace.getMtKalkulace((Integer) session.getAttribute("kalkulaceRRRRMM"), session.getAttribute("vybranaMt").toString(), session.getAttribute("vybranyZavod")
 				.toString());
 		mtk.setMrok(mtKalkulace.getMrok());
 		mtk.setUtime(new Date());
 		mtk.setUuser(req.getUserPrincipal().getName().toUpperCase());
 		serviceMtKalkulace.setMtKalkulace(mtk);
 
-		return "redirect:/srv/predstavitel/seznam/" + session.getAttribute("kalukaceRRRRMM");
+		List<PredstavitelKalkulace> pk = servicePredstavitelKalkulace.getPredstaviteleKalkulace(session.getAttribute("vybranaMt").toString(), session.getAttribute("vybranyZavod").toString(),
+				(Integer) session.getAttribute("kalkulaceRRRRMM"));
+		log.debug("###\t ...zmenil se modelovy rok - mazu PR cisla a PR messages pro postihnute predstavitele.");
+		for (PredstavitelKalkulace predstavitelKalk : pk) {
+			servicePredstavitelPr.removePredstavitelPrAll(predstavitelKalk.getId());
+			servicePredstavitelMessage.removePredstavitelMessageAll(predstavitelKalk.getId());
+			predstavitelKalk.setExistsPr(null);
+			servicePredstavitelKalkulace.setPredstavitelKalkulace(predstavitelKalk);
+		}
+
+		log.debug("###\t Zmena modeloveho roku - ulozeni posledni editace do MT_KALKULACE.");
+		List<MtKalkulace> mtKalkulacePoslEdit = serviceMtKalkulace.getMtKalkulace(session.getAttribute("vybranaMt").toString());
+		for (MtKalkulace mtkx : mtKalkulacePoslEdit) {
+			mtkx.setPosledniEditace(new Date());
+			mtkx.setPosledniEditaceDuvod("Změna modelového roku u " + mtkx.getGz39tMt().getModelTr() + " - " + mtkx.getGz39tMt().getZavod());
+			serviceMtKalkulace.setMtKalkulace(mtkx);
+		}
+
+		return "redirect:/srv/predstavitel/seznam/" + session.getAttribute("kalkulaceRRRRMM");
 	}
 
 	/* ******************************************************************************************************************************************** */
@@ -467,15 +503,22 @@ public class PredstavitelController {
 		PredstavitelKalkulace pk = servicePredstavitelKalkulace.getPredstavitelKalkulaceId(idPredKalk);
 		model.addAttribute("pk", pk);
 
-		List<PredstavitelPr> pp = servicePredstavitelPr.getPredstavitelPr(pk.getId());
-		model.addAttribute("pp", pp);
+		List<PredstavitelPr> prPodminky = servicePredstavitelPr.getPredstavitelPr(pk.getId());
+		model.addAttribute("prPodminky", prPodminky);
 
-		List<PredstavitelMessage> pm = servicePredstavitelMessage.getPredstavitel(pk.getId());
-		model.addAttribute("pm", pm);
+		List<PredstavitelMessage> prMessage = servicePredstavitelMessage.getPredstavitelMessageWithoutException(pk.getId());
+		model.addAttribute("prMessage", prMessage);
+
+		List<PredstavitelMessage> prMessageException = servicePredstavitelMessage.getPredstavitelMessageOnlyException(pk.getId());
+		String prMesEx = null;
+		for (PredstavitelMessage pmes : prMessageException) {
+			prMesEx = (prMesEx == null ? "" : prMesEx + "\t\n") + pmes.getKod() + "-" + pmes.getText() + "\t\n";
+		}
+		model.addAttribute("prMessageException", prMesEx);
 
 		session.setAttribute("vybranaMt", pk.getGz39tMtKalkulace().getGz39tMt().getModelTr());
 		session.setAttribute("vybranyZavod", pk.getGz39tMtKalkulace().getGz39tMt().getZavod());
-		session.setAttribute("kalukaceRRRRMM", pk.getGz39tMtKalkulace().getGz39tKalkulace().getKalkulace());
+		session.setAttribute("kalkulaceRRRRMM", pk.getGz39tMtKalkulace().getGz39tKalkulace().getKalkulace());
 
 		return "/predstavitelDetail";
 	}
@@ -510,10 +553,21 @@ public class PredstavitelController {
 
 		PredstavitelKalkulace pk = servicePredstavitelKalkulace.getPredstavitelKalkulaceId(idPredKalk);
 		pk.setVybavyEdit(predstavitelKalkulace.getVybavyEdit().toUpperCase());
+		pk.setExistsPr(null);
 		pk.setUtime(new Date());
 		pk.setUuser(req.getUserPrincipal().getName().toUpperCase());
 		servicePredstavitelKalkulace.setPredstavitelKalkulace(pk);
+		
+		servicePredstavitelPr.removePredstavitelPrAll(pk.getId());
+		servicePredstavitelMessage.removePredstavitelMessageAll(pk.getId());
 
+		log.debug("###\t Zmena vybavy predstavitele - ulozeni posledni editace do MT_KALKULACE.");
+		List<MtKalkulace> mtKalkulacePoslEdit = serviceMtKalkulace.getMtKalkulace(pk.getGz39tMtKalkulace().getGz39tMt().getModelTr());
+		for (MtKalkulace mtkx : mtKalkulacePoslEdit) {
+			mtkx.setPosledniEditace(new Date());
+			mtkx.setPosledniEditaceDuvod("Změna výbavy představitele " + pk.getGz39tPredstavitel().getCisloPred() + ", " + pk.getGz39tPredstavitel().getModelovyKlic().toUpperCase() + " - " + mtkx.getGz39tMt().getZavod());
+			serviceMtKalkulace.setMtKalkulace(mtkx);
+		}
 		return "redirect:/srv/predstavitel/detail/" + idPredKalk;
 	}
 
@@ -524,9 +578,21 @@ public class PredstavitelController {
 
 		PredstavitelKalkulace pk = servicePredstavitelKalkulace.getPredstavitelKalkulaceId(idPredKalk);
 		pk.setVybavyEdit(null);
+		pk.setExistsPr(null);
 		pk.setUtime(new Date());
 		pk.setUuser(req.getUserPrincipal().getName().toUpperCase());
 		servicePredstavitelKalkulace.setPredstavitelKalkulace(pk);
+
+		servicePredstavitelPr.removePredstavitelPrAll(pk.getId());
+		servicePredstavitelMessage.removePredstavitelMessageAll(pk.getId());
+
+		log.debug("###\t Zmena (zruseni) vybavy predstavitele - ulozeni posledni editace do MT_KALKULACE.");
+		List<MtKalkulace> mtKalkulacePoslEdit = serviceMtKalkulace.getMtKalkulace(pk.getGz39tMtKalkulace().getGz39tMt().getModelTr());
+		for (MtKalkulace mtkx : mtKalkulacePoslEdit) {
+			mtkx.setPosledniEditace(new Date());
+			mtkx.setPosledniEditaceDuvod("Změna (zrušení) výbavy představitele " + pk.getGz39tPredstavitel().getCisloPred() + ", " + pk.getGz39tPredstavitel().getModelovyKlic().toUpperCase() + " - " + mtkx.getGz39tMt().getZavod());
+			serviceMtKalkulace.setMtKalkulace(mtkx);
+		}
 
 		return "redirect:/srv/predstavitel/detail/" + idPredKalk;
 	}
@@ -537,10 +603,22 @@ public class PredstavitelController {
 		log.debug("###\t predstavitelDetailPotlacitVybavu(" + idPredKalk + ", " + predstavitelKalkulace.getVybavyEdit() + ")");
 
 		PredstavitelKalkulace pk = servicePredstavitelKalkulace.getPredstavitelKalkulaceId(idPredKalk);
-		pk.setVybavyEdit("Potlačit původní výbavu");
+		pk.setVybavyEdit("Původní výbava potlačena!");
 		pk.setUtime(new Date());
+		pk.setExistsPr(null);
 		pk.setUuser(req.getUserPrincipal().getName().toUpperCase());
 		servicePredstavitelKalkulace.setPredstavitelKalkulace(pk);
+
+		servicePredstavitelPr.removePredstavitelPrAll(pk.getId());
+		servicePredstavitelMessage.removePredstavitelMessageAll(pk.getId());
+
+		log.debug("###\t Zmena (potlaceni) vybavy predstavitele - ulozeni posledni editace do MT_KALKULACE.");
+		List<MtKalkulace> mtKalkulacePoslEdit = serviceMtKalkulace.getMtKalkulace(pk.getGz39tMtKalkulace().getGz39tMt().getModelTr());
+		for (MtKalkulace mtkx : mtKalkulacePoslEdit) {
+			mtkx.setPosledniEditace(new Date());
+			mtkx.setPosledniEditaceDuvod("Změna (potlačení) výbavy představitele " + pk.getGz39tPredstavitel().getCisloPred() + ", " + pk.getGz39tPredstavitel().getModelovyKlic().toUpperCase() + " - " + mtkx.getGz39tMt().getZavod());
+			serviceMtKalkulace.setMtKalkulace(mtkx);
+		}
 
 		return "redirect:/srv/predstavitel/detail/" + idPredKalk;
 	}
@@ -561,142 +639,6 @@ public class PredstavitelController {
 		model.addAttribute("prList", prList);
 
 		return "/prDetail";
-	}
-
-	@RequestMapping("/detail/komunikaceFavas/{idMtKalk}/{idPredKalk}")
-	public String detailKomunikaceFavas(@PathVariable long idMtKalk, @PathVariable long idPredKalk, Model model, HttpServletRequest req, HttpSession session) throws ParseException,
-			InterruptedException {
-		// log.debug("###\t detailKomunikaceFavas(" + idMtKalk + ", " + idPredKalk + ")");
-
-		List<PredstavitelKalkulace> pk_ke_zpracovani = new ArrayList<PredstavitelKalkulace>();
-		MtKalkulace mtk = new MtKalkulace();
-
-		if (idMtKalk == 0 && idPredKalk > 0) {
-			log.debug("###\t detailKomunikaceFavas(" + idMtKalk + ", " + idPredKalk + ") ... komunikace jednoho predstavitele z obrazovky DETAIL PREDSTAVITELE");
-			pk_ke_zpracovani.add(servicePredstavitelKalkulace.getPredstavitelKalkulaceId(idPredKalk));
-		} else {
-			log.debug("###\t detailKomunikaceFavas(" + idMtKalk + ", " + idPredKalk + ") ... hromadna komunikace predstavitelu z obrazovky SEZNAM PREDSTAVITELU");
-			mtk = serviceMtKalkulace.getMtKalkulaceId(idMtKalk);
-			List<PredstavitelKalkulace> pkxxx = servicePredstavitelKalkulace.getPredstaviteleKalkulace(mtk.getGz39tMt().getModelTr(), mtk.getGz39tKalkulace().getKalkulace());
-			for (PredstavitelKalkulace predstavitelKalkulace : pkxxx) {
-				pk_ke_zpracovani.add(predstavitelKalkulace);
-			}
-		}
-		int pocet_komunikovanych_predstavitelu = pk_ke_zpracovani.size();
-		int i = 1;
-		for (PredstavitelKalkulace pk : pk_ke_zpracovani) {
-
-			log.debug("###\t\t " + i++ + "/" + pocet_komunikovanych_predstavitelu + " komunikace pro: " + pk.getGz39tPredstavitel().getModelovyKlic() + ", " + pk.getGz39tMtKalkulace().getMrok()
-					+ ", " + pk.getGz39tPredstavitel().getKodZeme() + ", " + pk.getGz39tMtKalkulace().getGz39tKalkulace().getKalkulacniDatum() + ", "
-					+ (pk.getVybavyEdit() != null ? pk.getVybavyEdit() : pk.getGz39tPredstavitel().getVybavy()));
-
-			VehicleOrder o = new VehicleOrder();
-
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
-			Date datum = sdf.parse(pk.getGz39tMtKalkulace().getGz39tKalkulace().getKalkulacniDatum());
-			Calendar cal = Calendar.getInstance();
-			cal.setTime(datum);
-			o.setDate(cal);
-			o.setNationalSalesProgramme(pk.getGz39tPredstavitel().getKodZeme());
-			o.setModelCode(pk.getGz39tPredstavitel().getModelovyKlic());
-			o.setModelYear(pk.getGz39tMtKalkulace().getMrok());
-			// o.setEquipment("PK22B1");
-
-			if (pk.getVybavyEdit() != null && pk.getVybavyEdit().startsWith("+")) {
-				o.setEquipment(pk.getVybavyEdit().replace("+", "").trim());
-			} else if (pk.getGz39tPredstavitel().getVybavy() != null) {
-				o.setEquipment(pk.getGz39tPredstavitel().getVybavy().replace("+", "").trim());
-			}
-
-			// FAVAS (konkretne metoda o.getFavas()) obcas vyhodi chybu: Server returned HTTP response code: 501 for URL: https://smbdpp1c.fw.skoda.vwg:30700 ... ale jen ji vypise
-			// a metoda v tomto pripade vraci NULL.
-			// V 99% pripadech se po okamzitem opetovnem zavolani teto metody chyba jiz nevyskytne. Proto kdyz mi metoda vrati null, tak to zkusim jeste 2x a az potom vyhodim
-			// chybu. V tom pripade ale uz padne aplikace!
-			Favas favas = null;
-			if (o.getFavas() == null) {
-				log.error("### BACHA ... 1 neuspesny pokus komunikace s FAVASem, zkusim znova za 5 sekund).");
-				Thread.sleep(5000);
-			} else if (o.getFavas() == null) {
-				log.error("### BACHA ... 2 neuspesny pokus komunikace s FAVASem, zkusim znova za NAPOSLEDY za 5 sekund).");
-				Thread.sleep(5000);
-			} else {
-				favas = o.getFavas();
-				List<PredstavitelPr> ppList = servicePredstavitelPr.getPredstavitelPr(pk.getId());
-				if (ppList.size() > 0) {
-					for (PredstavitelPr predstavitelPr : ppList) {
-						servicePredstavitelPr.removePredstavitelPr(predstavitelPr);
-					}
-				}
-
-				List<PredstavitelMessage> ppMesList = servicePredstavitelMessage.getPredstavitel(pk.getId());
-				if (ppMesList.size() > 0) {
-					for (PredstavitelMessage predstavitelMessage : ppMesList) {
-						servicePredstavitelMessage.removePredstavitelMessage(predstavitelMessage);
-					}
-				}
-
-				Set<Equipment> equipment = favas.getEquipment();
-				if (equipment.size() > 0) {
-					//log.debug("###\t\t equipment: " + equipment.size());
-					for (Equipment eq : equipment) {
-						log.trace(eq.getFamily() + "-" + eq.getType() + "-" + eq.getValue() + ", ");
-						PredstavitelPr pp = new PredstavitelPr();
-						pp.setRodina(eq.getFamily());
-						pp.setTyp(eq.getType());
-						pp.setPr(eq.getValue());
-						pp.setUuser(req.getUserPrincipal().getName().toUpperCase());
-						pp.setUtime(new Date());
-						pp.setGz39tPredstavitelKalkulace(pk);
-						servicePredstavitelPr.addPredstavitelPr(pp);
-					}
-					pk.setUuser(req.getUserPrincipal().getName().toUpperCase());
-					pk.setUtime(new Date());
-					pk.setExistsPr(equipment.size());
-					servicePredstavitelKalkulace.setPredstavitelKalkulace(pk);
-				}
-
-				Set<vwg.skoda.favas.mbv.Message> message = favas.getMessage();
-				if (message.size() > 0) {
-					for (Message me : message) {
-						//log.debug("###\t\t message\t" + me.getCode() + "\t" + me.getText());
-						PredstavitelMessage pm = new PredstavitelMessage();
-						pm.setKod(me.getCode());
-						pm.setText(me.getText());
-						pm.setUuser(req.getUserPrincipal().getName().toUpperCase());
-						pm.setUtime(new Date());
-						pm.setGz39tPredstavitelKalkulace(pk);
-						servicePredstavitelMessage.addPredstavitelMessage(pm);
-					}
-				}
-
-				Set<vwg.skoda.favas.mbv.Error> errorFavas = favas.getError();
-				if (errorFavas.size() > 0) {
-					for (vwg.skoda.favas.mbv.Error er : errorFavas) {
-						log.error("###\t\t errorFavas\t" + er.getErrNo() + ", " + er.getSource() + ", " + er.getText() + ", " + er.getWeight() + ", " + er.getType().toString());
-					}
-				}
-
-				// for (Entry<String, String[]> e : favas.getPacketInfo().entrySet()) {
-				// for (String pr : e.getValue()) {
-				// System.out.println("### packetInfo\t" + e.getKey() + " - " + pr);
-				// }
-				// }
-				// String[] packStruk = favas.getPacketStruc("PK4");
-				// for (int i = 0; i < packStruk.length; i++) {
-				// System.out.println("### packet struk\t" + packStruk[i]);
-				// }
-
-			}
-		}
-
-		if (idMtKalk == 0 && idPredKalk > 0) {
-			// probehla komunikace jednoho predstavitele z obrazovky DETAIL PREDSTAVITELE
-			return "redirect:/srv/predstavitel/detail/" + idPredKalk;
-		} else {
-			// probehla hromadna komunikace predstavitelu z obrazovky SEZNAM PREDSTAVITELU
-			return "redirect:/srv/predstavitel/seznam/" + mtk.getGz39tKalkulace().getKalkulace();
-		}
-
 	}
 
 	/* ******************************************************************************************************************************************** */

@@ -21,7 +21,6 @@
 	<filter>
 		<filter-name>encodingFilter</filter-name>
 		<filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
-		<async-supported>true</async-supported>
 		<init-param>
 			<param-name>encoding</param-name>
 			<param-value>UTF-8</param-value>
@@ -40,7 +39,6 @@
 		<servlet-name>dispatcher</servlet-name>
 		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
 		<load-on-startup>1</load-on-startup>
-		<async-supported>true</async-supported>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>dispatcher</servlet-name>
@@ -56,7 +54,6 @@
 			<param-name>persistence.unit</param-name>
 			<param-value>cocafoplPersistence</param-value>
 		</init-param>
-		<async-supported>true</async-supported>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>QueryServlet</servlet-name>
@@ -74,6 +71,17 @@
 	</security-role>
 
 	<security-role>
+		<description>Schvalovatelé</description>
+		<role-name>APPROVERS</role-name>
+	</security-role>
+
+	<security-role>
+		<description>Čtenáři</description>
+		<role-name>READERS</role-name>
+	</security-role>
+	
+
+	<security-role>
 		<description>Service Desk</description>
 		<role-name>SERVICEDESK</role-name>
 	</security-role>
@@ -86,6 +94,8 @@
 		<auth-constraint>
 			<role-name>USERS</role-name>
 			<role-name>ADMINS</role-name>
+			<role-name>APPROVERS</role-name>
+			<role-name>READERS</role-name>
 			<role-name>SERVICEDESK</role-name>
 		</auth-constraint>
 	</security-constraint>

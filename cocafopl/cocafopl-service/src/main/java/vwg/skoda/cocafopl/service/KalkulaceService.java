@@ -96,7 +96,7 @@ public class KalkulaceService {
 	}
 
 	public Kalkulace getKalkulacePlusMesic(int kalkulace) {
-		log.debug("###\t\t getKalkulacePlusMesic(" + kalkulace + ");");
+		log.trace("###\t\t getKalkulacePlusMesic(" + kalkulace + ");");
 		Kalkulace gre;
 		try {
 			List<Kalkulace> kalk = entityManager.createQuery("SELECT u FROM Kalkulace u WHERE u.kalkulace > :kalkulace ORDER BY u.kalkulace ASC", Kalkulace.class).setParameter("kalkulace", kalkulace)
@@ -109,7 +109,7 @@ public class KalkulaceService {
 	}
 
 	public Kalkulace getKalkulaceMinusMesic(int kalkulace) {
-		log.debug("###\t\t getKalkulaceMinusMesic(" + kalkulace + ");");
+		log.trace("###\t\t getKalkulaceMinusMesic(" + kalkulace + ");");
 		Kalkulace gre;
 		try {
 			List<Kalkulace> kalk = entityManager.createQuery("SELECT u FROM Kalkulace u WHERE u.kalkulace < :kalkulace ORDER BY u.kalkulace DESC", Kalkulace.class)

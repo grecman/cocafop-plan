@@ -1,0 +1,50 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>vwg.skoda.cocafopl</groupId>
+		<artifactId>cocafopl</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+	</parent>
+	<artifactId>cocafopl-ear</artifactId>
+	<packaging>ear</packaging>
+
+	<properties>
+		<ear.directory>g:/.Projects/IT/SAB/builds/COCAFOPPL/</ear.directory>
+		<ear.file>cocafoppl</ear.file>
+	</properties>
+
+	<build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-ear-plugin</artifactId>
+				<configuration>
+					<version>6</version>
+					<displayName>COCAFOPPL</displayName>
+					<generateApplicationXml>true</generateApplicationXml>
+					<modules>
+						<webModule>
+							<groupId>vwg.skoda.cocafopl</groupId>
+							<artifactId>cocafopl-web</artifactId>
+							<contextRoot>/cocafopl-web</contextRoot>
+						</webModule>
+					</modules>
+
+					<finalName>${ear.file}</finalName>
+					<outputDirectory>${ear.directory}</outputDirectory>
+					<skinnyWars>true</skinnyWars>
+					
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+	<dependencies>
+		<dependency>
+			<groupId>vwg.skoda.cocafopl</groupId>
+			<artifactId>cocafopl-web</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+			<type>war</type>
+		</dependency>
+	</dependencies>
+	
+</project>

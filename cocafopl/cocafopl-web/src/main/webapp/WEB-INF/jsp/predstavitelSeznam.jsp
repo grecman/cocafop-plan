@@ -76,13 +76,13 @@
 							<img src="${pageContext.servletContext.contextPath}/resources/ico/gre/go_left_30.png" />
 						</a>
 					</span>
-					<span style="font-size: 16px; margin-left: 0px; margin-right: 0px;">${kalukaceRRRRMM}</span>
+					<span style="font-size: 16px; margin-left: 0px; margin-right: 0px;">${kalkulaceRRRRMM}</span>
 					<span style="margin-top: 3px; margin-left: 2px; margin-right: 2px;">
 						<a href="${pageContext.servletContext.contextPath}/srv/predstavitel/seznam/plusMesic">
 							<img src="${pageContext.servletContext.contextPath}/resources/ico/gre/go_right_30.png" />
 						</a>
 					</span>
-					<c:if test="${(not(empty(kalukaceRRRRMM)))}">
+					<c:if test="${(not(empty(kalkulaceRRRRMM)))}">
 						<c:choose>
 							<c:when test="${(empty(mtk))}">
 								<span>
@@ -174,7 +174,8 @@
 										<td align="left">${i.gz39tPredstavitel.poznamka}</td>
 										<td align="center"><c:choose>
 												<c:when test="${(i.gz39tMtKalkulace.gz39tMt.platnostOd > i.gz39tPredstavitel.platnostOd)}">
-													<SPAN style="background-color: red;" title="Platnost představitele je mimo rozsah platnosti modelové třídy!"> ${i.gz39tPredstavitel.platnostOd}</SPAN>
+													<SPAN style="background-color: red;" title="Platnost představitele je mimo rozsah platnosti modelové třídy!">
+														${i.gz39tPredstavitel.platnostOd}</SPAN>
 												</c:when>
 												<c:otherwise>
 													${i.gz39tPredstavitel.platnostOd}
@@ -182,13 +183,21 @@
 											</c:choose></td>
 										<td align="center"><c:choose>
 												<c:when test="${(i.gz39tPredstavitel.platnostDo > i.gz39tMtKalkulace.gz39tMt.platnostDo)}">
-													<SPAN style="background-color: red;" title="Platnost představitele je mimo rozsah platnosti modelové třídy!"> ${i.gz39tPredstavitel.platnostDo}</SPAN>
+													<SPAN style="background-color: red;" title="Platnost představitele je mimo rozsah platnosti modelové třídy!">
+														${i.gz39tPredstavitel.platnostDo}</SPAN>
 												</c:when>
 												<c:otherwise>
 													${i.gz39tPredstavitel.platnostDo}
 												</c:otherwise>
 											</c:choose></td>
-										<td align="left" style="overflow: hidden;" title="${i.gz39tPredstavitel.vybavy}">${i.gz39tPredstavitel.vybavy}</td>
+										<td align="left" style="overflow: hidden; font-size: x-small; font-weight: bold;"><c:choose>
+												<c:when test="${empty i.vybavyEdit}">
+													${i.gz39tPredstavitel.vybavy}
+												</c:when>
+												<c:otherwise>
+													<span title="Původní výbava: ${i.gz39tPredstavitel.vybavy}" style="color: blue;">${i.vybavyEdit}</span>
+												</c:otherwise>
+											</c:choose></td>
 										<td align="center"><c:choose>
 												<c:when test="${i.gz39tPredstavitel.comix}">
 													<img src="${pageContext.servletContext.contextPath}/resources/ico/ok.png" />
@@ -207,63 +216,19 @@
 											</c:choose></td>
 									</tr>
 								</c:forEach>
-								<!--<c:forEach items="${pkView}" var="i">
-									<tr>
-										<td style="display: none;">${i.idPk}</td>
-										<td align="center">${i.cisloPred}</td>
-										<td align="left"><a href="${pageContext.servletContext.contextPath}/srv/predstavitel/detail/${i.idPk}">
-												<span style="color: #4BA82E; font-weight: bold; margin-left: 0px; margin-right: 0px;">${i.modelovyKlic}</span>
-											</a></td>
-										<td align="center">${i.rozlozenost}</td>
-										<td align="center">${i.kodZeme}</td>
-										<td align="left">${i.typ}</td>
-										<td align="left">${ivybava}</td>
-										<td align="left">${i.obsah}</td>
-										<td align="left">${i.vykon}</td>
-										<td align="center">${i.euNorma}</td>
-										<td align="left">${i.poznamka}</td>
-										<td align="center"><c:choose>
-												<c:when test="${(i.platnostOdMt > i.platnostOd)}">
-													<SPAN style="background-color: red;" title="Platnost představitele je mimo rozsah platnosti modelové třídy!"> ${i.platnostOd}</SPAN>
-												</c:when>
-												<c:otherwise>
-													${i.platnostOd}
-												</c:otherwise>
-											</c:choose></td>
-										<td align="center"><c:choose>
-												<c:when test="${(i.platnostDo > i.platnostDoMt)}">
-													<SPAN style="background-color: red;" title="Platnost představitele je mimo rozsah platnosti modelové třídy!"> ${i.platnostDo}</SPAN>
-												</c:when>
-												<c:otherwise>
-													${i.platnostDo}
-												</c:otherwise>
-											</c:choose></td>
-										<td align="left" style="overflow: hidden;" title="${i.vybavy}">${i.vybavy}</td>
-										<td align="center"><c:choose>
-												<c:when test="${i.comix}">
-													<img src="${pageContext.servletContext.contextPath}/resources/ico/ok.png" />
-												</c:when>
-												<c:otherwise>
-													<img src="${pageContext.servletContext.contextPath}/resources/ico/zrusit.png" />
-												</c:otherwise>
-											</c:choose></td>
-										<td align="center"><c:choose>
-												<c:when test="${i.prCount>0}">
-													<img src="${pageContext.servletContext.contextPath}/resources/ico/152.png" />
-												</c:when>
-												<c:otherwise>
-													<img src="${pageContext.servletContext.contextPath}/resources/ico/151.png" />
-												</c:otherwise>
-											</c:choose></td>
-									</tr>
-								</c:forEach>  -->
 							</tbody>
 						</table>
 					</div>
+					<DIV style="color: red; font-weight: bold;">${errorMesage}</DIV>
 					<div class="formBar">
 						<span>
-							<a href="${pageContext.servletContext.contextPath}/srv/predstavitel/detail/komunikaceFavas/${mtk.id}/0">
-								<input type="button" value="Prověřit MBV/Favas" class="heroBtn" style="width: auto;"></input>
+							<a href="${pageContext.servletContext.contextPath}/srv/komunikaceFavas/${mtk.id}/0/vse">
+								<input type="button" value="Prověřit vše" class="heroBtn" style="width: auto;" title="Komunikace MBV/Favas"></input>
+							</a>
+						</span>
+						<span>
+							<a href="${pageContext.servletContext.contextPath}/srv/komunikaceFavas/${mtk.id}/0/zbyvajici">
+								<input type="button" value="Prověřit zbývající" class="heroBtn" style="width: auto;" title="Komunikace MBV/Favas"></input>
 							</a>
 						</span>
 						<span>
@@ -288,16 +253,23 @@
 						action="${pageContext.servletContext.contextPath}/srv/predstavitel/seznam/zmenaModelovehoRoku/">
 						<TABLE>
 							<TR>
-								<TD>Modelový rok<SPAN style="color: red; font-weight: bold;">*</SPAN></TD>
+								<TD style="width: 110px;">Modelový rok<SPAN style="color: red; font-weight: bold;">*</SPAN></TD>
 								<TD><form:input path="mrok" id="mrok" class="textovePole" cssStyle="width:40px"></form:input></TD>
+							</TR>
+							<TR style="height: 40px;">
+								<TD colspan="2"><SPAN style="color: red; font-weight: bold;">!&#160;</SPAN> <SPAN style="font-size: x-small; color: gray;"> Po uložení bude
+										u všech představitelů dané kalkulace a modelové třídy smazán stávající PR popis.</SPAN></TD>
 							</TR>
 						</TABLE>
 					</form:form>
 				</div>
 				<div class="modalFooter">
-					<SPAN style="color: red; font-weight: bold;">*</SPAN>
-					<SPAN style="font-size: x-small; color: gray;"> povinný údaj</SPAN>
-					<input type="button" id="formModelovyRokZmenaButton" value="Uložit" class="ok"></input>
+					<TABLE style="width: 100%;">
+						<TR>
+							<TD><SPAN style="color: red; font-weight: bold;">*</SPAN> <SPAN style="font-size: x-small; color: gray;"> povinný údaj</SPAN></TD>
+							<TD align="right"><input type="button" id="formModelovyRokZmenaButton" value="Uložit" class="heroBtn"></input></TD>
+						</TR>
+					</TABLE>
 				</div>
 			</div>
 		</div>

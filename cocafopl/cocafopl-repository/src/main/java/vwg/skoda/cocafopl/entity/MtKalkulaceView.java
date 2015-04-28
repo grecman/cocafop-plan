@@ -25,7 +25,7 @@ public class MtKalkulaceView implements Serializable {
 
 	private int mrok;
 
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="POSLEDNI_VYPOCET")
 	private Date posledniVypocet;
 
@@ -34,7 +34,7 @@ public class MtKalkulaceView implements Serializable {
 
 	private String produkt;
 
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
 	private Date schvaleno;
 
 	private String schvalil;

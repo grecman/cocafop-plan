@@ -45,11 +45,40 @@ public class PredstavitelMessageService {
 		entityManager.remove(u);
 	}
 	
-	public List<PredstavitelMessage> getPredstavitel(long idPredstavitelKalkulace) {
-		log.trace("###\t\t getPredstavitelMessage(" + idPredstavitelKalkulace+");");
+	@Transactional
+	public void removePredstavitelMessageAll(long idPredstavitelKalkulace) {
+		log.trace("###\t\t removePredstavitelMessageAll(" + idPredstavitelKalkulace + ")");
+		entityManager.createQuery("DELETE FROM PredstavitelMessage a WHERE a.gz39tPredstavitelKalkulace.id = :idPk ").setParameter("idPk", idPredstavitelKalkulace).executeUpdate();
+	}
+	
+	
+	public List<PredstavitelMessage> getPredstavitelMessageAll(long idPredstavitelKalkulace) {
+		log.trace("###\t\t getPredstavitelMessageAll(" + idPredstavitelKalkulace+");");
 		List<PredstavitelMessage> gre;
 		try {
 			gre = entityManager.createQuery("SELECT u FROM PredstavitelMessage u WHERE u.gz39tPredstavitelKalkulace.id=:idPredstavitelKalkulace ORDER BY u.kod ", PredstavitelMessage.class).setParameter("idPredstavitelKalkulace", idPredstavitelKalkulace).getResultList();
+		} catch (NoResultException e) {
+			return null;
+		}
+		return gre;
+	}
+	
+	public List<PredstavitelMessage> getPredstavitelMessageOnlyException(long idPredstavitelKalkulace) {
+		log.trace("###\t\t getPredstavitelMessageWithException(" + idPredstavitelKalkulace+");");
+		List<PredstavitelMessage> gre;
+		try {
+			gre = entityManager.createQuery("SELECT u FROM PredstavitelMessage u WHERE u.gz39tPredstavitelKalkulace.id=:idPredstavitelKalkulace AND u.kod IN (SELECT e.kod FROM MessageException e) ORDER BY u.kod ", PredstavitelMessage.class).setParameter("idPredstavitelKalkulace", idPredstavitelKalkulace).getResultList();
+		} catch (NoResultException e) {
+			return null;
+		}
+		return gre;
+	}
+	
+	public List<PredstavitelMessage> getPredstavitelMessageWithoutException(long idPredstavitelKalkulace) {
+		log.trace("###\t\t getPredstavitelMessageWithoutException(" + idPredstavitelKalkulace+");");
+		List<PredstavitelMessage> gre;
+		try {
+			gre = entityManager.createQuery("SELECT u FROM PredstavitelMessage u WHERE u.gz39tPredstavitelKalkulace.id=:idPredstavitelKalkulace AND u.kod NOT IN (SELECT e.kod FROM MessageException e) ORDER BY u.kod ", PredstavitelMessage.class).setParameter("idPredstavitelKalkulace", idPredstavitelKalkulace).getResultList();
 		} catch (NoResultException e) {
 			return null;
 		}
