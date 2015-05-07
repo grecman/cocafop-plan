@@ -165,8 +165,7 @@ public class PredstavitelController {
 		for (Predstavitel pr : prd) {
 			existujiciCislaPred.add(pr.getCisloPred());
 		}
-		
-		
+			
 		
 		
 		
