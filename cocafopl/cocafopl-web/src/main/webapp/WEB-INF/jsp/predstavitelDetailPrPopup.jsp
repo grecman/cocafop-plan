@@ -23,22 +23,22 @@
 					<col width="80px" />
 					<TR style="height: 25px;">
 						<TD style="font-weight: bold;">Produkt</TD>
-						<TD><SPAN style="background-color: white;">${mtProd.produkt}</SPAN></TD>
-						<TD><SPAN style="background-color: white;">${mtProd.popisProduktu}</SPAN></TD>
+						<TD><SPAN style="color:teal; font-weight: bold;">${mtProd.produkt}</SPAN></TD>
+						<TD><SPAN style="color:maroon; font-weight: bold;">${mtProd.popisProduktu}</SPAN></TD>
 					</TR>
 					<TR style="height: 25px;">
 						<TD style="font-weight: bold;">Rodina</TD>
-						<TD><SPAN style="background-color: white;">${prOne.famkz}</SPAN></TD>
-						<TD><SPAN style="background-color: white;">${prOne.famBen}</SPAN></TD>
+						<TD><SPAN style="color:teal; font-weight: bold;">${prOne.famkz}</SPAN></TD>
+						<TD><SPAN style="color:maroon; font-weight: bold;">${prOne.famBen}</SPAN></TD>
 					</TR>
 					<TR style="height: 30px;">
 						<TD style="font-weight: bold; border-bottom-color: black; border-bottom: thin; border-bottom-style: solid;">PR číslo</TD>
-						<TD style="border-bottom-color: black; border-bottom: thin; border-bottom-style: solid;"><SPAN style="background-color: white;">${prOne.prnr}</SPAN></TD>
-						<TD style="border-bottom-color: black; border-bottom: thin; border-bottom-style: solid;"><SPAN style="background-color: white;">${prOne.beschreibung}</SPAN></TD>
-						<TD style="border-bottom-color: black; border-bottom: thin; border-bottom-style: solid;"><SPAN style="background-color: white;">${prOne.eindat}</SPAN></TD>
-						<TD style="border-bottom-color: black; border-bottom: thin; border-bottom-style: solid;"><SPAN style="background-color: white;">${prOne.entdat}</SPAN></TD>
-						<TD style="border-bottom-color: black; border-bottom: thin; border-bottom-style: solid;"><SPAN style="background-color: white;">${prOne.einschl}</SPAN></TD>
-						<TD style="border-bottom-color: black; border-bottom: thin; border-bottom-style: solid;"><SPAN style="background-color: white;">${prOne.entschl}</SPAN></TD>
+						<TD style="border-bottom-color: black; border-bottom: thin; border-bottom-style: solid;"><SPAN style="color:teal; font-weight: bold;">${prOne.prnr}</SPAN></TD>
+						<TD style="border-bottom-color: black; border-bottom: thin; border-bottom-style: solid;"><SPAN style="color:maroon; font-weight: bold; ">${prOne.beschreibung}</SPAN></TD>
+						<TD style="border-bottom-color: black; border-bottom: thin; border-bottom-style: solid;"><SPAN style="color:black;">${prOne.eindat}</SPAN></TD>
+						<TD style="border-bottom-color: black; border-bottom: thin; border-bottom-style: solid;"><SPAN style="color:black;">${prOne.entdat}</SPAN></TD>
+						<TD style="border-bottom-color: black; border-bottom: thin; border-bottom-style: solid;"><SPAN style="color:black;">${prOne.einschl}</SPAN></TD>
+						<TD style="border-bottom-color: black; border-bottom: thin; border-bottom-style: solid;"><SPAN style="color:black;">${prOne.entschl}</SPAN></TD>
 					</TR>
 					<c:forEach items="${prList}" var="i">
 						<c:if test="${i.prnr != prOne.prnr}">

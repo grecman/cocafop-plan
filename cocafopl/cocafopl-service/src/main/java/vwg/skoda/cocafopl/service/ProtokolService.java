@@ -39,10 +39,15 @@ public class ProtokolService {
 		log.debug("###\t\t getAllLogin();");
 		return entityManager.createQuery("SELECT a FROM Protokol a WHERE a.action LIKE 'Login%' ORDER BY a.time desc", Protokol.class).getResultList();
 	}
-
+	
 	public List<Protokol> getAll() {
 		log.debug("###\t\t getAll();");
-		return entityManager.createQuery("SELECT a FROM Protokol a  ORDER BY a.time desc", Protokol.class).getResultList();
+		return entityManager.createQuery("SELECT a FROM Protokol ORDER BY a.time desc", Protokol.class).getResultList();
+	}
+
+	public List<Protokol> getAllWithoutLogin() {
+		log.debug("###\t\t getAllWithoutLogin();");
+		return entityManager.createQuery("SELECT a FROM Protokol a WHERE a.action != 'Login do aplikace' ORDER BY a.time desc", Protokol.class).getResultList();
 	}
 	
 	public List<Protokol> getAllUsers() {

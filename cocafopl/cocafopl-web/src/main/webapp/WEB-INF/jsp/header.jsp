@@ -33,7 +33,7 @@
 			<a class="${selectedMenu eq 'archiv' ? 'selected' : 'passive'}" href="${pageContext.servletContext.contextPath}/srv/archiv/kalkulace">Archív</a>
 			<a class="${selectedMenu eq 'mv' ? 'selected' : 'passive'}" href="${pageContext.servletContext.contextPath}/srv/mv/uvodniZobrazeni">MV</a>
 			<a class="${selectedMenu eq 'offline' ? 'selected' : 'passive'}" href="${pageContext.servletContext.contextPath}/srv/offline">Off-line</a>
- 			<a class="${selectedMenu eq 'monitoring' ? 'selected' : 'passive'}" href="${pageContext.servletContext.contextPath}/srv/monitoring/serviceDesk">Monitoring</a>  
+ 			<a class="${selectedMenu eq 'monitoring' ? 'selected' : 'passive'}" href="${pageContext.servletContext.contextPath}/srv/monitoring/logging">Monitoring</a>  
 			<a class="${selectedMenu eq 'napoveda' ? 'selected' : 'passive'}" href="${pageContext.servletContext.contextPath}/srv/napoveda">Nápověda</a> 
 		</div>
 	</div>

@@ -69,9 +69,9 @@
 
 				<div class="tableContainer">
 					<table class="dataTable" id="tableId">
-						<col width="120px" />
-						<col width="100px" />
 						<col width="170px" />
+						<col width="80px" />
+						<col width="155px" />
 						<col width="*" />
 						<thead>
 							<tr>

@@ -1,6 +1,9 @@
 package vwg.skoda.cocafopl.service;
 
+import java.util.List;
+
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 
 import org.apache.log4j.Logger;
@@ -18,21 +21,21 @@ public class ArchPredstavitelPrService {
 	private EntityManager entityManager;
 
 	@Transactional
-	public void addArchPredstavitelPr(ArchPredstavitelPr archPredstavitelPr) {
-		log.trace("###\t\t addArchPredstavitel(" + archPredstavitelPr + ")");
-		entityManager.persist(archPredstavitelPr);
+	public void addArchPredstavitelPr(ArchPredstavitelPr predstavitelPr) {
+		log.trace("###\t\t addArchPredstavitelPr(" + predstavitelPr + ")");
+		entityManager.persist(predstavitelPr);
 	}
 
-	@Transactional
-	public void removeArchPredstavitel(ArchPredstavitelPr archPredstavitelPr) {
-		log.trace("###\t\t removeArchPredstavitel(" + archPredstavitelPr + ")");
-		ArchPredstavitelPr u = getArchPredstavitelId(archPredstavitelPr.getId());
-		entityManager.remove(u);
-	}
 	
-	public ArchPredstavitelPr getArchPredstavitelId(long id) {
-		log.trace("###\t\t getArchPredstavitel(" + id + ");");
-		return entityManager.find(ArchPredstavitelPr.class, id);
+	public List<ArchPredstavitelPr> getArchPredstavitelPr(long idPredstavitel) {
+		log.trace("###\t\t getArchPredstavitelPr(" + idPredstavitel+");");
+		List<ArchPredstavitelPr> gre;
+		try {
+			gre = entityManager.createQuery("SELECT u FROM ArchPredstavitelPr u WHERE u.gz40tPredstavitel.id=:idPredstavitel ORDER BY u.rodina ", ArchPredstavitelPr.class).setParameter("idPredstavitel", idPredstavitel).getResultList();
+		} catch (NoResultException e) {
+			return null;
+		}
+		return gre;
 	}
 
 

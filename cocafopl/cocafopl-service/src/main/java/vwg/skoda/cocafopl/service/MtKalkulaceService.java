@@ -58,12 +58,12 @@ public class MtKalkulaceService {
 		return gre;
 	}
 
-	public List<MtKalkulace> getMtKalkulace(String mt) {
-		log.trace("###\t\t getMtKalkulace(" + mt + ");");
+	public List<MtKalkulace> getMtKalkulace(String mt, String zavod) {
+		log.trace("###\t\t getMtKalkulace(" + mt+"-"+zavod + ");");
 		List<MtKalkulace> gre = null;
 		try {
-			gre = entityManager.createQuery("SELECT mtk FROM MtKalkulace mtk WHERE mtk.gz39tMt.modelTr=:mt ORDER BY mtk.gz39tKalkulace.kalkulace", MtKalkulace.class).setParameter("mt", mt)
-					.getResultList();
+			gre = entityManager.createQuery("SELECT mtk FROM MtKalkulace mtk WHERE mtk.gz39tMt.modelTr=:mt AND mtk.gz39tMt.zavod=:zavod ORDER BY mtk.gz39tKalkulace.kalkulace", MtKalkulace.class)
+					.setParameter("mt", mt).setParameter("zavod", zavod).getResultList();
 		} catch (NoResultException e) {
 			return null;
 		}

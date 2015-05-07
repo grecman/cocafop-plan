@@ -80,12 +80,12 @@
 						<TR>
 							<TD style="width: 170px; height: 30px; font-weight: bold;">Platnost OD<SPAN style="color: red; font-weight: bold;">*</SPAN></TD>
 							<TD><form:input  path="platnostOd" id="platnostOd" value="${mtInput.platnostOd}" class="textovePole" cssStyle="width:60px"></form:input><SPAN
-								style="font-size: x-small; color: gray;"> V případě, že existuje pro tuto modelovou třídu schválaná kalkulace nebo okomunikovaný představitel, tak platnost nebude změněna.</SPAN></TD>
+								style="font-size: x-small; color: gray;"> V případě, že existuje pro tuto modelovou třídu schválaná kalkulace, tak platnost nebude změněna.</SPAN></TD>
 						</TR>
 						<TR>
 							<TD style="width: 170px; height: 30px; font-weight: bold;">Platnost DO<SPAN style="color: red; font-weight: bold;">*</SPAN></TD>
 							<TD><form:input path="platnostDo" id="platnostDo" value="${mtInput.platnostDo}" class="textovePole" cssStyle="width:60px"></form:input><SPAN
-								style="font-size: x-small; color: gray;"> Minimální hodnota této platnosti je první neschválená kalkulace pro vybranou modelovou třídu. V případě zadání nižší hodnoty proběhne automatická oprava.</SPAN></TD>
+								style="font-size: x-small; color: gray;"> Minimální hodnota této platnosti musí být vyšší než poslední schválená kalkulace. V případě zadání nižší hodnoty proběhne automatická oprava.</SPAN></TD>
 						</TR>
 						<TR>
 							<TD colspan="2"><SPAN style="color: red; font-weight: bold;">*</SPAN><SPAN style="font-size: x-small; color: gray;"> povinný údaj</SPAN></TD>

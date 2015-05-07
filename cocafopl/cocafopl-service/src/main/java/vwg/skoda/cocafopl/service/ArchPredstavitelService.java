@@ -43,12 +43,12 @@ public class ArchPredstavitelService {
 		return entityManager.find(ArchPredstavitel.class, id);
 	}
 
-	public List<ArchPredstavitel> getArchPredstavitel(int kalkulace, String modelova_trida) {
-		log.trace("###\t\t getArchPredstavitel(" + kalkulace + ", " + modelova_trida + ");");
+	public List<ArchPredstavitel> getArchPredstavitel(int kalkulace, String modelova_trida, String zavod) {
+		log.trace("###\t\t getArchPredstavitel(" + kalkulace + ", " + modelova_trida +"-"+zavod+");");
 		List<ArchPredstavitel> gre;
 		try {
-			gre = entityManager.createQuery("SELECT u FROM ArchPredstavitel u WHERE u.gz40tKalkulace.kalkulace=:kalkulace AND u.modelTr=:modelova_trida ORDER BY u.cisloPred", ArchPredstavitel.class)
-					.setParameter("kalkulace", kalkulace).setParameter("modelova_trida", modelova_trida).getResultList();
+			gre = entityManager.createQuery("SELECT u FROM ArchPredstavitel u WHERE u.gz40tKalkulace.kalkulace=:kalkulace AND u.modelTr=:modelova_trida AND u.zavod=:zavod ORDER BY u.cisloPred", ArchPredstavitel.class)
+					.setParameter("kalkulace", kalkulace).setParameter("modelova_trida", modelova_trida).setParameter("zavod", zavod).getResultList();
 		} catch (NoResultException e) {
 			return null;
 		}
@@ -66,6 +66,32 @@ public class ArchPredstavitelService {
 			return null;
 		}
 		return gre;
+	}
+	
+	public List<ArchPredstavitel> getArchPredstavitelProMinuleCislo(int kalkulace, String mt, String zavod, String mk, String kodZeme) {
+		log.trace("###\t\t getArchPredstavitelProMinuleCislo(" + kalkulace + ", " + mt + "-" + zavod + ", " + mk + ", "+kodZeme+");");
+		List<ArchPredstavitel> gre;
+		try {
+			gre = entityManager
+					.createQuery("SELECT u FROM ArchPredstavitel u WHERE u.gz40tKalkulace.kalkulace=:kalkulace AND u.modelTr=:mt AND u.zavod=:zavod AND u.modelovyKlic=:mk AND u.kodZeme=:kodZeme ",
+							ArchPredstavitel.class).setParameter("kalkulace", kalkulace).setParameter("mt", mt).setParameter("zavod", zavod).setParameter("mk", mk).setParameter("kodZeme", kodZeme).getResultList();
+		} catch (NoResultException e) {
+			return null;
+		}
+		return gre;			
+	}
+	
+	public List<Integer> getArchPredstavitelCislaPredVRoce(String rok, String mt) {
+		log.trace("###\t\t getArchPredstavitelCislaPredVRoce(" + rok + ", " + mt + ");");
+		List<Integer> gre;
+		try {
+			gre = entityManager
+					.createQuery("SELECT a.cisloPred FROM ArchPredstavitel a WHERE a.modelTr=:mt AND substring(a.gz40tKalkulace.kalkulace, 1, 4)=:rok GROUP BY a.cisloPred ORDER BY a.cisloPred ",
+							Integer.class).setParameter("rok", rok).setParameter("mt", mt).getResultList();
+		} catch (NoResultException e) {
+			return null;
+		}
+		return gre;			
 	}
 
 }

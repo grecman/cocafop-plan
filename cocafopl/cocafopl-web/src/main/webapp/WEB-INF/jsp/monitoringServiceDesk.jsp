@@ -59,15 +59,9 @@
 				<BR />
 				<HR />
 			</div>
-			<div class="messages" id="messages">
-				<div id="feedback" class="feedback">&#160;</div>
-			</div>
+			
 		</div>
 		<div class="pageFooter">
-			<div class="actionFooter">
-				<span id="footerButtons"> <a id="templateButton" class="heroBtn">templateButton1</a></span> <span id="footerButtons"> <a id="templateButton"
-					class="heroBtn">templateButton2</a></span>
-			</div>
 			<jsp:include page="footerInfo.jsp" />
 		</div>
 	</div>

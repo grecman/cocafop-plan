@@ -49,27 +49,27 @@ public class PredstavitelService {
 		return entityManager.createQuery("SELECT u FROM Predstavitel u ORDER BY u.predstavitel DESC ", Predstavitel.class).getResultList();
 	}
 	
-	public List<Integer> getPredstavitelRoky() {
-		log.trace("###\t\t getPredstavitelRoky();");
-		List<Integer> gre = null;
-		try {
-			gre = entityManager.createQuery("SELECT u.rok FROM Predstavitel u GROUP BY u.rok ORDER BY u.rok DESC", Integer.class).getResultList();
-		} catch (NoResultException e) {
-			return null;
-		}
-		return gre;
-	}
+//	public List<Integer> getPredstavitelRoky() {
+//		log.trace("###\t\t getPredstavitelRoky();");
+//		List<Integer> gre = null;
+//		try {
+//			gre = entityManager.createQuery("SELECT u.rok FROM Predstavitel u GROUP BY u.rok ORDER BY u.rok DESC", Integer.class).getResultList();
+//		} catch (NoResultException e) {
+//			return null;
+//		}
+//		return gre;
+//	}
 	
-	public List<Predstavitel> getPredstaviteleVRoce(int rok) {
-		log.trace("###\t\t getPredstaviteleVRoce("+rok+");");
-		List<Predstavitel> gre = null;
-		try {
-			gre = entityManager.createQuery("SELECT u FROM Predstavitel u WHERE u.rok=:rok ORDER BY u.rok DESC", Predstavitel.class).setParameter("rok", rok).getResultList();
-		} catch (NoResultException e) {
-			return null;
-		}
-		return gre;
-	}
+//	public List<Predstavitel> getPredstaviteleVRoce(int rok) {
+//		log.trace("###\t\t getPredstaviteleVRoce("+rok+");");
+//		List<Predstavitel> gre = null;
+//		try {
+//			gre = entityManager.createQuery("SELECT u FROM Predstavitel u WHERE u.rok=:rok ORDER BY u.rok DESC", Predstavitel.class).setParameter("rok", rok).getResultList();
+//		} catch (NoResultException e) {
+//			return null;
+//		}
+//		return gre;
+//	}
 	
 	public Predstavitel getPredstavitel(String mt, Integer cisloPred) {
 		log.trace("###\t\t getPredstavitel("+mt+", "+cisloPred+");");
@@ -104,6 +104,4 @@ public class PredstavitelService {
 		}
 		return gre;
 	}
-
-
 }

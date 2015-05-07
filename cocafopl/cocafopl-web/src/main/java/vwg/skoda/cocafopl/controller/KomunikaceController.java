@@ -182,7 +182,7 @@ public class KomunikaceController {
 
 			if (probehlaAlesponJednaKomunikace) {
 				log.trace("###\t\t Komunikace MBV/Favas - ulozeni posledni editace do MT_KALKULACE.");
-				List<MtKalkulace> mtKalkulacePoslEdit = serviceMtKalkulace.getMtKalkulace(pk.getGz39tMtKalkulace().getGz39tMt().getModelTr());
+				List<MtKalkulace> mtKalkulacePoslEdit = serviceMtKalkulace.getMtKalkulace(pk.getGz39tMtKalkulace().getGz39tMt().getModelTr(), pk.getGz39tMtKalkulace().getGz39tMt().getZavod());
 				for (MtKalkulace mtkx : mtKalkulacePoslEdit) {
 					mtkx.setPosledniEditace(new Date());
 					mtkx.setPosledniEditaceDuvod("Komunikace MBV/Favas " + pk.getGz39tPredstavitel().getCisloPred() + ", " + pk.getGz39tPredstavitel().getModelovyKlic().toUpperCase() + " - "

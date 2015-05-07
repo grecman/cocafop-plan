@@ -209,6 +209,7 @@ public class IndexController {
 		
 		// inicializace sessinovych promennych (abych nemusel resit NULLy a mohl se ptat jen na isEmpty)
 		session.setAttribute("kalkulaceRRRRMM", "");
+		session.setAttribute("archKalkulaceRRRRMM", "");
 		session.setAttribute("vybranaMt", "");
 		session.setAttribute("vybranyZavod", "");
 

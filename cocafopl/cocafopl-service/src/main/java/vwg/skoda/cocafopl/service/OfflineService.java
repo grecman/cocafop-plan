@@ -54,5 +54,16 @@ public class OfflineService {
 		}
 		return gre;
 	}
+	
+	public List<Offline> getOfflineAgendaNeukoncena(String agenda) {
+		log.trace("###\t\t getOfflineAgendaNeukoncena();");
+		List<Offline> gre;
+		try {
+			gre = entityManager.createQuery("SELECT u FROM Offline u WHERE u.agenda=:agenda AND u.casUkonceni IS NULL ORDER BY u.casZadani DESC ", Offline.class).setParameter("agenda", agenda).getResultList();
+		} catch (NoResultException e) {
+			return null;
+		}
+		return gre;
+	}
 
 }

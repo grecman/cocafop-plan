@@ -79,7 +79,6 @@
 		<description>Čtenáři</description>
 		<role-name>READERS</role-name>
 	</security-role>
-	
 
 	<security-role>
 		<description>Service Desk</description>
@@ -100,7 +99,6 @@
 		</auth-constraint>
 	</security-constraint>
 
-<!--
 	<resource-ref>
 		<description></description>
 		<res-ref-name>jdbc/Cocafoppl</res-ref-name>
@@ -108,6 +106,6 @@
 		<res-auth>Container</res-auth>
 		<res-sharing-scope>Shareable</res-sharing-scope>
 	</resource-ref>
--->
+
 
 </web-app>

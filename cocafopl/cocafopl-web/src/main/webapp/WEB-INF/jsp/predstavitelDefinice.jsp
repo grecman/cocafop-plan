@@ -6,10 +6,8 @@
 	<jsp:directive.page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" />
 	<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-
 <jsp:include page="lib.jsp" />
 <title>COCAFOP-Plan</title>
-
 <script>
 	var IdVRadku = 0;
 
@@ -51,28 +49,25 @@
 </script>
 </head>
 <body class="pages">
-
 	<div class="page basePage">
-
 		<c:set scope="request" var="selectedMenu" value="predstavitel" />
 		<c:set scope="request" var="selectedSubMenu" value="definice" />
-
 		<jsp:include page="header.jsp" />
-
 		<div class="submenu">
 			<div class="items">
 				<a class="${selectedSubMenu eq 'definice' ? 'selected' : 'passive'}" href="${pageContext.servletContext.contextPath}/srv/predstavitel/definice">Definice
-					představitelů</a> <a class="${selectedSubMenu eq 'seznam' ? 'selected' : 'passive'}" href="${pageContext.servletContext.contextPath}/srv/predstavitel/seznam">Seznam
+					představitelů</a>
+				<a class="${selectedSubMenu eq 'seznam' ? 'selected' : 'passive'}" href="${pageContext.servletContext.contextPath}/srv/predstavitel/seznam">Seznam
 					představitelů</a>
 			</div>
 		</div>
-
 		<div class="pageBody">
 			<div class="mainAreaWide">
 				<div class="formBar">
 					<c:choose>
 						<c:when test="${(empty(mt.modelTr))}">
-							<span> <form:form commandName="mt" action="${pageContext.servletContext.contextPath}/srv/predstavitel/definice/list">
+							<span>
+								<form:form commandName="mt" action="${pageContext.servletContext.contextPath}/srv/predstavitel/definice/list">
 						&#160;Modelová třída a závod:&#160;
                             <form:select onchange="this.form.submit(); return true;" path="id">
 										<form:option value="0"> . . .  </form:option>
@@ -84,12 +79,12 @@
 							</span>
 						</c:when>
 						<c:otherwise>
-							<a href="${pageContext.servletContext.contextPath}/srv/predstavitel/definice"> <SPAN>&#160;Modelová třída a závod:&#160;</SPAN><span
-								style="color: #4BA82E; font-weight: bold;">${mt.modelTr}-${mt.zavod}</span>
+							<a href="${pageContext.servletContext.contextPath}/srv/predstavitel/definice">
+								<SPAN>&#160;Modelová třída a závod:&#160;</SPAN>
+								<span style="color: #4BA82E; font-weight: bold;">${mt.modelTr}-${mt.zavod}</span>
 							</a>
 						</c:otherwise>
 					</c:choose>
-
 					<c:if test="${not(empty(mt.modelTr))}">
 						<SPAN style="margin-left: 50px; margin-right: 0px;">Produkt:</SPAN>
 						<SPAN style="background-color: white;">&#160;${mt.produkt}&#160;</SPAN>
@@ -99,7 +94,6 @@
 						<SPAN style="background-color: white;">&#160;${mt.platnostOd}&#160;-&#160;${mt.platnostDo}&#160;</SPAN>
 					</c:if>
 				</div>
-
 				<c:if test="${not(empty(listPredstavitelu))}">
 					<div class="tableContainer">
 						<table class="dataTable" id="tableId" style="table-layout: fixed;">
@@ -108,19 +102,16 @@
 							<col width="60px" />
 							<col width="45px" />
 							<col width="45px" />
-
 							<col width="120px" />
-							<col width="125px" />
-							<col width="65px" />
 							<col width="120px" />
+							<col width="100px" />
+							<col width="85px" />
 							<col width="50px" />
-
 							<col width="*" />
 							<col width="65px" />
 							<col width="65px" />
 							<col width="140px" />
 							<col width="60px" />
-
 							<col width="50px" />
 							<col width="45px" />
 							<thead>
@@ -131,19 +122,16 @@
 									<th style="font-size: x-small;" title="Modelový klíč">Model. klíč</th>
 									<th style="font-size: x-small;" title="Rozloženost">Rozl.</th>
 									<th style="font-size: x-small;">Kód země</th>
-
 									<th style="font-size: x-small;">Typ</th>
 									<th style="font-size: x-small;">Výbava</th>
 									<th style="font-size: x-small;">Obsah</th>
 									<th style="font-size: x-small;">Výkon</th>
 									<th style="font-size: x-small;">EU norma</th>
-
 									<th style="font-size: x-small;">Poznámka</th>
 									<th style="font-size: x-small;">Platnost OD</th>
 									<th style="font-size: x-small;">Platnost DO</th>
 									<th style="font-size: x-small;">Výbavy</th>
 									<th style="font-size: x-small;">Čestnost</th>
-
 									<th style="font-size: x-small;">Comix</th>
 									<th></th>
 								</tr>
@@ -153,7 +141,21 @@
 									<tr>
 										<td style="display: none;">${i.id}</td>
 										<td align="center">${i.cisloPred}</td>
-										<td align="center">${i.cisloPredMin}</td>
+										<td align="center"><c:choose>
+												<c:when test="${i.cisloPredMin==-1}">
+													<SPAN style="color: red;" title="Pro tohoto představitele existuje více kombinací modelové třídy a kódu země v archívu.">xxx</SPAN>
+												</c:when>
+												<c:otherwise>
+													<c:choose>
+														<c:when test="${i.cisloPredMin==0}">
+															<SPAN title="Pro tohoto představitele neexistuje kombinace modelové třídy a kódu země v archívu.">&#160;&#160;&#160;&#160;</SPAN>
+														</c:when>
+														<c:otherwise>
+															${i.cisloPredMin}
+														</c:otherwise>
+													</c:choose>
+												</c:otherwise>
+											</c:choose></td>
 										<td align="left">${i.modelovyKlic}</td>
 										<td align="center">${i.rozlozenost}</td>
 										<td align="center">${i.kodZeme}</td>
@@ -190,9 +192,12 @@
 												</c:otherwise>
 											</c:choose></td>
 										<td align="center"><c:if test="${moznoEditovat}">
-												<a href="${pageContext.servletContext.contextPath}/srv/predstavitel/definice/editForm/${i.id}"> <img title="Editovat" style="border: 0px;"
-													src="${pageContext.servletContext.contextPath}/resources/ico/edit.png" /></a>
-												<a href="#openModalSmazat"><img title="Smazat" style="border: 0px;" src="${pageContext.servletContext.contextPath}/resources/ico/smazat.png" /></a>
+												<a href="${pageContext.servletContext.contextPath}/srv/predstavitel/definice/editForm/${i.id}">
+													<img title="Editovat" style="border: 0px;" src="${pageContext.servletContext.contextPath}/resources/ico/edit.png" />
+												</a>
+												<a href="#openModalSmazat">
+													<img title="Smazat" style="border: 0px;" src="${pageContext.servletContext.contextPath}/resources/ico/smazat.png" />
+												</a>
 											</c:if></td>
 									</tr>
 								</c:forEach>
@@ -200,20 +205,29 @@
 						</table>
 					</div>
 				</c:if>
-
 				<c:if test="${not(empty(mt.modelTr))}">
 					<div class="formBar">
-
-						<span><a href="${pageContext.servletContext.contextPath}/srv/predstavitel/definice/novyPredForm"><input type="button" value="Nový"
-								class="heroBtn"></input></a></span>
-
+						<span>
+							<a href="${pageContext.servletContext.contextPath}/srv/predstavitel/definice/novyPredForm">
+								<input type="button" value="Nový" class="heroBtn"></input>
+							</a>
+						</span>
 						<c:if test="${empty(listPredstavitelu) and not(empty(vybranaMtZavod))}">
-							<span><a href="${pageContext.servletContext.contextPath}/srv/predstavitel/definice/import"><input type="button" value="Import" class="heroBtn"></input></a></span>
+							<span>
+								<a href="${pageContext.servletContext.contextPath}/srv/predstavitel/definice/import">
+									<input type="button" value="Import" class="heroBtn"></input>
+								</a>
+							</span>
 						</c:if>
 						<c:if test="${not(empty(listPredstavitelu))}">
-							<span><input type="button" id="idButtonExport" value="Export EXCEL" class="heroBtn"></input></span>
-							<span><a href="#openModalMinuleCisloPred"><input type="button" value="Doplnit min.číslo" class="heroBtn"
-									title="Doplnit minulé číslo představitele"></input></a></span>
+							<span>
+								<input type="button" id="idButtonExport" value="Export EXCEL" class="heroBtn"></input>
+							</span>
+							<span>
+								<a href="#openModalMinuleCisloPred">
+									<input type="button" value="Doplnit min.číslo" class="heroBtn" title="Doplnit minulé číslo představitele"></input>
+								</a>
+							</span>
 						</c:if>
 					</div>
 				</c:if>
@@ -223,8 +237,6 @@
 			<jsp:include page="footerInfo.jsp" />
 		</div>
 	</div>
-
-
 	<!-- *****************************  M  O  D  A  L   **********************************-->
 	<div id="openModalSmazat" class="modalWindow">
 		<div class="obalovak">
@@ -233,8 +245,9 @@
 				<h3>Smazání představitele</h3>
 			</div>
 			<div class="modalContent">
-				Opravdu chcete smazat tohoto představitele?<BR /> <BR /> <SPAN style="font-size: x-small; color: gray;">Pokud pro představitele existuje kalkulace,
-					která je již v daném roce schválena, tak smazání nebude provedeno.</SPAN>
+				Opravdu chcete smazat tohoto představitele?<BR /> <BR />
+				<SPAN style="font-size: x-small; color: gray;">Pokud pro představitele existuje kalkulace, která je již v daném roce schválena, tak smazání nebude
+					provedeno.</SPAN>
 			</div>
 			<div class="modalFooter">
 				<input type="button" id="smazatButton" value="Smazat" class="ok"></input>
@@ -247,11 +260,16 @@
 			<div class="modalHeader">
 				<h3>Doplnění minulých čísel představitelů</h3>
 			</div>
-			<div class="modalContent">Po potvrzení, aplikace doplní "Minulé číslo představitele" z prosince předchozího roku (vyhledávat se bude dle stejného
-				modelového klíče a kódu země), a to pouze u představitelů, kde je toto pole prazdné.</div>
+			<div class="modalContent">Po potvrzení, aplikace doplní "Minulé číslo představitele" z prosince předchozího roku. Shoda se bude vyhledávat dle stejného
+				modelového klíče a kódu země. Doplnění se provede u všech zobrazených představitelů!</div>
 			<div class="modalFooter">
-				<a href="${pageContext.servletContext.contextPath}/srv/predstavitel/definice/doplnitMinuleCisloPredstavitele"> <input type="button"
-					id="doplnitMinCisloButton" value="Doplnit" class="ok"></input></a>
+				<TABLE style="width: 100%;">
+					<TR>
+						<TD align="right"><a href="${pageContext.servletContext.contextPath}/srv/predstavitel/definice/doplnitMinuleCisloPredstavitele">
+								<input type="button" id="doplnitMinCisloButton" value="Doplnit" class="ok"></input>
+							</a></TD>
+					</TR>
+				</TABLE>
 			</div>
 		</div>
 	</div>

@@ -9,29 +9,37 @@
 	<packaging>ear</packaging>
 
 	<properties>
-		<ear.directory>g:/.Projects/IT/SAB/builds/COCAFOPPL/</ear.directory>
 		<ear.file>cocafoppl</ear.file>
+		<ear.directory>g:/.Projects/IT/SAB/builds/COCAFOPPL/</ear.directory>
 	</properties>
 
 	<build>
 		<plugins>
 			<plugin>
 				<artifactId>maven-ear-plugin</artifactId>
+				<version>2.10</version>
 				<configuration>
 					<version>6</version>
 					<displayName>COCAFOPPL</displayName>
 					<generateApplicationXml>true</generateApplicationXml>
+					
 					<modules>
 						<webModule>
 							<groupId>vwg.skoda.cocafopl</groupId>
 							<artifactId>cocafopl-web</artifactId>
-							<contextRoot>/cocafopl-web</contextRoot>
+							<contextRoot>/cocafoppl</contextRoot>
 						</webModule>
 					</modules>
 
 					<finalName>${ear.file}</finalName>
 					<outputDirectory>${ear.directory}</outputDirectory>
+					
 					<skinnyWars>true</skinnyWars>
+					<archive>
+						<manifest>
+							<addClasspath>true</addClasspath>
+						</manifest>
+					</archive>
 					
 				</configuration>
 			</plugin>
@@ -46,5 +54,5 @@
 			<type>war</type>
 		</dependency>
 	</dependencies>
-	
+
 </project>

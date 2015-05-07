@@ -20,8 +20,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import vwg.skoda.cocafopl.entity.ArchKalkulace;
+import vwg.skoda.cocafopl.entity.ArchKalkulaceMtZavView;
 import vwg.skoda.cocafopl.entity.ArchPredstavitel;
-import vwg.skoda.cocafopl.entity.ArchPredstavitelPr;
 import vwg.skoda.cocafopl.entity.Kalkulace;
 import vwg.skoda.cocafopl.entity.KalkulaceMtZavod;
 import vwg.skoda.cocafopl.entity.Mt;
@@ -30,10 +30,10 @@ import vwg.skoda.cocafopl.entity.MtKalkulaceView;
 import vwg.skoda.cocafopl.entity.MtProd;
 import vwg.skoda.cocafopl.entity.Offline;
 import vwg.skoda.cocafopl.entity.PredstavitelKalkulace;
-import vwg.skoda.cocafopl.entity.PredstavitelPr;
 import vwg.skoda.cocafopl.entity.Protokol;
 import vwg.skoda.cocafopl.entity.User;
 import vwg.skoda.cocafopl.obj.UniObj;
+import vwg.skoda.cocafopl.service.ArchKalkulaceMtZavViewService;
 import vwg.skoda.cocafopl.service.ArchKalkulaceService;
 import vwg.skoda.cocafopl.service.ArchPredstavitelPrService;
 import vwg.skoda.cocafopl.service.ArchPredstavitelService;
@@ -100,6 +100,9 @@ public class KalkulaceController {
 
 	@Autowired
 	private OfflineService serviceOffline;
+
+	@Autowired
+	private ArchKalkulaceMtZavViewService serviceArchKalkuaceMtZavView;
 
 	@RequestMapping("/mtDefinice")
 	public String mtDefinice(Mt mt, Model model, HttpServletRequest req, HttpSession session) throws SQLException, UnknownHostException {
@@ -207,18 +210,31 @@ public class KalkulaceController {
 	public String editMtFormSubmit(Mt mt, Model model, HttpServletRequest req, HttpSession session) throws SQLException, UnknownHostException {
 		log.debug("###\t editMtFormSubmit(" + mt.getModelTr() + "," + mt.getZavod() + "," + mt.getKodZeme() + "," + mt.getPlatnostOd() + "-" + mt.getPlatnostDo() + ", " + mt.getPopis() + ")");
 
-		// ArchPredstavitel ap = serviceArchPredstavitel.get
-
 		Mt mtEdit = serviceMt.getMt(mt.getId());
 
 		mtEdit.setModelTr(mt.getModelTr());
 		mtEdit.setZavod(mt.getZavod());
 		mtEdit.setKodZeme(mt.getKodZeme());
 		mtEdit.setPopis(mt.getPopis());
-		// TODO: V případě, že existuje pro tuto modelovou třídu schválaná kalkulace nebo okomunikovaný představitel, tak platnost nebude změněna
-		mtEdit.setPlatnostOd(mt.getPlatnostOd());
-		// TODO: Minimální hodnota této platnosti je první neschválená kalkulace pro vybranou modelovou třídu. V případě zadání nižší hodnoty proběhne automatická oprava
-		mtEdit.setPlatnostDo(mt.getPlatnostDo());
+
+		List<ArchKalkulaceMtZavView> akMt = serviceArchKalkuaceMtZavView.getArchKalkulaceMtZavView(mt.getModelTr(), mt.getZavod());
+		if (akMt.isEmpty()) {
+			mtEdit.setPlatnostOd(mt.getPlatnostOd());
+		} else {
+			log.debug("###\t\t Platnost-OD  nebyla zmenena, protoze existuje pro tuto modelovou třídu schválaná kalkulace");
+		}
+
+		List<MtKalkulace> mtk = serviceMtKalkulace.getMtKalkulace(mt.getModelTr(), mt.getZavod());
+		if (mtEdit.getPlatnostDo().intValue() == mt.getPlatnostDo().intValue()) {
+			log.debug("###\t\t Platnost-DO nebyla zmenena, needituji.");
+			// toto je tady kvuli tomu, aby pri editaci jiz neplatnych MT se automaticky neopravila platnostDo dle posledni prac.kalkulace, viz druhy ELSE
+		} else if (mt.getPlatnostDo() >= mtk.get(0).getGz39tKalkulace().getKalkulace()) {
+			mtEdit.setPlatnostDo(mt.getPlatnostDo());
+		} else {
+			log.debug("###\t\t Platnost-DO byla mensi nez posledni pracovni kalkulace, proto ji opravuji na hodnotu posledni pracovni kalkulace.");
+			mtEdit.setPlatnostDo(mtk.get(0).getGz39tKalkulace().getKalkulace());
+		}
+
 		mtEdit.setUtime(new Date());
 		mtEdit.setUuser(req.getUserPrincipal().getName().toUpperCase());
 		serviceMt.setMt(mtEdit);
@@ -540,95 +556,129 @@ public class KalkulaceController {
 	public String spustitVypocet(@PathVariable int kalkulaceRRRRMM, Model model, HttpServletRequest req, HttpSession session) throws SQLException, UnknownHostException {
 		log.debug("###\t spustitVypocet(" + kalkulaceRRRRMM + ")");
 
-		log.debug("###\t ...mazu pripadny priznak SCHAVLENO u vsech modelovych trid v entite MtKalkulace");
-		List<MtKalkulace> mtkList = serviceMtKalkulace.getMtKalkulace(kalkulaceRRRRMM);
-		for (MtKalkulace mtk : mtkList) {
-			mtk.setSchvaleno(null);
-			mtk.setSchvalil(null);
-			mtk.setUtime(new Date());
-			mtk.setUuser(req.getUserPrincipal().getName().toUpperCase());
-			serviceMtKalkulace.setMtKalkulace(mtk);
-		}
+		List<Offline> offVypocet = serviceOffline.getOfflineAgendaNeukoncena("Představitelé - výpočet");
+		if (offVypocet.isEmpty()) {
 
-		List<ArchKalkulace> akSmazat = serviceArchKalkulace.getArchKalkulaceAll();
-		for (ArchKalkulace akDel : akSmazat) {
-			if(akDel.getSchvaleno()==null){
-				log.debug("###\t ...mazu " + akDel.getKalkulace() + " z celeho archvivu.");
-				serviceArchKalkulace.removeArchKalkulace(akDel);
+			Offline off = new Offline();
+			off.setAgenda("Představitelé - výpočet");
+			off.setCasZadani(new Date());
+			off.setStatus("Nový");
+			off.setUzivatel(req.getUserPrincipal().getName().toUpperCase());
+			// GRE: v popisu nutno ukladat ciste jen rrrrmm, pac to pak slouzi jako parametr davky !!!
+			off.setPopis(String.valueOf(kalkulaceRRRRMM));
+			serviceOffline.addOffline(off);
+
+			log.debug("###\t ...mazu pripadny priznak SCHAVLENO u vsech modelovych trid v entite MtKalkulace");
+			List<MtKalkulace> mtkList = serviceMtKalkulace.getMtKalkulace(kalkulaceRRRRMM);
+			for (MtKalkulace mtk : mtkList) {
+				mtk.setSchvaleno(null);
+				mtk.setSchvalil(null);
+				mtk.setUtime(new Date());
+				mtk.setUuser(req.getUserPrincipal().getName().toUpperCase());
+				serviceMtKalkulace.setMtKalkulace(mtk);
 			}
-		}
 
-		log.debug("###\t ...zakladam kalkulaci v ArchKalkulace.");
-		Kalkulace k = serviceKalkulace.getKalkulace(kalkulaceRRRRMM);
-		ArchKalkulace ak = new ArchKalkulace();
-		ak.setKalkulace(k.getKalkulace());
-		ak.setKalkulacniDatum(k.getKalkulacniDatum());
-		ak.setPosledniVypocet(new Date());
-		ak.setTerkach(serviceArchKalkulace.getTerkach());
-		ak.setTerka(serviceArchKalkulace.getTerka());
-		serviceArchKalkulace.addArchKalkulace(ak);
-
-		List<MtKalkulace> mtkListFullPr = serviceMtKalkulace.getMtKalkulaceFullPr(kalkulaceRRRRMM);
-		for (MtKalkulace mtk : mtkListFullPr) {
-			List<PredstavitelKalkulace> pkList = servicePredstavitelKalkulace.getPredstaviteleKalkulace(mtk.getGz39tMt().getModelTr(), mtk.getGz39tMt().getZavod(), mtk.getGz39tKalkulace()
-					.getKalkulace());
-			for (PredstavitelKalkulace pk : pkList) {
-				log.debug("###\t ...zakladam pro " + pk.getGz39tPredstavitel().getModelovyKlic() + " pred.c.: " + pk.getGz39tPredstavitel().getCisloPred() + "  do ArchPredstavitel");
-				ArchPredstavitel apk = new ArchPredstavitel();
-				apk.setGz40tKalkulace(serviceArchKalkulace.getArchKalkulaceId(kalkulaceRRRRMM));
-				apk.setCisloPred(pk.getGz39tPredstavitel().getCisloPred());
-				apk.setEuNorma(pk.getGz39tPredstavitel().getEuNorma());
-				apk.setKodZeme(pk.getGz39tPredstavitel().getKodZeme());
-				apk.setModelovyKlic(pk.getGz39tPredstavitel().getModelovyKlic());
-				apk.setModelovyRok(pk.getGz39tMtKalkulace().getMrok());
-				apk.setModelTr(pk.getGz39tMtKalkulace().getGz39tMt().getModelTr());
-				apk.setObsah(pk.getGz39tPredstavitel().getObsah());
-				apk.setPlatnostDo(pk.getGz39tPredstavitel().getPlatnostDo());
-				apk.setPlatnostOd(pk.getGz39tPredstavitel().getPlatnostOd());
-				apk.setPoznamka(pk.getGz39tPredstavitel().getPoznamka());
-				apk.setProdukt(pk.getGz39tMtKalkulace().getGz39tMt().getProdukt());
-				apk.setPrpoz(servicePredstavitelPr.getPredstavitelPrNudle(pk.getId()));
-				apk.setRozlozenost(pk.getGz39tPredstavitel().getRozlozenost());
-				apk.setTyp(pk.getGz39tPredstavitel().getTyp());
-				apk.setVybava(pk.getGz39tPredstavitel().getVybava());
-				if (pk.getVybavyEdit() != null && !pk.getVybavyEdit().startsWith("+")) {
-					// puvodni vybava zamerne potlacena
-					apk.setVybavy(null);
-				} else if (pk.getVybavyEdit() != null && pk.getVybavyEdit().startsWith("+")) {
-					apk.setVybavy(pk.getVybavyEdit());
-				} else {
-					apk.setVybavy(pk.getGz39tPredstavitel().getVybavy());
-				}
-				apk.setComix(pk.getGz39tPredstavitel().getComix());
-				apk.setVykon(pk.getGz39tPredstavitel().getVykon());
-				apk.setZavod(pk.getGz39tMtKalkulace().getGz39tMt().getZavod());
-				serviceArchPredstavitel.addArchPredstavitel(apk);
-
-				ArchPredstavitel apkgre = serviceArchPredstavitel.getArchPredstavitel(pk.getGz39tMtKalkulace().getGz39tKalkulace().getKalkulace(), pk.getGz39tMtKalkulace().getGz39tMt().getModelTr(),
-						pk.getGz39tMtKalkulace().getGz39tMt().getZavod(), pk.getGz39tPredstavitel().getCisloPred());
-				List<PredstavitelPr> prList = servicePredstavitelPr.getPredstavitelPr(pk.getId());
-				for (PredstavitelPr pr : prList) {
-					ArchPredstavitelPr prArch = new ArchPredstavitelPr();
-					prArch.setPr(pr.getPrEditovane() != null ? pr.getPrEditovane() : pr.getPr());
-					prArch.setRodina(pr.getRodina());
-					prArch.setTyp(pr.getTyp());
-					prArch.setGz40tPredstavitel(apkgre);
-					serviceArchPredstavitelPr.addArchPredstavitelPr(prArch);
+			List<ArchKalkulace> akSmazat = serviceArchKalkulace.getArchKalkulaceAll();
+			for (ArchKalkulace akDel : akSmazat) {
+				if (akDel.getSchvaleno() == null) {
+					log.debug("###\t ...mazu " + akDel.getKalkulace() + " z celeho archvivu.");
+					serviceArchKalkulace.removeArchKalkulace(akDel);
+					// GRE: pracovni (neschvaleny) stav muze byt jen jeden, ale proto pro jistotu mazu ve for cyklu vse, kdyby se tam nejakou chybkou dostala dalsi prac.kalkulace
 				}
 			}
-			mtk.setPosledniVypocet(new Date());
-			mtk.setPosledniVypocetUser(req.getUserPrincipal().getName().toUpperCase());
-			serviceMtKalkulace.setMtKalkulace(mtk);
+
+			log.debug("###\t ...zakladam kalkulaci v ArchKalkulace.");
+			Kalkulace k = serviceKalkulace.getKalkulace(kalkulaceRRRRMM);
+			ArchKalkulace ak = new ArchKalkulace();
+			ak.setKalkulace(k.getKalkulace());
+			ak.setKalkulacniDatum(k.getKalkulacniDatum());
+			ak.setPosledniVypocet(new Date());
+			ak.setTerkach(serviceArchKalkulace.getTerkach());
+			ak.setTerka(serviceArchKalkulace.getTerka());
+			serviceArchKalkulace.addArchKalkulace(ak);
+
+			String protokolInfo = "";
+			int protokolPredCount = 0;
+
+			List<MtKalkulace> mtkListFullPr = serviceMtKalkulace.getMtKalkulaceFullPr(kalkulaceRRRRMM);
+			for (MtKalkulace mtk : mtkListFullPr) {
+				List<PredstavitelKalkulace> pkList = servicePredstavitelKalkulace.getPredstaviteleKalkulace(mtk.getGz39tMt().getModelTr(), mtk.getGz39tMt().getZavod(), mtk.getGz39tKalkulace()
+						.getKalkulace());
+				for (PredstavitelKalkulace pk : pkList) {
+					log.debug("###\t ...zakladam pro " + pk.getGz39tPredstavitel().getModelovyKlic() + " pred.c.: " + pk.getGz39tPredstavitel().getCisloPred() + "  do ArchPredstavitel");
+					ArchPredstavitel apk = new ArchPredstavitel();
+					apk.setGz40tKalkulace(serviceArchKalkulace.getArchKalkulaceId(kalkulaceRRRRMM));
+					apk.setCisloPred(pk.getGz39tPredstavitel().getCisloPred());
+					apk.setCisloPredMin(pk.getGz39tPredstavitel().getCisloPredMin());
+					apk.setEuNorma(pk.getGz39tPredstavitel().getEuNorma());
+					apk.setKodZeme(pk.getGz39tPredstavitel().getKodZeme());
+					apk.setModelovyKlic(pk.getGz39tPredstavitel().getModelovyKlic());
+					apk.setModelovyRok(pk.getGz39tMtKalkulace().getMrok());
+					apk.setModelTr(pk.getGz39tMtKalkulace().getGz39tMt().getModelTr());
+					apk.setObsah(pk.getGz39tPredstavitel().getObsah());
+					apk.setPlatnostDo(pk.getGz39tPredstavitel().getPlatnostDo());
+					apk.setPlatnostOd(pk.getGz39tPredstavitel().getPlatnostOd());
+					apk.setPoznamka(pk.getGz39tPredstavitel().getPoznamka());
+					apk.setProdukt(pk.getGz39tMtKalkulace().getGz39tMt().getProdukt());
+					apk.setPrpoz(servicePredstavitelPr.getPredstavitelPrNudle(pk.getId()));
+					apk.setRozlozenost(pk.getGz39tPredstavitel().getRozlozenost());
+					apk.setTyp(pk.getGz39tPredstavitel().getTyp());
+					apk.setVybava(pk.getGz39tPredstavitel().getVybava());
+					if (pk.getVybavyEdit() != null && !pk.getVybavyEdit().startsWith("+")) {
+						// puvodni vybava zamerne potlacena
+						apk.setVybavy(null);
+					} else if (pk.getVybavyEdit() != null && pk.getVybavyEdit().startsWith("+")) {
+						apk.setVybavy(pk.getVybavyEdit());
+					} else {
+						apk.setVybavy(pk.getGz39tPredstavitel().getVybavy());
+					}
+					apk.setComix(pk.getGz39tPredstavitel().getComix());
+					apk.setVykon(pk.getGz39tPredstavitel().getVykon());
+					apk.setZavod(pk.getGz39tMtKalkulace().getGz39tMt().getZavod());
+					serviceArchPredstavitel.addArchPredstavitel(apk);
+
+					// GRE - insert PR GZ40T_PREDSTAVITEL_PR trvalo skoro minutu, proto jsem to presunul do davky.
+					// ArchPredstavitel apkgre = serviceArchPredstavitel.getArchPredstavitel(pk.getGz39tMtKalkulace().getGz39tKalkulace().getKalkulace(),
+					// pk.getGz39tMtKalkulace().getGz39tMt()
+					// .getModelTr(), pk.getGz39tMtKalkulace().getGz39tMt().getZavod(), pk.getGz39tPredstavitel().getCisloPred());
+					// List<PredstavitelPr> prList = servicePredstavitelPr.getPredstavitelPr(pk.getId());
+					// for (PredstavitelPr pr : prList) {
+					// ArchPredstavitelPr prArch = new ArchPredstavitelPr();
+					// prArch.setPr(pr.getPr());
+					// prArch.setPrEditovane(pr.getPrEditovane());
+					// prArch.setRodina(pr.getRodina());
+					// prArch.setTyp(pr.getTyp());
+					// prArch.setGz40tPredstavitel(apkgre);
+					// serviceArchPredstavitelPr.addArchPredstavitelPr(prArch);
+					// }
+
+					protokolPredCount++;
+				}
+				protokolInfo = protokolInfo + mtk.getGz39tMt().getModelTr() + "-" + mtk.getGz39tMt().getZavod() + " (" + protokolPredCount + "),  ";
+				protokolPredCount = 0;
+				mtk.setPosledniVypocet(new Date());
+				mtk.setPosledniVypocetUser(req.getUserPrincipal().getName().toUpperCase());
+				serviceMtKalkulace.setMtKalkulace(mtk);
+			}
+
+			Protokol newProtokol = new Protokol();
+			newProtokol.setNetusername(req.getUserPrincipal().getName().toUpperCase());
+			newProtokol.setAction("Spuštěn výpocet");
+			newProtokol.setInfo(protokolInfo + " (počet představitelů)");
+			newProtokol.setTime(new Date());
+			newProtokol.setSessionid(req.getSession().getId());
+			serviceProtokol.addProtokol(newProtokol);
+
+		} else {
+			log.debug("###\t Vypocet nebude spuštěn, protože v době zadání již jeden nedokončený požadavek ve frontě je!");
+			Protokol newProtokol = new Protokol();
+			newProtokol.setNetusername(req.getUserPrincipal().getName().toUpperCase());
+			newProtokol.setAction("Spuštěn výpocet");
+			newProtokol.setInfo("Vypocet nebude spuštěn, protože v době zadání již jeden nedokončený požadavek ve frontě je!");
+			newProtokol.setTime(new Date());
+			newProtokol.setSessionid(req.getSession().getId());
+			serviceProtokol.addProtokol(newProtokol);
 		}
-		
-		Offline off = new Offline();
-		off.setAgenda("Představitelé - výpočet");
-		off.setCasZadani(new Date());
-		off.setStatus("Nový");
-		off.setUzivatel(req.getUserPrincipal().getName().toUpperCase());
-		off.setPopis(kalkulaceRRRRMM + " - ...");
-		serviceOffline.addOffline(off);
-		
 		return "redirect:/srv/kalkulace/detail/" + kalkulaceRRRRMM;
 	}
 
@@ -641,11 +691,15 @@ public class KalkulaceController {
 			k.setSchvaleno(new Date());
 			k.setSchvalil(req.getUserPrincipal().getName().toUpperCase());
 			serviceArchKalkulace.setArchKalkulace(k);
-			
+
+			Kalkulace kalk = serviceKalkulace.getKalkulace(kalkulaceRRRRMM);
+			serviceKalkulace.removeKalkulace(kalk);
+			session.setAttribute("kalkulaceRRRRMM", "");
+
 			Protokol newProtokol = new Protokol();
 			newProtokol.setNetusername(req.getUserPrincipal().getName().toUpperCase());
 			newProtokol.setAction("Schvaleni kalkulace");
-			newProtokol.setInfo(" pro kalkulace " + kalkulaceRRRRMM);
+			newProtokol.setInfo(String.valueOf(kalkulaceRRRRMM));
 			newProtokol.setTime(new Date());
 			newProtokol.setSessionid(req.getSession().getId());
 			serviceProtokol.addProtokol(newProtokol);
@@ -653,7 +707,7 @@ public class KalkulaceController {
 		} else {
 			log.debug("###\t ... pokus o schvaleni kalkulace ve ktere nebylo nic spocitano!!!");
 		}
-		return "redirect:/srv/kalkulace/detail/" + kalkulaceRRRRMM;
+		return "redirect:/srv/archiv/kalkulace";
 	}
 
 	/* ============================================================================================================= */
@@ -690,7 +744,7 @@ public class KalkulaceController {
 		List<MtKalkulace> mtKalkulace = serviceMtKalkulace.getMtKalkulaceForDelete();
 		for (MtKalkulace mtk : mtKalkulace) {
 
-			String message = "Bylo provedeno na zaklade zmeny platnostiOd nebo Do pro mt " + mtk.getGz39tMt().getModelTr() + " pro kalkulaci " + mtk.getGz39tKalkulace().getKalkulace();
+			String message = "Bylo provedeno na zaklade zmeny platnostiOd nebo Do pro modelovou třídu " + mtk.getGz39tMt().getModelTr() + " pro kalkulaci " + mtk.getGz39tKalkulace().getKalkulace();
 			serviceMtKalkulace.removeMtKalkulace(mtk);
 
 			Protokol newProtokol = new Protokol();

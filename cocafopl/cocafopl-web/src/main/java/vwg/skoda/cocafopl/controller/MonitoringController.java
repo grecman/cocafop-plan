@@ -88,14 +88,17 @@ public class MonitoringController {
 		log.debug("###\t monitoringLogging()");
 		session.setAttribute("pageTitle", "Monitoring - logging");
 		
-		User aktualUser = serviceUser.getUser(req.getUserPrincipal().getName().toUpperCase());
-		if (aktualUser.getUserRole().contains("ADMINS")) {
-			List<Protokol> protokol = serviceProtokol.getAll();
-			model.addAttribute("protokol", protokol);
-		} else {
-			List<Protokol> protokol = serviceProtokol.getAllUserActivity(req.getUserPrincipal().getName().toUpperCase());
-			model.addAttribute("protokol", protokol);
-		}
+//		User aktualUser = serviceUser.getUser(req.getUserPrincipal().getName().toUpperCase());
+//		if (aktualUser.getUserRole().contains("ADMINS")) {
+//			List<Protokol> protokol = serviceProtokol.getAll();
+//			model.addAttribute("protokol", protokol);
+//		} else {
+//			List<Protokol> protokol = serviceProtokol.getAllUserActivity(req.getUserPrincipal().getName().toUpperCase());
+//			model.addAttribute("protokol", protokol);
+//		}
+		
+		List<Protokol> protokol = serviceProtokol.getAllWithoutLogin();
+		model.addAttribute("protokol", protokol);
 
 		return "/monitoringLogging";
 	}

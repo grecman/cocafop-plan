@@ -2,7 +2,7 @@
     <wb-module deploy-name="cocafoppl">
         <wb-resource deploy-path="/" source-path="/target/m2e-wtp/ear-resources"/>
         <wb-resource deploy-path="/" source-path="/src/main/application" tag="defaultRootSource"/>
-        <dependent-module archiveName="cocafopl-web-0.0.1-SNAPSHOT.war" deploy-path="/" handle="module:/classpath/var/M2_REPO/vwg/skoda/cocafopl/cocafopl-web/0.0.1-SNAPSHOT/cocafopl-web-0.0.1-SNAPSHOT.war">
+        <dependent-module archiveName="cocafopl-web-0.0.1-SNAPSHOT.war" deploy-path="/" handle="module:/resource/cocafopl-web/cocafopl-web">
             <dependency-type>uses</dependency-type>
         </dependent-module>
         <dependent-module archiveName="FavasComm-1.0.jar" deploy-path="/" handle="module:/classpath/var/M2_REPO/vwg/skoda/favas/mbv/FavasComm/FavasComm/1.0/FavasComm-1.0.jar">
