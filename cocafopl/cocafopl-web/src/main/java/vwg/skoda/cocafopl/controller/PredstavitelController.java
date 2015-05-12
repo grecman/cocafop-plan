@@ -165,9 +165,6 @@ public class PredstavitelController {
 		for (Predstavitel pr : prd) {
 			existujiciCislaPred.add(pr.getCisloPred());
 		}
-			
-		
-		
 		
 		if (existujiciCislaPred.isEmpty()) {
 			for (int i = 1; i <= 15; i++) {

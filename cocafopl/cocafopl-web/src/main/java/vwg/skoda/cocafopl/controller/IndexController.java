@@ -213,7 +213,7 @@ public class IndexController {
 		session.setAttribute("vybranaMt", "");
 		session.setAttribute("vybranyZavod", "");
 
-		return "redirect:/srv/kalkulace/detail";
+		return "redirect:/srv/archiv/kusovnik";
 	}
 
 }

@@ -2,14 +2,11 @@
 
 <jsp:root xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:form="http://www.springframework.org/tags/form" xmlns:Spring="http://www.springframework.org/tags"
 	xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:f="http://java.sun.com/jsp/jstl/fmt" version="2.0">
-	<div class="logo">
+	<div class="logo"><SCRIPT type="text/javascript">/* gre */</SCRIPT>
 		<!-- pri prazdnem tagu v DIVu prohlizece neumeji tento div uzavrit a ignoruji nasledujici /DIV, proto tento komentar -->
 	</div>
 	<div class="header">
 		<div class="title">COCAFOPPL | ${pageTitle}</div>
-<!-- 		<div class="pageTitle"> -->
-<!-- 			<span id="page.title">${pageTitle}</span> -->
-<!-- 		</div> -->
 		<div class="info">
 			<div class="user">
 				<span id="uzivatel">${userName}&#160;</span>

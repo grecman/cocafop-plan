@@ -57,7 +57,6 @@
 					<col width="180px" />
 					<col width="180px" />
 					<col width="180px" />
-					<col width="205px" />
 					<tr>
 						<td>Číslo představitele</td>
 						<td><SPAN style="background-color: white;">&#160;${p.cisloPred}&#160;</SPAN></td>
@@ -119,7 +118,7 @@
 							<td>PR popis</td>
 						</tr>
 						<tr>
-							<td style="background-color: white; font-family: monospace;" colspan="7">
+							<td style="background-color: white; font-family: monospace;" colspan="6">
 								<c:forEach items="${prPodminky}" var="i">
 									<c:choose>
 										<c:when test="${empty i.prEditovane}">
@@ -135,7 +134,6 @@
 									</c:choose>
 								</c:forEach></td>
 						</tr>
-
 				</table>
 				<BR />
 				<div class="formBar">

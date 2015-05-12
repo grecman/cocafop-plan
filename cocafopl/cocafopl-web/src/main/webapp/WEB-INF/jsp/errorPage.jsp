@@ -14,7 +14,7 @@
 <body class="pages">
 
 	<div class="page basePage">
-		<div class="logo">
+		<div class="logo"><SCRIPT type="text/javascript">/* gre */</SCRIPT>
 			<!-- pri prazdnem tagu v DIVu prohlizece neumeji tento div uzavrit a ignoruji nasledujici /DIV, proto tento komentar -->
 		</div>
 

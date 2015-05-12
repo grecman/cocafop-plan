@@ -17,7 +17,8 @@ public class ArchKalkulaceMtZavView implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	private String id;
+	@Column(name="ID_POM")
+	private String idPom;
 		
 	private int kalkulace;
 
@@ -41,12 +42,18 @@ public class ArchKalkulaceMtZavView implements Serializable {
 	private String modelTr;
 	
 	private String zavod;
+	
+	private String produkt;
 
 	public ArchKalkulaceMtZavView() {
 	}
-	
-	public String getId() {
-		return id;
+
+	public String getIdPom() {
+		return idPom;
+	}
+
+	public void setIdPom(String idPom) {
+		this.idPom = idPom;
 	}
 
 	public int getKalkulace() {
@@ -85,9 +92,10 @@ public class ArchKalkulaceMtZavView implements Serializable {
 		return zavod;
 	}
 
-	public void setId(String id) {
-		this.id = id;
+	public String getProdukt() {
+		return produkt;
 	}
+
 
 	public void setKalkulace(int kalkulace) {
 		this.kalkulace = kalkulace;
@@ -124,8 +132,10 @@ public class ArchKalkulaceMtZavView implements Serializable {
 	public void setZavod(String zavod) {
 		this.zavod = zavod;
 	}
-	
-	
+
+	public void setProdukt(String produkt) {
+		this.produkt = produkt;
+	}
 	
 
 }

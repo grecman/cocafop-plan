@@ -23,9 +23,21 @@ public class ArchKalkulaceMtZavViewService {
 		log.trace("###\t\t getArchKalkulaceMtZavViewId(" + id + ");");
 		return entityManager.find(ArchKalkulaceMtZavView.class, id);
 	}
+	
+	public List<ArchKalkulaceMtZavView> getArchKalkulaceMtZavView() {
+		log.trace("###\t\t getArchKalkulaceMtZavView();");
+		List<ArchKalkulaceMtZavView> gre = null;
+		try {
+			gre = entityManager
+					.createQuery("SELECT u FROM ArchKalkulaceMtZavView u ORDER BY u.kalkulace DESC ", ArchKalkulaceMtZavView.class).getResultList();
+		} catch (NoResultException e) {
+			return null;
+		}
+		return gre;
+	}
 
 	public ArchKalkulaceMtZavView getArchKalkulaceMtZavView(int kalkulace, String mt, String zavod) {
-		log.trace("###\t\t getArchKalkulaceMtZavViewId(" + kalkulace + ", " + mt + "-" + zavod + " );");
+		log.trace("###\t\t getArchKalkulaceMtZavView(" + kalkulace + ", " + mt + "-" + zavod + " );");
 		ArchKalkulaceMtZavView gre = null;
 		try {
 			gre = entityManager
@@ -38,7 +50,7 @@ public class ArchKalkulaceMtZavViewService {
 	}
 	
 	public List<ArchKalkulaceMtZavView> getArchKalkulaceMtZavView(String mt, String zavod) {
-		log.trace("###\t\t getArchKalkulaceMtZavViewId(" +  mt + "-" + zavod + " );");
+		log.trace("###\t\t getArchKalkulaceMtZavView(" +  mt + "-" + zavod + " );");
 		List<ArchKalkulaceMtZavView> gre = null;
 		try {
 			gre = entityManager

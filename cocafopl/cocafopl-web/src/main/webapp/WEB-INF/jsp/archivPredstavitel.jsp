@@ -46,8 +46,8 @@
 							</form:form>
 						</c:when>
 						<c:otherwise>
+							<SPAN>&#160;Kalkulace:&#160;</SPAN>
 							<a href="${pageContext.servletContext.contextPath}/srv/archiv/predstavitel">
-								<SPAN>&#160;Kalkulace:&#160;</SPAN>
 								<SPAN style="color: #4BA82E; font-weight: bold; margin-left: 0px; margin-right: 0px;">${archKalkulaceRRRRMM}</SPAN>
 							</a>
 						</c:otherwise>
@@ -68,8 +68,8 @@
 								</form:form>
 							</c:when>
 							<c:otherwise>
+								<SPAN>&#160;Modelová třída a závod:&#160;:</SPAN>
 								<a href="${pageContext.servletContext.contextPath}/srv/archiv/predstavitel/mtZav">
-									<SPAN>&#160;Modelová třída a závod:&#160;:</SPAN>
 									<SPAN style="color: #4BA82E; font-weight: bold; margin-left: 0px; margin-right: 0px;">${akMtZavView.modelTr}-${akMtZavView.zavod}</SPAN>
 								</a>
 								<SPAN style="margin-left: 20px; margin-right: 0px;">Kalkulační datum:</SPAN>
@@ -77,9 +77,13 @@
 								<c:choose>
 									<c:when test="${not empty akMtZavView.schvaleno}">
 										<SPAN style="margin-left: 20px; margin-right: 0px;">Schválil:</SPAN>
-										<SPAN style="background-color: white;">&#160;${akMtZavView.schvaleno}&#160;</SPAN>
+										<SPAN style="background-color: white;">
+											&#160;
+											<f:formatDate value="${akMtZavView.schvaleno}" pattern="yyyy-MM-dd HH:mm:ss" />
+											&#160;
+										</SPAN>
 										<SPAN style="margin-left: 20px; margin-right: 0px;">Schválil:</SPAN>
-										<SPAN style="background-color: white;">&#160;${akMtZavView.schvaleno}&#160;</SPAN>
+										<SPAN style="background-color: white;">&#160;${akMtZavView.schvalil}&#160;</SPAN>
 									</c:when>
 									<c:otherwise>
 										<SPAN style="color: red; font-weight: bolder;">&#160;Pracovní (nechválená) kalkulace!!&#160;</SPAN>
