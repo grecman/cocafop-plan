@@ -11,11 +11,6 @@
 
 <jsp:include page="lib.jsp" />
 <title>COCAFOP-Plan</title>
-<script>
-	$(document).ready(function() {
-		modalConfirmationDeleteAll();
-	});
-</script>
 </head>
 <body class="pages">
 
@@ -29,19 +24,10 @@
 	
 
 			</div>
-
-			<div id="dialog-confirm" title="Smazat vše?">
-				<p> Všechny položky budou nenávratně smazány. Opravdu provést?</p>
-			</div>
-
-			<div class="messages" id="messages">
-				<div id="feedback" class="feedback">&#160;</div>
-			</div>
 		</div>
 
 		<div class="pageFooter">
 			<div class="buttonBar">
-				<span> <a id="opener" class="heroBtn">Smazat vše</a></span>
 			</div>
 			<jsp:include page="footerInfo.jsp" />
 		</div>

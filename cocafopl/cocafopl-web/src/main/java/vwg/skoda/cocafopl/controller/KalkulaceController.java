@@ -637,7 +637,7 @@ public class KalkulaceController {
 					apk.setZavod(pk.getGz39tMtKalkulace().getGz39tMt().getZavod());
 					serviceArchPredstavitel.addArchPredstavitel(apk);
 
-					// GRE - insert PR GZ40T_PREDSTAVITEL_PR trvalo skoro minutu, proto jsem to presunul do davky.
+					// GRE - insert PR do GZ40T_PREDSTAVITEL_PR trvalo skoro minutu, proto jsem to presunul do davky.
 					// ArchPredstavitel apkgre = serviceArchPredstavitel.getArchPredstavitel(pk.getGz39tMtKalkulace().getGz39tKalkulace().getKalkulace(),
 					// pk.getGz39tMtKalkulace().getGz39tMt()
 					// .getModelTr(), pk.getGz39tMtKalkulace().getGz39tMt().getZavod(), pk.getGz39tPredstavitel().getCisloPred());

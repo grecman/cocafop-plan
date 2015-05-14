@@ -105,6 +105,7 @@ public class PredstavitelController {
 		session.setAttribute("vybranaMt", "");
 		session.setAttribute("vybranyZavod", "");
 		session.setAttribute("kalkulaceRRRRMM", "");
+		session.setAttribute("errorMesage", "");
 
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMM");
 		List<Mt> mtr = serviceMt.getMtPlatneK(Integer.valueOf(sdf.format(new Date())));
@@ -390,6 +391,7 @@ public class PredstavitelController {
 
 		session.setAttribute("vybranaMt", "");
 		session.setAttribute("vybranyZavod", "");
+		session.setAttribute("errorMesage", "");
 
 		User aktualUser = serviceUser.getUser(req.getUserPrincipal().getName().toUpperCase());
 		if (aktualUser.getUserRole().equals("SERVICEDESK".trim())) {
@@ -423,6 +425,8 @@ public class PredstavitelController {
 	public String predstavitelSeznamSKalkulaci(@PathVariable int kalkulaceRRRRMM, Mt mt, MtKalkulace mtKalkulace, Model model, HttpServletRequest req, HttpSession session) throws SQLException,
 			UnknownHostException {
 		log.debug("###\t predstavitelSeznamSKalkulaci(" + session.getAttribute("kalkulaceRRRRMM") + ", " + session.getAttribute("vybranaMt") + "-" + session.getAttribute("vybranyZavod") + ")");
+		
+		session.setAttribute("errorMesage", "");
 
 		if (session.getAttribute("vybranaMt").toString().isEmpty() && session.getAttribute("vybranyZavod").toString().isEmpty()) {
 			List<MtKalkulace> mtList = serviceMtKalkulace.getMtKalkulace((Integer) session.getAttribute("kalkulaceRRRRMM"));

@@ -101,7 +101,7 @@
 
 	<resource-ref>
 		<description></description>
-		<res-ref-name>jdbc/Cocafoppl</res-ref-name>
+		<res-ref-name>jdbc/cocafoppl</res-ref-name>
 		<res-type>javax.sql.DataSource</res-type>
 		<res-auth>Container</res-auth>
 		<res-sharing-scope>Shareable</res-sharing-scope>

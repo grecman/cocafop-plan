@@ -44,7 +44,7 @@ public class IndexController {
 		String role = null;
 
 		if (req.isUserInRole("USERS")) {
-				role = "USERS";
+			role = "USERS";
 		}
 
 		if (req.isUserInRole("READERS")) {
@@ -81,17 +81,17 @@ public class IndexController {
 		session.setAttribute("errorMesage", null);
 
 		log.info("###\t ... for user: " + session.getAttribute("userName") + " (" + role + ") ... " + session.getAttribute("serverName"));
-				
+
 		// test prvniho connectu do db
 		try {
 			serviceUserZentaAdm.getUserZentaAdm(req.getUserPrincipal().getName().toUpperCase());
 		} catch (Exception e) {
-			log.error("###\t Nepodařil se connect do ZentaAdm.GZ09T52@_ZENTA (ověření existence uživatele), nejspíše nefungují databáze!");
+			log.error("###\t Nepodařil se connect do ZentaAdm.GZ09T52@_ZENTA (ověření existence uživatele), nejspíše nefungují databáze!", e);
 			session.setAttribute("errorMesage", "Nepodařil se connect do ZentaAdm.GZ09T52@_ZENTA (ověření existence uživatele), nejspíše nefungují databáze nebo nejsou granty na uvedenou tabulku!");
 			return "redirect:/srv/errorPage";
-		} 
-		
-		//  test existence uzivatele
+		}
+
+		// test existence uzivatele
 		UserZentaAdm userZentaAdm = serviceUserZentaAdm.getUserZentaAdm(req.getUserPrincipal().getName().toUpperCase());
 		if (userZentaAdm == null || userZentaAdm.getNetUsername().isEmpty()) {
 			log.error("###\t Přihlašovaný uživatel " + req.getUserPrincipal().getName().toUpperCase() + " nenalezen v db ZentaAdm.GZ09T52!");
@@ -128,8 +128,8 @@ public class IndexController {
 			User user = serviceUser.getUser(req.getUserPrincipal().getName().toUpperCase());
 
 			// kontrola zmeny uzivatelske role
-			//System.out.println("session: "+session.getAttribute("userRole").toString().trim().length()+" - '"+session.getAttribute("userRole")+"'");
-			//System.out.println("apl    : "+user.getUserRole().toString().trim().length()+" - '"+user.getUserRole()+"'");
+			// System.out.println("session: "+session.getAttribute("userRole").toString().trim().length()+" - '"+session.getAttribute("userRole")+"'");
+			// System.out.println("apl    : "+user.getUserRole().toString().trim().length()+" - '"+user.getUserRole()+"'");
 			if (!session.getAttribute("userRole").equals(user.getUserRole())) {
 				log.debug("###\t U prihlasovaneho uzivatele " + req.getUserPrincipal().getName().toUpperCase() + " se zmenila role z " + user.getUserRole() + " na "
 						+ session.getAttribute("userRole").toString());
@@ -138,17 +138,17 @@ public class IndexController {
 				user.setUtime(new Date());
 				user.setUuser("IndexController");
 				serviceUser.updateUser(user);
-				
+
 				Protokol newProtokol8 = new Protokol();
 				newProtokol8.setNetusername(req.getUserPrincipal().getName().toUpperCase());
 				newProtokol8.setAction("Zmena opravneni");
-				newProtokol8.setInfo("Puvodni: "+puvodniOpravneni+"\t Nove: "+session.getAttribute("userRole").toString());
+				newProtokol8.setInfo("Puvodni: " + puvodniOpravneni + "\t Nove: " + session.getAttribute("userRole").toString());
 				newProtokol8.setTime(new Date());
 				newProtokol8.setSessionid(req.getSession().getId());
 				serviceProtokol.addProtokol(newProtokol8);
-				
+
 			}
-			
+
 			// kontrola ID Skonet
 			if (user.getIdSkonet() != userZentaAdm.getIdSkonet()) {
 				log.debug("###\t U prihlasovaneho uzivatele " + req.getUserPrincipal().getName().toUpperCase() + " se v ZentaAdm zmenilo ID_SKONET z " + user.getIdSkonet() + " -> "
@@ -187,26 +187,26 @@ public class IndexController {
 				newProtokol2.setTime(new Date());
 				newProtokol2.setSessionid(req.getSession().getId());
 				serviceProtokol.addProtokol(newProtokol2);
-			} 
+			}
 		}
 
 		Protokol newProtokol = new Protokol();
 		newProtokol.setNetusername(req.getUserPrincipal().getName().toUpperCase());
 		newProtokol.setAction("Login do aplikace");
-		newProtokol.setInfo(session.getAttribute("serverName")+" - " + req.getSession().getServletContext().getServerInfo());
+		newProtokol.setInfo(session.getAttribute("serverName") + " - " + req.getSession().getServletContext().getServerInfo());
 		newProtokol.setTime(new Date());
 		newProtokol.setSessionid(req.getSession().getId());
 		serviceProtokol.addProtokol(newProtokol);
-		
+
 		User aktualUser = serviceUser.getUser(req.getUserPrincipal().getName().toUpperCase());
 		if (aktualUser.getUserRole().equals("SERVICEDESK".trim())) {
 			log.debug("###\t Uzivatel s roli SERVICEDESK ->- presmerovavam na prislusnou stranku.");
 			return "redirect:/srv/monitoring/serviceDesk";
-		} else if (aktualUser.getUserRole().equals("ADMINS".trim())){
+		} else if (aktualUser.getUserRole().equals("ADMINS".trim())) {
 			log.debug("###\t Uzivatel s roli ADMINS ->- presmerovavam na prislusnou stranku.");
 			return "redirect:/srv/monitoring/logging";
 		}
-		
+
 		// inicializace sessinovych promennych (abych nemusel resit NULLy a mohl se ptat jen na isEmpty)
 		session.setAttribute("kalkulaceRRRRMM", "");
 		session.setAttribute("archKalkulaceRRRRMM", "");

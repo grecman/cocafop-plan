@@ -58,10 +58,10 @@
 								<form:form commandName="archKalkulaceMtZavView" action="${pageContext.servletContext.contextPath}/srv/archiv/predstavitel/list">
 									<SPAN>&#160;Modelová třída a závod:&#160;</SPAN>
 									<SPAN>
-										<form:select onchange="this.form.submit(); return true;" path="id">
+										<form:select onchange="this.form.submit(); return true;" path="idPom">
 											<form:option value="0"> . . .  </form:option>
 											<c:forEach var="i" items="${mtZavodList}">
-												<form:option value="${i.id}">${i.modelTr}-${i.zavod}</form:option>
+												<form:option value="${i.idPom}">${i.modelTr}-${i.zavod}</form:option>
 											</c:forEach>
 										</form:select>
 									</SPAN>

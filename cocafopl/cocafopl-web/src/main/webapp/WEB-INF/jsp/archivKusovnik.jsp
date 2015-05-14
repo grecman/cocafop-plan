@@ -112,9 +112,6 @@
 								<input type="submit" id="formButton" value="Vyhledat" class="heroBtn" style="display: inline;"></input>
 							</form:form>
 						</SPAN>
-						<c:if test="${mocVelkyPocetVybranychZazmanuZKusovniku}">
-							<SPAN style="color: red;">Proveden velký výběr dat! Zobrazeno bude pouze prvních 1000 záznamů.</SPAN>
-						</c:if>
 					</c:if>
 				</div>
 				<c:if test="${not empty archKusList}">
@@ -122,7 +119,7 @@
 						<table class="dataTable" id="tableId" style="table-layout: fixed;">
 							<col width="35px" />
 							<col width="35px" />
-							<col width="120px" />
+							<col width="125px" />
 							<col width="350px" />
 							<col width="85px" />
 							<col width="85px" />
@@ -172,12 +169,17 @@
 										<td align="center">${i.skoda}</td>
 										<td align="center">${i.vw}</td>
 										<td align="center">${i.local}</td>
-										<td align="left" style="overflow:hidden;" title="${i.prpod}">${i.prpod}</td>
-										<td align="center">${i.lfdnr}</td>
+										<td align="left" style="overflow: hidden;" title="${i.prpod}">${i.prpod}</td>
+										<td align="center" style="font-size: xx-small;">${i.lfdnr}</td>
 									</tr>
 								</c:forEach>
 							</tbody>
 						</table>
+					</div>
+					<div class="formBar">
+						<c:if test="${mocVelkyPocetVybranychZazmanuZKusovniku}">
+							<SPAN style="color: red;">Proveden velký výběr dat! Zobrazeno bude pouze prvních 1000 záznamů.</SPAN>
+						</c:if>
 					</div>
 				</c:if>
 			</div>

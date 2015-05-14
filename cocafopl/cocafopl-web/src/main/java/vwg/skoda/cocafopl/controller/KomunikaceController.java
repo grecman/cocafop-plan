@@ -111,7 +111,7 @@ public class KomunikaceController {
 			Favas favas = null;
 			for (int f = 1; f <= 3; f++) {
 				if (o.getFavas() == null) {
-					log.error("###\t BACHA ... " + f + ". neuspesny pokus komunikace s FAVASem {getFavas() vratil NULL}, zkusim znova za 5 sekund.");
+					log.error("###\t BACHA ... " + f + ". neuspesny pokus komunikace s FAVASem {getFavas() vratil NULL}, zkusim znova za 5 sekund (max 3 pokusy).");
 					if (f == 3) {
 						session.setAttribute("errorMesage", "Chyba komunikace MBV/Favas! Obrattě se prosím na EO partnera aplikace.");
 						break;

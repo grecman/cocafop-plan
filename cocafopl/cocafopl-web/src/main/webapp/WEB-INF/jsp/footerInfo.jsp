@@ -5,13 +5,15 @@
 
 
 	<div class="infoFooter">
-		<div class="copyright">&#160;© SKODA AUTO a.s. <SPAN style="color: gray; font-size: x-small; margin-left: 880px;">Server:&#160;${serverName}</SPAN></div>
+		<div class="copyright">&#160;© SKODA AUTO a.s. <SPAN style="color: gray; font-size: x-small; margin-left: 900px;">Server:&#160;${serverName}</SPAN></div>
+		<!-- 
 		<div class="buildInf">
 			(i)
 			<div class="info">
 				<span id="buildInfo">build info z GITu</span>
 			</div>
 		</div>
+		 -->
 	</div>
 
 
