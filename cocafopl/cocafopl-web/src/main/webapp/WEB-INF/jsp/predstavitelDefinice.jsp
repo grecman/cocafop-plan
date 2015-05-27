@@ -131,7 +131,7 @@
 									<th style="font-size: x-small;">Platnost OD</th>
 									<th style="font-size: x-small;">Platnost DO</th>
 									<th style="font-size: x-small;">Výbavy</th>
-									<th style="font-size: x-small;">Čestnost</th>
+									<th style="font-size: x-small;">Četnost</th>
 									<th style="font-size: x-small;">Comix</th>
 									<th></th>
 								</tr>
@@ -215,13 +215,13 @@
 						<c:if test="${empty(listPredstavitelu) and not(empty(vybranaMtZavod))}">
 							<span>
 								<a href="${pageContext.servletContext.contextPath}/srv/predstavitel/definice/import">
-									<input type="button" value="Import" class="heroBtn"></input>
+									<input type="button" value="Import EXCEL" class="heroBtn"  style="background-color: gray;"></input>
 								</a>
 							</span>
 						</c:if>
 						<c:if test="${not(empty(listPredstavitelu))}">
 							<span>
-								<input type="button" id="idButtonExport" value="Export EXCEL" class="heroBtn"></input>
+								<input type="button" id="idButtonExport" value="Export EXCEL" class="heroBtn"  style="background-color: gray;"></input>
 							</span>
 							<span>
 								<a href="#openModalMinuleCisloPred">
@@ -250,7 +250,11 @@
 					provedeno.</SPAN>
 			</div>
 			<div class="modalFooter">
-				<input type="button" id="smazatButton" value="Smazat" class="ok"></input>
+				<TABLE style="width: 100%;">
+					<TR>
+						<TD align="right"><input type="button" id="smazatButton" value="Smazat" class="ok"></input></TD>
+					</TR>
+				</TABLE>
 			</div>
 		</div>
 	</div>
@@ -261,7 +265,7 @@
 				<h3>Doplnění minulých čísel představitelů</h3>
 			</div>
 			<div class="modalContent">Po potvrzení, aplikace doplní "Minulé číslo představitele" z prosince předchozího roku. Shoda se bude vyhledávat dle stejného
-				modelového klíče a kódu země. Doplnění se provede u všech zobrazených představitelů!</div>
+				modelového klíče a kódu země.</div>
 			<div class="modalFooter">
 				<TABLE style="width: 100%;">
 					<TR>

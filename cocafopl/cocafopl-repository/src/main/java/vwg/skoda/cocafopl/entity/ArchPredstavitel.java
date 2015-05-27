@@ -1,7 +1,9 @@
 package vwg.skoda.cocafopl.entity;
 
 import java.io.Serializable;
+
 import javax.persistence.*;
+
 import java.util.Set;
 
 @Entity
@@ -69,7 +71,7 @@ public class ArchPredstavitel implements Serializable {
 	private ArchKalkulace gz40tKalkulace;
 
 	//bi-directional many-to-one association to ArchPredstavitelPr
-	@OneToMany(mappedBy="gz40tPredstavitel")
+	@OneToMany(mappedBy="gz40tPredstavitel", cascade={CascadeType.REMOVE})
 	private Set<ArchPredstavitelPr> gz40tPredstavitelPrs;
 
 	public ArchPredstavitel() {

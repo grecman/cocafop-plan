@@ -83,10 +83,10 @@
 								<tr>
 									<td>${off.uzivatel}</td>
 									<td>${off.agenda}</td>
-									<td><f:formatDate value="${off.casZadani}" pattern="yyyy-MM-dd HH:mm:ss" /></td>
+									<td title="ID:${off.id}"><f:formatDate value="${off.casZadani}" pattern="yyyy-MM-dd HH:mm:ss" /></td>
 									<td><f:formatDate value="${off.casSpusteni}" pattern="yyyy-MM-dd HH:mm:ss" /></td>
 									<td><f:formatDate value="${off.casUkonceni}" pattern="yyyy-MM-dd HH:mm:ss" /></td>
-									<td>${off.popis}</td>
+									<td title="parametr:${off.parametr}">${off.popis}</td>
 									<td>${off.status}</td>
 								</tr>
 							</c:forEach>

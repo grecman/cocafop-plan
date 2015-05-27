@@ -20,7 +20,7 @@ public class ArchKusyProvPK implements Serializable {
 	private String zavod;
 
 	@Column(name="CISLO_PRED")
-	private int cisloPred;
+	private Integer cisloPred;
 
 	private String cdilu;
 
@@ -46,10 +46,10 @@ public class ArchKusyProvPK implements Serializable {
 	public void setZavod(String zavod) {
 		this.zavod = zavod;
 	}
-	public int getCisloPred() {
+	public Integer getCisloPred() {
 		return this.cisloPred;
 	}
-	public void setCisloPred(int cisloPred) {
+	public void setCisloPred(Integer cisloPred) {
 		this.cisloPred = cisloPred;
 	}
 	public String getCdilu() {

@@ -36,7 +36,7 @@ public class ArchKalkcd implements Serializable {
 	private float matsbce;
 
 
-	@ManyToOne
+	@ManyToOne(cascade={CascadeType.REMOVE})
 	@JoinColumns({ @JoinColumn(name = "kalkulace", referencedColumnName = "kalkulace", updatable = false, insertable = false),
 			@JoinColumn(name = "model_Tr", referencedColumnName = "model_tr", updatable = false, insertable = false),
 			@JoinColumn(name = "zavod", referencedColumnName = "zavod", updatable = false, insertable = false),

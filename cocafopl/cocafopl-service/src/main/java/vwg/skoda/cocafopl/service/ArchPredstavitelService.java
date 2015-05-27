@@ -37,6 +37,12 @@ public class ArchPredstavitelService {
 		ArchPredstavitel u = getArchPredstavitelId(archPredstavitel.getId());
 		entityManager.remove(u);
 	}
+	
+	@Transactional
+	public void removeArchPredstavitelAll(int kalkulace) {
+		log.trace("###\t\t removeArchPredstavitelAll(" + kalkulace + ")");
+		entityManager.createQuery("DELETE FROM ArchPredstavitel a WHERE a.gz40tKalkulace.kalkulace = :kalkulace ").setParameter("kalkulace", kalkulace).executeUpdate();
+	}
 
 	public ArchPredstavitel getArchPredstavitelId(long id) {
 		log.trace("###\t\t getArchPredstavitelId(" + id + ");");

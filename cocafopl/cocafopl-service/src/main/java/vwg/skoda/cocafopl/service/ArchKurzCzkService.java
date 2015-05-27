@@ -1,5 +1,7 @@
 package vwg.skoda.cocafopl.service;
 
+import java.util.List;
+
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
@@ -23,27 +25,21 @@ public class ArchKurzCzkService {
 		return entityManager.find(ArchKurzCzk.class, id);
 	}
 	
-	public ArchKurzCzk getArchKurzCzk(int kalkulace) {
+	public List<ArchKurzCzk> getArchKurzCzk(int kalkulace) {
 		log.trace("###\t\t getArchKurzCzkOne(" + kalkulace + ");");
-		ArchKurzCzk gre;
+		List<ArchKurzCzk> gre = null;
 		try {
-			gre = entityManager.createQuery("SELECT u FROM ArchKurzCzk u WHERE u.kalkulace=:kalkulace", ArchKurzCzk.class).setParameter("kalkulace", kalkulace).getSingleResult();
+			gre = entityManager.createQuery("SELECT u FROM ArchKurzCzk u WHERE u.gz40tKalkulace.kalkulace=:kalkulace ", ArchKurzCzk.class).setParameter("kalkulace", kalkulace).getResultList();
 		} catch (NoResultException e) {
 			return null;
 		}
 		return gre;
 	}
 	
-	public void removeArchKurzCzk(int kalkulace) {
-		log.trace("###\t\t removeArchKurzCzk(" + kalkulace + ");");
-		entityManager.createQuery("DELETE u FROM ArchKurzCzk u WHERE u.gz40tKalkulace=:kalkulace", ArchKurzCzk.class).setParameter("kalkulace", kalkulace).getSingleResult();
-	}
-
 	@Transactional
-	public void removeArchKurzCzk(ArchKurzCzk archKurzCzk) {
-		log.trace("###\t\t removeArchKurzCzk(" + archKurzCzk + ")");
-		ArchKurzCzk u = getArchKurzCzkId(archKurzCzk.getId());
-		entityManager.remove(u);
+	public void removeArchKurzCzkAll(int kalkulace) {
+		log.trace("###\t\t removeArchKurzCzkAll(" + kalkulace + ")");
+		entityManager.createQuery("DELETE FROM ArchKurzCzk a WHERE a.gz40tKalkulace.kalkulace = :kalkulace ").setParameter("kalkulace", kalkulace).executeUpdate();
 	}
 
 

@@ -9,33 +9,53 @@
 <jsp:include page="lib.jsp" />
 <title>COCAFOP-Plan</title>
 <script>
-	$(document).ready(function() {
+	$(document)
+			.ready(
+					function() {
 
-		$('#tableId').dataTable({
-			"paging" : true,
-			"ordering" : false,
-			"info" : true,
-			"bFilter" : true,
-			"iDisplayLength" : 25,
-			"language" : {
-				// datatables.net/reference/option/language
-				"lengthMenu" : "&#160;Zobrazit _MENU_ řádků na stránce.",
-				"info" : "&#160;Stránka: _PAGE_/_PAGES_, načteno _TOTAL_ záznamů.",
-				"infoEmpty" : "Nenalezeny žádné záznamy.",
-				"infoFiltered" : "&#160;(filtr: _TOTAL_ / _MAX_)",
-				"loadingRecords" : "Nahrávám...",
-				"processing" : "Pracuji...",
-				"search" : "Vyhledat:",
-				"zeroRecords" : "Nebyly nalezeny žádné záznamy.",
-				"paginate" : {
-					"first" : "První",
-					"last" : "Poslední",
-					"next" : "Další",
-					"previous" : "Předcházející"
-				}
-			}
-		});
-	});
+						$('#tableId').dataTable({
+							"paging" : true,
+							"ordering" : true,
+							"order" : [ [ 2, "asc" ], [ 0, "asc" ] ],
+							"info" : true,
+							"bFilter" : true,
+							"iDisplayLength" : 25,
+							"language" : {
+								// datatables.net/reference/option/language
+								"lengthMenu" : "&#160;Zobrazit _MENU_ řádků na stránce.",
+								"info" : "&#160;Stránka: _PAGE_/_PAGES_, načteno _TOTAL_ záznamů.",
+								"infoEmpty" : "Nenalezeny žádné záznamy.",
+								"infoFiltered" : "&#160;(filtr: _TOTAL_ / _MAX_)",
+								"loadingRecords" : "Nahrávám...",
+								"processing" : "Pracuji...",
+								"search" : "Vyhledat:",
+								"zeroRecords" : "Nebyly nalezeny žádné záznamy.",
+								"paginate" : {
+									"first" : "První",
+									"last" : "Poslední",
+									"next" : "Další",
+									"previous" : "Předcházející"
+								}
+							}
+						});
+
+						$("#formButton")
+								.click(
+										function() {
+											var cdilu = (!$("#cdilu").val().match(/^[_a-zA-Z0-9\u0020]{3,15}$/) ? "V masce pro číslo dílu musí být alespoň 3 znaky (čísla/písmena).\nPolovené je i podtržítko pro zástupný znak. Příklad: 5E_827550_"
+													: "");
+											var result = cdilu;
+											if (result.length == 0) {
+												$("#formId").submit();
+											} else {
+												alert(result);
+											}
+										});
+
+						$("#tableId").on('click', 'tr', function() {
+							$(this).addClass('selectedTableRow').siblings().removeClass('selectedTableRow');
+						});
+					});
 </script>
 </head>
 <body class="pages">
@@ -48,9 +68,9 @@
 				<a class="${selectedSubMenu eq 'kalkulace' ? 'selected' : 'passive'}" href="${pageContext.servletContext.contextPath}/srv/archiv/kalkulace">Kalkulace</a>
 				<a class="${selectedSubMenu eq 'kusovnik' ? 'selected' : 'passive'}" href="${pageContext.servletContext.contextPath}/srv/archiv/kusovnik">Kusovník</a>
 				<a class="${selectedSubMenu eq 'cenik' ? 'selected' : 'passive'}" href="${pageContext.servletContext.contextPath}/srv/archiv/cenik">Ceník</a>
+				<a class="${selectedSubMenu eq 'predstavitel' ? 'selected' : 'passive'}" href="${pageContext.servletContext.contextPath}/srv/archiv/predstavitel">Představitel</a>
 				<a class="${selectedSubMenu eq 'kusyNaProvedeni' ? 'selected' : 'passive'}" href="${pageContext.servletContext.contextPath}/srv/archiv/kusyNaProvedeni">Kusy
 					na provedení</a>
-				<a class="${selectedSubMenu eq 'predstavitel' ? 'selected' : 'passive'}" href="${pageContext.servletContext.contextPath}/srv/archiv/predstavitel">Představitel</a>
 				<a class="${selectedSubMenu eq 'dilVPredstavitelych' ? 'selected' : 'passive'}"
 					href="${pageContext.servletContext.contextPath}/srv/archiv/dilVPredstavitelich">Díl v představitelích</a>
 				<a class="${selectedSubMenu eq 'kurzovniListek' ? 'selected' : 'passive'}" href="${pageContext.servletContext.contextPath}/srv/archiv/kurzovniListek">Kurzovní
@@ -107,9 +127,9 @@
 					<c:if test="${not empty vybranyProdukt}">
 						<SPAN style="margin-left: 20px; margin-right: 0px;">Číslo dílu:</SPAN>
 						<SPAN>
-							<form:form commandName="archKusovnik" action="${pageContext.servletContext.contextPath}/srv/archiv/kusovnik/list">
-								<form:input path="cdilu" class="textovePole" cssStyle="width:125px"></form:input>&#160;&#160;
-								<input type="submit" id="formButton" value="Vyhledat" class="heroBtn" style="display: inline;"></input>
+							<form:form commandName="archKusovnik" id="formId" action="${pageContext.servletContext.contextPath}/srv/archiv/kusovnik/list">
+								<form:input path="cdilu" id="cdilu" class="textovePole" cssStyle="width:160px"></form:input>&#160;&#160;
+								<input type="button" id="formButton" value="Vyhledat" class="heroBtn" style="display: inline; margin-left: 25px;"></input>
 							</form:form>
 						</SPAN>
 					</c:if>
@@ -131,10 +151,9 @@
 							<col width="40px" />
 							<col width="40px" />
 							<col width="*" />
-							<col width="75px" />
+							<col width="90px" />
 							<thead>
 								<tr>
-									<th style="display: none;">Id</th>
 									<th style="font-size: x-small;" title="Produkt">Prod</th>
 									<th style="font-size: x-small;" title="Závod produktu">Záv</th>
 									<th style="font-size: x-small;">Číslo dílu</th>
@@ -155,7 +174,6 @@
 							<tbody>
 								<c:forEach items="${archKusList}" var="i">
 									<tr>
-										<td style="display: none;">${i.id}</td>
 										<td align="center">${i.produkt}</td>
 										<td align="center">${i.zavod}</td>
 										<td align="left">${i.cdilu}</td>
@@ -177,8 +195,11 @@
 						</table>
 					</div>
 					<div class="formBar">
-						<c:if test="${mocVelkyPocetVybranychZazmanuZKusovniku}">
-							<SPAN style="color: red;">Proveden velký výběr dat! Zobrazeno bude pouze prvních 1000 záznamů.</SPAN>
+						<span>
+							<input type="button" id="idButtonExport" value="Export EXCEL" class="heroBtn" style="background-color: gray;"></input>
+						</span>
+						<c:if test="${pocetNactenychZaznamu>1000}">
+							<SPAN style="color: red;">Proveden velký výběr dat! Načteno ${pocetNactenychZaznamu} záznamu, zobrazeno bude pouze prvních 1000.</SPAN>
 						</c:if>
 					</div>
 				</c:if>

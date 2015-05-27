@@ -33,6 +33,8 @@ public class Offline implements Serializable {
 	private String status;
 
 	private String uzivatel;
+	
+	private String parametr;
 
 	public Offline() {
 	}
@@ -100,5 +102,14 @@ public class Offline implements Serializable {
 	public void setUzivatel(String uzivatel) {
 		this.uzivatel = uzivatel;
 	}
+
+	public String getParametr() {
+		return parametr;
+	}
+
+	public void setParametr(String parametr) {
+		this.parametr = parametr;
+	}
+	
 
 }

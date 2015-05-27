@@ -9,12 +9,16 @@
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 
+	<properties>
+		<timestamp>${maven.build.timestamp}</timestamp>
+	</properties>
+
 	<dependencies>
 
 		<dependency>
 			<groupId>vwg.skoda.cocafopl</groupId>
 			<artifactId>cocafopl-service</artifactId>
- 			<version>0.0.1-SNAPSHOT</version>
+			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 
 		<dependency>
@@ -57,7 +61,18 @@
 						</manifest>
 					</archive>
 					<failOnMissingWebXml>false</failOnMissingWebXml>
+					<webResources>
+						<resource>
+							<directory>${basedir}/src/main/webapp/WEB-INF</directory>
+							<filtering>true</filtering>
+							<targetPath>WEB-INF</targetPath>
+							<includes>
+								<include>**/web.xml</include>
+							</includes>
+						</resource>
+					</webResources>
 				</configuration>
+
 			</plugin>
 		</plugins>
 	</build>

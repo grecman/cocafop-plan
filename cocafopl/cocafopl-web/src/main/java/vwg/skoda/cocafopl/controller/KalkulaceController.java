@@ -33,8 +33,12 @@ import vwg.skoda.cocafopl.entity.PredstavitelKalkulace;
 import vwg.skoda.cocafopl.entity.Protokol;
 import vwg.skoda.cocafopl.entity.User;
 import vwg.skoda.cocafopl.obj.UniObj;
+import vwg.skoda.cocafopl.service.ArchCenikSapService;
 import vwg.skoda.cocafopl.service.ArchKalkulaceMtZavViewService;
 import vwg.skoda.cocafopl.service.ArchKalkulaceService;
+import vwg.skoda.cocafopl.service.ArchKurzCzkService;
+import vwg.skoda.cocafopl.service.ArchKurzEurService;
+import vwg.skoda.cocafopl.service.ArchKusovnikService;
 import vwg.skoda.cocafopl.service.ArchPredstavitelPrService;
 import vwg.skoda.cocafopl.service.ArchPredstavitelService;
 import vwg.skoda.cocafopl.service.KalkulaceMtZavodService;
@@ -91,6 +95,18 @@ public class KalkulaceController {
 
 	@Autowired
 	private ArchPredstavitelPrService serviceArchPredstavitelPr;
+
+	@Autowired
+	private ArchCenikSapService serviceArchCenikSap;
+
+	@Autowired
+	private ArchKurzCzkService serviceArchKurzCzk;
+
+	@Autowired
+	private ArchKurzEurService serviceArchKurzEur;
+
+	@Autowired
+	private ArchKusovnikService serviceArchKusovnik;
 
 	@Autowired
 	private PredstavitelPrService servicePredstavitelPr;
@@ -555,17 +571,22 @@ public class KalkulaceController {
 	@RequestMapping(value = "/spustitVypocet/{kalkulaceRRRRMM}")
 	public String spustitVypocet(@PathVariable int kalkulaceRRRRMM, Model model, HttpServletRequest req, HttpSession session) throws SQLException, UnknownHostException {
 		log.debug("###\t spustitVypocet(" + kalkulaceRRRRMM + ")");
+//			try {
+//				Thread.sleep(10000);
+//			} catch (InterruptedException e) {
+//				System.out.println(e);
+//			}
 
 		List<Offline> offVypocet = serviceOffline.getOfflineAgendaNeukoncena("Představitelé - výpočet");
 		if (offVypocet.isEmpty()) {
-
+			
 			Offline off = new Offline();
 			off.setAgenda("Představitelé - výpočet");
 			off.setCasZadani(new Date());
 			off.setStatus("Nový");
 			off.setUzivatel(req.getUserPrincipal().getName().toUpperCase());
-			// GRE: v popisu nutno ukladat ciste jen rrrrmm, pac to pak slouzi jako parametr davky !!!
-			off.setPopis(String.valueOf(kalkulaceRRRRMM));
+			off.setParametr(String.valueOf(kalkulaceRRRRMM));
+			off.setPopis("Výpočet spuštěn pro: " +String.valueOf(kalkulaceRRRRMM));
 			serviceOffline.addOffline(off);
 
 			log.debug("###\t ...mazu pripadny priznak SCHAVLENO u vsech modelovych trid v entite MtKalkulace");
@@ -581,9 +602,18 @@ public class KalkulaceController {
 			List<ArchKalkulace> akSmazat = serviceArchKalkulace.getArchKalkulaceAll();
 			for (ArchKalkulace akDel : akSmazat) {
 				if (akDel.getSchvaleno() == null) {
-					log.debug("###\t ...mazu " + akDel.getKalkulace() + " z celeho archvivu.");
+					log.debug("###\t ...mazani archivu pro kalkulaci "+akDel.getKalkulace());
+					log.debug("###\t\t ...predstavitele");
+					serviceArchPredstavitel.removeArchPredstavitelAll(akDel.getKalkulace());
+					log.debug("###\t\t ...kurzovni listky");
+					serviceArchKurzCzk.removeArchKurzCzkAll(akDel.getKalkulace());
+					serviceArchKurzEur.removeArchKurzEurAll(akDel.getKalkulace());
+					log.debug("###\t\t ...kusovnik");
+					serviceArchKusovnik.removeArchKusovnikAll(akDel.getKalkulace());
+					log.debug("###\t\t ...cenik SAP");
+					serviceArchCenikSap.removeArchCenikSapAll(akDel.getKalkulace());
+					log.debug("###\t\t ...kalkulaci");
 					serviceArchKalkulace.removeArchKalkulace(akDel);
-					// GRE: pracovni (neschvaleny) stav muze byt jen jeden, ale proto pro jistotu mazu ve for cyklu vse, kdyby se tam nejakou chybkou dostala dalsi prac.kalkulace
 				}
 			}
 
@@ -638,19 +668,6 @@ public class KalkulaceController {
 					serviceArchPredstavitel.addArchPredstavitel(apk);
 
 					// GRE - insert PR do GZ40T_PREDSTAVITEL_PR trvalo skoro minutu, proto jsem to presunul do davky.
-					// ArchPredstavitel apkgre = serviceArchPredstavitel.getArchPredstavitel(pk.getGz39tMtKalkulace().getGz39tKalkulace().getKalkulace(),
-					// pk.getGz39tMtKalkulace().getGz39tMt()
-					// .getModelTr(), pk.getGz39tMtKalkulace().getGz39tMt().getZavod(), pk.getGz39tPredstavitel().getCisloPred());
-					// List<PredstavitelPr> prList = servicePredstavitelPr.getPredstavitelPr(pk.getId());
-					// for (PredstavitelPr pr : prList) {
-					// ArchPredstavitelPr prArch = new ArchPredstavitelPr();
-					// prArch.setPr(pr.getPr());
-					// prArch.setPrEditovane(pr.getPrEditovane());
-					// prArch.setRodina(pr.getRodina());
-					// prArch.setTyp(pr.getTyp());
-					// prArch.setGz40tPredstavitel(apkgre);
-					// serviceArchPredstavitelPr.addArchPredstavitelPr(prArch);
-					// }
 
 					protokolPredCount++;
 				}
@@ -679,7 +696,8 @@ public class KalkulaceController {
 			newProtokol.setSessionid(req.getSession().getId());
 			serviceProtokol.addProtokol(newProtokol);
 		}
-		return "redirect:/srv/kalkulace/detail/" + kalkulaceRRRRMM;
+
+		return "redirect:/srv/offline";
 	}
 
 	@RequestMapping(value = "/schvalit/{kalkulaceRRRRMM}")

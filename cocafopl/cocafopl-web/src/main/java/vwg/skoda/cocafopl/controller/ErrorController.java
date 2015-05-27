@@ -26,5 +26,11 @@ public class ErrorController {
 		model.addAttribute("errorMsg", errorMesage);
 		return "/errorPage";
 	}
+	
+	@RequestMapping("/testPage")
+	public String test(Model model, HttpSession session, HttpServletRequest req, HttpServletResponse res) {
+
+		return "/testPage";
+	}
 
 }

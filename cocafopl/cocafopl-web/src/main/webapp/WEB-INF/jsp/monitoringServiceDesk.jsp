@@ -40,6 +40,7 @@
 				<H3>Informace o aplikaci</H3>
 				<DIV style="padding-left: 20px; font-size: 14px;">
 					Server: <B>${serverName}</B><BR /> IP: <B>${ip}</B><BR /> Root aplikace: <B>${pageContext.servletContext.contextPath}</B><BR />
+					Poslední build: <B>${initParam.buildTimeStamp}</B>
 				</DIV>
 				<BR />
 				<HR />
@@ -54,7 +55,7 @@
 					Vaše poslední přihlášení: <B>${lastUserLogin}</B><BR /> 
 					Do aplikace jste se celkem přihlásil: <B>${userLogin}</B><BR />
 					<BR /> Aplikaci používá celkem: <B>${allUsers}</B> uživatelů. 
-					<BR /> Počet všech přihlášení: <B>${allUserLogin}</B>
+					<BR /> Počet všech přihlášení: <B>${allUserLogin}</B>  
 				</DIV>
 				<BR />
 				<HR />

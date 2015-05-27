@@ -56,8 +56,14 @@ public class KalkulaceService {
 	}
 
 	public List<Kalkulace> getKalkulaceAll() {
-		log.trace("###\t\t getKalkulaceAll();");
-		return entityManager.createQuery("SELECT u FROM Kalkulace u ORDER BY u.kalkulace DESC ", Kalkulace.class).getResultList();
+		log.trace("###\t\t getKalkulaceAll()");
+		List<Kalkulace> gre;
+		try {
+			gre = entityManager.createQuery("SELECT u FROM Kalkulace u ORDER BY u.kalkulace DESC ", Kalkulace.class).getResultList();
+		} catch (NoResultException e) {
+			return null;
+		}
+		return gre;
 	}
 
 	public Integer getKalkulacePosledniRok() {

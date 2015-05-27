@@ -1,5 +1,7 @@
 package vwg.skoda.cocafopl.service;
 
+import java.util.List;
+
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
@@ -22,11 +24,11 @@ public class ArchKurzEurService {
 		return entityManager.find(ArchKurzEur.class, id);
 	}
 	
-	public ArchKurzEur getArchKurzEur(int kalkulace) {
+	public List<ArchKurzEur> getArchKurzEur(int kalkulace) {
 		log.trace("###\t\t getArchKurzEurOne(" + kalkulace + ");");
-		ArchKurzEur gre;
+		List<ArchKurzEur> gre = null;
 		try {
-			gre = entityManager.createQuery("SELECT u FROM ArchKurzEur u WHERE u.kalkulace=:kalkulace", ArchKurzEur.class).setParameter("kalkulace", kalkulace).getSingleResult();
+			gre = entityManager.createQuery("SELECT u FROM ArchKurzEur u WHERE u.gz40tKalkulace.kalkulace=:kalkulace ", ArchKurzEur.class).setParameter("kalkulace", kalkulace).getResultList();
 		} catch (NoResultException e) {
 			return null;
 		}
@@ -34,24 +36,10 @@ public class ArchKurzEurService {
 	}
 
 	@Transactional
-	public void addArchKurzEur(ArchKurzEur archKurzEur) {
-		log.trace("###\t\t addArchKurzEur(" + archKurzEur + ")");
-		entityManager.persist(archKurzEur);
+	public void removeArchKurzEurAll(int kalkulace) {
+		log.trace("###\t\t removeArchKurzEurAll(" + kalkulace + ")");
+		entityManager.createQuery("DELETE FROM ArchKurzEur a WHERE a.gz40tKalkulace.kalkulace = :kalkulace ").setParameter("kalkulace", kalkulace).executeUpdate();
 	}
-
-	@Transactional
-	public void setArchKurzEur(ArchKurzEur archKurzEur) {
-		log.trace("###\t\t setArchKurzEur(" + archKurzEur + ")");
-		entityManager.merge(archKurzEur);
-	}
-
-	@Transactional
-	public void removeArchKurzEur(ArchKurzEur archKurzEur) {
-		log.trace("###\t\t removeArchKurzEur(" + archKurzEur + ")");
-		ArchKurzEur u = getArchKurzEurId(archKurzEur.getId());
-		entityManager.remove(u);
-	}
-
 
 
 }

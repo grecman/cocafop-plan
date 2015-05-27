@@ -1,6 +1,7 @@
 package vwg.skoda.cocafopl.entity;
 
 import java.io.Serializable;
+
 import javax.persistence.*;
 
 /**
@@ -25,7 +26,7 @@ public class ArchKusyProv implements Serializable {
 
 	private String vw;
 
-	@ManyToOne
+	@ManyToOne(cascade={CascadeType.REMOVE})
 	@JoinColumns({ @JoinColumn(name = "kalkulace", referencedColumnName = "kalkulace", updatable = false, insertable = false),
 			@JoinColumn(name = "model_Tr", referencedColumnName = "model_tr", updatable = false, insertable = false),
 			@JoinColumn(name = "zavod", referencedColumnName = "zavod", updatable = false, insertable = false),

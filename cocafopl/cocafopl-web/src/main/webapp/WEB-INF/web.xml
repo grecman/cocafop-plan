@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee"
-	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
-	id="WebApp_ID" version="3.0">
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" id="WebApp_ID" version="3.0">
 	<display-name>cocafoppl</display-name>
 	<welcome-file-list>
 		<welcome-file>index.html</welcome-file>
@@ -12,12 +10,12 @@
 		<welcome-file>default.htm</welcome-file>
 		<welcome-file>default.jsp</welcome-file>
 	</welcome-file-list>
-	
-    <listener>
+
+	<listener>
 		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
 	</listener>
-	
-	<!-- SPRINGovy EncodingFiltr pro naSETotovani requestu na UTF-8 (diakritika)-->
+
+	<!-- SPRINGovy EncodingFiltr pro naSETotovani requestu na UTF-8 (diakritika) -->
 	<filter>
 		<filter-name>encodingFilter</filter-name>
 		<filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
@@ -30,6 +28,7 @@
 			<param-value>true</param-value>
 		</init-param>
 	</filter>
+
 	<filter-mapping>
 		<filter-name>encodingFilter</filter-name>
 		<url-pattern>/srv/*</url-pattern>
@@ -59,7 +58,7 @@
 		<servlet-name>QueryServlet</servlet-name>
 		<url-pattern>/query</url-pattern>
 	</servlet-mapping>
-	
+
 	<security-role>
 		<description>Standardní uživatelé</description>
 		<role-name>USERS</role-name>
@@ -107,5 +106,17 @@
 		<res-sharing-scope>Shareable</res-sharing-scope>
 	</resource-ref>
 
+	<resource-ref>
+		<description></description>
+		<res-ref-name>vwg.skoda.favas.url</res-ref-name>
+		<res-type>java.net.URL</res-type>
+		<res-auth>Container</res-auth>
+		<res-sharing-scope>Shareable</res-sharing-scope>
+	</resource-ref>
+
+	<context-param>
+		<param-name>buildTimeStamp</param-name>
+		<param-value>${timestamp}</param-value>
+	</context-param>
 
 </web-app>

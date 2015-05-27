@@ -6,10 +6,8 @@
 	<jsp:directive.page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" />
 	<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-
 <jsp:include page="lib.jsp" />
 <title>COCAFOP-Plan</title>
-
 <script>
 	var IdKalkulaceVRadku = 0;
 
@@ -53,34 +51,28 @@
 		});
 	});
 </script>
-
 </head>
 <body class="pages">
-
 	<div class="page basePage">
-
 		<c:set scope="request" var="selectedMenu" value="kalkulace" />
 		<c:set scope="request" var="selectedSubMenu" value="kalkulaceSeznam" />
-
-
 		<jsp:include page="header.jsp" />
-
-
 		<div class="submenu">
 			<div class="items">
 				<a class="${selectedSubMenu eq 'mt' ? 'selected' : 'passive'}" href="${pageContext.servletContext.contextPath}/srv/kalkulace/mtDefinice">Modelové třídy</a>
 				<a class="${selectedSubMenu eq 'kalkulaceSeznam' ? 'selected' : 'passive'}" href="${pageContext.servletContext.contextPath}/srv/kalkulace/seznam">Seznam
-					kalkulací</a> <a class="${selectedSubMenu eq 'kalkulaceDetail' ? 'selected' : 'passive'}" href="${pageContext.servletContext.contextPath}/srv/kalkulace/detail">Detail
+					kalkulací</a>
+				<a class="${selectedSubMenu eq 'kalkulaceDetail' ? 'selected' : 'passive'}" href="${pageContext.servletContext.contextPath}/srv/kalkulace/detail">Detail
 					kalkulace</a>
 			</div>
 		</div>
-
 		<div class="pageBody">
 			<div class="mainAreaWide">
 				<div class="formBar">
 					<c:choose>
 						<c:when test="${not(empty(listRoku))}">
-							<span> <form:form commandName="uniObj" action="${pageContext.servletContext.contextPath}/srv/kalkulace/seznam">
+							<span>
+								<form:form commandName="uniObj" action="${pageContext.servletContext.contextPath}/srv/kalkulace/seznam">
 						&#160;Rok:&#160;
                             <form:select onchange="this.form.submit(); return true;" path="rok">
 										<form:option value="0"> . . .  </form:option>
@@ -95,13 +87,11 @@
 							<span style="color: red;">Nejsou vytvořeny žádné kalkulace. Tlačítko "Přidat rok" vytvoří kalkulace pro aktuální rok.</span>
 						</c:otherwise>
 					</c:choose>
-					<span style="padding-left: 865px;">Poslední schválená
-							kalkulace:</span>
-					<a href="${pageContext.servletContext.contextPath}/srv/archiv/kalkulace"> <span style="color: #4BA82E; font-weight: bold;">${posledniArchivniKalkulace.kalkulace}</span>
+					<span style="padding-left: 865px;">Poslední schválená kalkulace:</span>
+					<a href="${pageContext.servletContext.contextPath}/srv/archiv/kalkulace">
+						<span style="color: #4BA82E; font-weight: bold;">${posledniArchivniKalkulace.kalkulace}</span>
 					</a>
 				</div>
-
-
 				<div class="tableContainer">
 					<table class="dataTable" id="tableId">
 						<col width="100px" />
@@ -124,48 +114,33 @@
 									<td align="center">${i.kalkulace}</td>
 									<td align="left">&#160; ${i.modZav}</td>
 									<td align="center">${i.kalkulacniDatum}</td>
-									<td align="center"><a href="${pageContext.servletContext.contextPath}/srv/kalkulace/detail/${i.kalkulace}"> <img title="Detail kalkulace"
-											style="border: 0px;" src="${pageContext.servletContext.contextPath}/resources/ico/browse.png" /></a>&#160; <c:if
-											test="${moznoEditovat}">
-											<a href="${pageContext.servletContext.contextPath}/srv/kalkulace/editKalkulaceForm/${i.idKalkulace}"><img title="Editace" style="border: 0px;"
-												src="${pageContext.servletContext.contextPath}/resources/ico/edit.png" /></a>&#160;
+									<td align="center"><a href="${pageContext.servletContext.contextPath}/srv/kalkulace/detail/${i.kalkulace}">
+											<img title="Detail kalkulace" style="border: 0px;" src="${pageContext.servletContext.contextPath}/resources/ico/browse.png" />
+										</a>&#160; <c:if test="${moznoEditovat}">
+											<a href="${pageContext.servletContext.contextPath}/srv/kalkulace/editKalkulaceForm/${i.idKalkulace}">
+												<img title="Editace" style="border: 0px;" src="${pageContext.servletContext.contextPath}/resources/ico/edit.png" />
+											</a>&#160;
 										</c:if></td>
 								</tr>
 							</c:forEach>
 						</tbody>
 					</table>
-
 				</div>
-
 				<div class="formBar">
 					<c:if test="${moznoEditovat}">
-						<span><a href="${pageContext.servletContext.contextPath}/srv/kalkulace/kalkulaceNova"><input type="button" id="formEditMtButton"
-								value="Přidat rok" class="heroBtn"></input></a></span>
+						<span>
+							<a href="${pageContext.servletContext.contextPath}/srv/kalkulace/kalkulaceNova">
+								<input type="button" id="formEditMtButton" value="Přidat rok" class="heroBtn"></input>
+							</a>
+						</span>
 					</c:if>
 				</div>
-
-				<!-- *****************************  M  O  D  A  L   **********************************-->
-				<div id="openModalSchavit" class="modalWindow">
-					<div class="obalovak">
-						<a href="#close" class="close">X</a>
-						<div class="modalHeader">
-							<h3>Schávení kalkulace</h3>
-						</div>
-						<div class="modalContent">Opravdu chcete schválit vybranou kalkulaci?</div>
-						<div class="modalFooter">
-							<input type="button" id="schavlitKalkulaciMtButton" value="Schválit" class="ok"></input>
-						</div>
-
-					</div>
-				</div>
-
 			</div>
 		</div>
 		<div class="pageFooter">
 			<jsp:include page="footerInfo.jsp" />
 		</div>
 	</div>
-
 </body>
 	</html>
 </jsp:root>

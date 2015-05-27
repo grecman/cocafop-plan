@@ -34,6 +34,12 @@
 				}
 			}
 		});
+
+		$("#tlacitkoSpustitVypocet").click(function() {
+			$("#sedaObr").css("visibility", "visible");
+			$("#spinner").css("visibility", "visible");
+		});
+
 	});
 </script>
 </head>
@@ -66,7 +72,7 @@
 							<img title="Editace" src="${pageContext.servletContext.contextPath}/resources/ico/gre/go_right_30.png" />
 						</a>
 					</span>
-					<span style="padding-left: 810px;">Poslední schválená kalkulace:</span>
+					<span style="padding-left: 750px;">Poslední schválená kalkulace:</span>
 					<a href="${pageContext.servletContext.contextPath}/srv/archiv/kalkulace">
 						<span style="color: #4BA82E; font-weight: bold;">${posledniArchivniKalkulace.kalkulace}</span>
 					</a>
@@ -165,7 +171,7 @@
 					<c:if test="${((empty posledniArchivniKalkulace.kalkulace) or kalkulace.kalkulace>posledniArchivniKalkulace.kalkulace) and alesponJedenPrJeOk=='OK'}">
 						<span>
 							<a href="${pageContext.servletContext.contextPath}/srv/kalkulace/spustitVypocet/${kalkulace.kalkulace}">
-								<input type="button" value="Spustit výpočet" class="heroBtn"></input>
+								<input type="button" id="tlacitkoSpustitVypocet" value="Spustit výpočet" class="heroBtn"></input>
 							</a>
 						</span>
 						<c:if test="${moznoEditovat and vsechnyMtSchvaleny=='OK'}">
@@ -176,6 +182,16 @@
 							</span>
 						</c:if>
 					</c:if>
+				</div>
+				<div class="whirly-loader" id="spinner" style="visibility: hidden; left: 50%; top: 50%; float: left; z-index: 200;">
+					<script>
+						/*http://www.css-spinners.com */
+					</script>
+				</div>
+				<div class="sedaObrProSpinner" id="sedaObr" style="visibility: hidden;">
+					<script>
+						/*problem s prazdnym tagem :( */
+					</script>
 				</div>
 			</div>
 		</div>

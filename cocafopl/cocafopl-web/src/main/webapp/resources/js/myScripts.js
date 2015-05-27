@@ -1,3 +1,4 @@
+/*
 function check(f, v) {
 	var fr = document.forms[f];
 	var errs = "";
@@ -14,25 +15,4 @@ function check(f, v) {
 	fr.submit();
 	return true;
 }
-
-function modalConfirmationDeleteAll() {
-	$("#dialog-confirm").dialog({
-		resizable : false,
-		autoOpen : false,
-		height : 180,
-		modal : true,
-		buttons : {
-			"Smazat vše" : function() {
-				// todo
-				$(this).dialog("close");
-			},
-			"Zpět" : function() {
-				$(this).dialog("close");
-			}
-		}
-	});
-
-	$("#opener").click(function() {
-		$("#dialog-confirm").dialog("open");
-	});
-}
+*/

@@ -51,6 +51,16 @@
 				alert(result);
 			}
 		});
+		
+		$("#tlacitkoProveritPrAll").click(function() {
+			$("#sedaObr").css("visibility", "visible");
+			$("#spinner").css("visibility", "visible");
+		});
+		
+		$("#tlacitkoProveritPr").click(function() {
+			$("#sedaObr").css("visibility", "visible");
+			$("#spinner").css("visibility", "visible");
+		});
 	});
 </script>
 </head>
@@ -223,19 +233,29 @@
 					<div class="formBar">
 						<span>
 							<a href="${pageContext.servletContext.contextPath}/srv/komunikaceFavas/${mtk.id}/0/vse">
-								<input type="button" value="Prověřit vše" class="heroBtn" style="width: auto;" title="Komunikace MBV/Favas"></input>
+								<input type="button" id="tlacitkoProveritPrAll" value="Prověřit vše" class="heroBtn" title="Komunikace MBV/Favas"></input>
 							</a>
 						</span>
 						<span>
 							<a href="${pageContext.servletContext.contextPath}/srv/komunikaceFavas/${mtk.id}/0/zbyvajici">
-								<input type="button" value="Prověřit zbývající" class="heroBtn" style="width: auto;" title="Komunikace MBV/Favas"></input>
+								<input type="button" id="tlacitkoProveritPr" value="Prověřit zbývající" class="heroBtn" title="Komunikace MBV/Favas"></input>
 							</a>
 						</span>
 						<span>
-							<input type="button" id="idButtonExport" value="Export EXCEL" class="heroBtn"></input>
+							<input type="button" id="idButtonExport" value="Export EXCEL" class="heroBtn" style="background-color: gray;"></input>
 						</span>
 					</div>
 				</c:if>
+				<div class="whirly-loader" id="spinner" style="visibility: hidden; left: 50%; top: 50%; float: left; z-index: 200;">
+					<script>
+						/*http://www.css-spinners.com */
+					</script>
+				</div>
+				<div class="sedaObrProSpinner" id="sedaObr" style="visibility: hidden;">
+					<script>
+						/*problem s prazdnym tagem :( */
+					</script>
+				</div>
 			</div>
 		</div>
 		<div class="pageFooter">

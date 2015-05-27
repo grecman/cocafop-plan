@@ -82,6 +82,7 @@ public class IndexController {
 
 		log.info("###\t ... for user: " + session.getAttribute("userName") + " (" + role + ") ... " + session.getAttribute("serverName"));
 
+			
 		// test prvniho connectu do db
 		try {
 			serviceUserZentaAdm.getUserZentaAdm(req.getUserPrincipal().getName().toUpperCase());
@@ -213,7 +214,8 @@ public class IndexController {
 		session.setAttribute("vybranaMt", "");
 		session.setAttribute("vybranyZavod", "");
 
-		return "redirect:/srv/archiv/kusovnik";
+		return "redirect:/srv/kalkulace/detail";
+		
 	}
 
 }

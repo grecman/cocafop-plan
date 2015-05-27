@@ -90,7 +90,7 @@ public class PredstavitelController {
 
 	@Autowired
 	private ArchKalkulaceService serviceArchKalkuace;
-	
+
 	@Autowired
 	private ArchPredstavitelService serviceArchPredstavitel;
 
@@ -151,22 +151,22 @@ public class PredstavitelController {
 		Mt mt = serviceMt.getMt(session.getAttribute("vybranaMt").toString(), session.getAttribute("vybranyZavod").toString());
 		model.addAttribute("modelovaTrida", mt);
 
-		// GRE: ziskani unikatniho seznamu predstavitelu 
+		// GRE: ziskani unikatniho seznamu predstavitelu
 		HashSet<Integer> existujiciCislaPred = new HashSet<Integer>();
 		ArrayList<Integer> cislaPredstavitelu = new ArrayList<Integer>();
-		
+
 		// cisla predstavitelu z archivu aktualniho roku
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy");
 		String AktualniRok = sdf.format(new Date());
 		List<Integer> prdArch = serviceArchPredstavitel.getArchPredstavitelCislaPredVRoce(AktualniRok, mt.getModelTr());
 		existujiciCislaPred.addAll(prdArch);
-		
+
 		// cisla predstavitelu z archivu aktualniho roku
 		List<Predstavitel> prd = servicePredstavitel.getPredstavitele(session.getAttribute("vybranaMt").toString(), session.getAttribute("vybranyZavod").toString());
 		for (Predstavitel pr : prd) {
 			existujiciCislaPred.add(pr.getCisloPred());
 		}
-		
+
 		if (existujiciCislaPred.isEmpty()) {
 			for (int i = 1; i <= 15; i++) {
 				cislaPredstavitelu.add(i);
@@ -191,42 +191,43 @@ public class PredstavitelController {
 		Mt mt = serviceMt.getMt(session.getAttribute("vybranaMt").toString(), session.getAttribute("vybranyZavod").toString());
 
 		// kontrola zdali nahodou neexistuje predstavitel se stejnym MK a kode zeme!
-		if (servicePredstavitel.getPredstavitel(session.getAttribute("vybranaMt").toString() + p.getModelovyKlic().toUpperCase(), p.getKodZeme()) == null) {
+		// if (servicePredstavitel.getPredstavitel(mt.getModelTr() + p.getModelovyKlic().toUpperCase(), p.getKodZeme()) == null) {
 
-			Predstavitel pred = new Predstavitel();
-			pred.setCetnost(p.getCetnost());
-			pred.setCisloPred(p.getCisloPred());
+		Predstavitel pred = new Predstavitel();
+		pred.setCetnost(p.getCetnost());
+		pred.setCisloPred(p.getCisloPred());
+
+		// zajisteni unikatnosti MK a COMIX=TRUE
+		Predstavitel predstavitelDoComixu = servicePredstavitel.getPredstavitelComix(mt.getModelTr(), mt.getZavod(), mt.getModelTr() + p.getModelovyKlic().toUpperCase());
+		if (predstavitelDoComixu == null) {
 			pred.setComix(p.getComix());
-			pred.setEuNorma(p.getEuNorma().toUpperCase());
-			pred.setKodZeme(p.getKodZeme().toUpperCase());
-			pred.setModelovyKlic(mt.getModelTr() + p.getModelovyKlic().toUpperCase());
-			pred.setObsah(p.getObsah());
-			pred.setPlatnostOd(p.getPlatnostOd());
-			pred.setPlatnostDo(p.getPlatnostDo());
-			pred.setPoznamka(p.getPoznamka());
-			pred.setRozlozenost(p.getRozlozenost() == null ? null : p.getRozlozenost().toUpperCase());
-			pred.setTyp(p.getTyp());
-			pred.setVybava(p.getVybava());
-			pred.setVybavy(p.getVybavy() == null ? null : p.getVybavy().toUpperCase());
-			pred.setVykon(p.getVykon());
-			pred.setUtime(new Date());
-			pred.setUuser(req.getUserPrincipal().getName().toUpperCase());
-			pred.setGz39tMt(mt);
-			servicePredstavitel.addPredstavitel(pred);
-
-			log.debug("###\t Novy predstavitel - ulozeni posledni editace do MT_KALKULACE.");
-			List<MtKalkulace> mtKalkulacePoslEdit = serviceMtKalkulace.getMtKalkulace(pred.getGz39tMt().getModelTr(), pred.getGz39tMt().getZavod());
-			for (MtKalkulace mtkx : mtKalkulacePoslEdit) {
-				mtkx.setPosledniEditace(new Date());
-				mtkx.setPosledniEditaceDuvod("Nový představitel číslo " + p.getCisloPred() + ", " + mt.getModelTr() + p.getModelovyKlic().toUpperCase() + " - " + mt.getZavod());
-				serviceMtKalkulace.setMtKalkulace(mtkx);
-			}
-
-			// Predstavitel prrr = servicePredstavitel.getPredstavitel((String) session.getAttribute("vybranaMt"), p.getCisloPred());
-			// predstavitelKalkulaceSmazani(req, prrr.getId());
-
 		} else {
-			log.debug("###\t\t ... predstavitel se stejnym MK a kodeZeme jiz existuje!");
+			log.debug("###\t\t ... predstavitel se stejnym MK a 'zaskrtnutym' COMIXem jiz existuje! Comix bude uložen jako FALSE.");
+			pred.setComix(false);
+		}
+		pred.setEuNorma(p.getEuNorma().toUpperCase());
+		pred.setKodZeme(p.getKodZeme().toUpperCase());
+		pred.setModelovyKlic(mt.getModelTr() + p.getModelovyKlic().toUpperCase());
+		pred.setObsah(p.getObsah());
+		pred.setPlatnostOd(p.getPlatnostOd());
+		pred.setPlatnostDo(p.getPlatnostDo());
+		pred.setPoznamka(p.getPoznamka());
+		pred.setRozlozenost(p.getRozlozenost() == null ? null : p.getRozlozenost().toUpperCase());
+		pred.setTyp(p.getTyp());
+		pred.setVybava(p.getVybava());
+		pred.setVybavy(p.getVybavy() == null ? null : p.getVybavy().toUpperCase());
+		pred.setVykon(p.getVykon());
+		pred.setUtime(new Date());
+		pred.setUuser(req.getUserPrincipal().getName().toUpperCase());
+		pred.setGz39tMt(mt);
+		servicePredstavitel.addPredstavitel(pred);
+
+		log.trace("###\t Novy predstavitel - ulozeni posledni editace do MT_KALKULACE.");
+		List<MtKalkulace> mtKalkulacePoslEdit = serviceMtKalkulace.getMtKalkulace(pred.getGz39tMt().getModelTr(), pred.getGz39tMt().getZavod());
+		for (MtKalkulace mtkx : mtKalkulacePoslEdit) {
+			mtkx.setPosledniEditace(new Date());
+			mtkx.setPosledniEditaceDuvod("Nový představitel číslo " + p.getCisloPred() + ", " + mt.getModelTr() + p.getModelovyKlic().toUpperCase() + " - " + mt.getZavod());
+			serviceMtKalkulace.setMtKalkulace(mtkx);
 		}
 
 		return "redirect:/srv/predstavitel/definice/list";
@@ -253,22 +254,22 @@ public class PredstavitelController {
 		}
 		model.addAttribute("mesice", mesice);
 
-		// GRE: ziskani unikatniho seznamu predstavitelu 
+		// GRE: ziskani unikatniho seznamu predstavitelu
 		HashSet<Integer> existujiciCislaPred = new HashSet<Integer>();
 		ArrayList<Integer> cislaPredstavitelu = new ArrayList<Integer>();
-		
+
 		// cisla predstavitelu z archivu aktualniho roku
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy");
 		String AktualniRok = sdf.format(new Date());
 		List<Integer> prdArch = serviceArchPredstavitel.getArchPredstavitelCislaPredVRoce(AktualniRok, mt.getModelTr());
 		existujiciCislaPred.addAll(prdArch);
-		
+
 		// cisla predstavitelu z archivu aktualniho roku
 		List<Predstavitel> prd = servicePredstavitel.getPredstavitele(session.getAttribute("vybranaMt").toString(), session.getAttribute("vybranyZavod").toString());
 		for (Predstavitel pr : prd) {
 			existujiciCislaPred.add(pr.getCisloPred());
 		}
-		
+
 		if (existujiciCislaPred.isEmpty()) {
 			for (int i = 1; i <= 15; i++) {
 				cislaPredstavitelu.add(i);
@@ -295,7 +296,6 @@ public class PredstavitelController {
 
 		if (!pred.getKodZeme().startsWith(p.getKodZeme().toUpperCase()) || !pred.getModelovyKlic().startsWith(pred.getGz39tMt().getModelTr() + p.getModelovyKlic().toUpperCase())) {
 			log.debug("###\t ...zmenil se modelovy klic nebo kod zeme - mazu PR cisla a PR messages a to pro vsechny aktivni kalkulace.");
-
 			List<PredstavitelKalkulace> pk = servicePredstavitelKalkulace.getPredstaviteleKalkulace(p.getId());
 			for (PredstavitelKalkulace predstavitelKalk : pk) {
 				servicePredstavitelPr.removePredstavitelPrAll(predstavitelKalk.getId());
@@ -304,11 +304,20 @@ public class PredstavitelController {
 				servicePredstavitelKalkulace.setPredstavitelKalkulace(predstavitelKalk);
 			}
 		}
-
 		pred.setCetnost(p.getCetnost());
 		pred.setCisloPred(p.getCisloPred());
 		pred.setCisloPredMin(p.getCisloPredMin());
-		pred.setComix(p.getComix());
+
+		// zajisteni unikatnosti MK a COMIX=TRUE
+		Predstavitel predstavitelDoComixu = servicePredstavitel.getPredstavitelComix(pred.getCisloPred(),pred.getGz39tMt().getModelTr(), pred.getGz39tMt().getZavod(), pred.getGz39tMt().getModelTr()
+				+ p.getModelovyKlic().toUpperCase());
+		if(predstavitelDoComixu == null){
+			pred.setComix(p.getComix());
+		} else{
+			log.debug("###\t\t ... predstavitel se stejnym MK a 'zaskrtnutym' COMIXem jiz existuje! Comix bude uložen jako FALSE.");
+			pred.setComix(false);
+		}
+		
 		pred.setEuNorma(p.getEuNorma().toUpperCase());
 		pred.setKodZeme(p.getKodZeme() == null ? null : p.getKodZeme().toUpperCase());
 		pred.setModelovyKlic(pred.getGz39tMt().getModelTr() + p.getModelovyKlic().toUpperCase());
@@ -364,14 +373,15 @@ public class PredstavitelController {
 
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy");
 		Integer AktualniRok = Integer.valueOf(sdf.format(new Date()));
-		String predchoziRRRRMM = AktualniRok-1+""+12;
-		
+		String predchoziRRRRMM = AktualniRok - 1 + "" + 12;
+
 		List<Predstavitel> predstavitel = servicePredstavitel.getPredstavitele(session.getAttribute("vybranaMt").toString(), session.getAttribute("vybranyZavod").toString());
 		for (Predstavitel pred : predstavitel) {
-			List<ArchPredstavitel> listAP =  serviceArchPredstavitel.getArchPredstavitelProMinuleCislo(Integer.valueOf(predchoziRRRRMM), pred.getGz39tMt().getModelTr(), pred.getGz39tMt().getZavod(), pred.getModelovyKlic(), pred.getKodZeme());
-			if(listAP.size()==0){
+			List<ArchPredstavitel> listAP = serviceArchPredstavitel.getArchPredstavitelProMinuleCislo(Integer.valueOf(predchoziRRRRMM), pred.getGz39tMt().getModelTr(), pred.getGz39tMt().getZavod(),
+					pred.getModelovyKlic(), pred.getKodZeme());
+			if (listAP.size() == 0) {
 				pred.setCisloPredMin(0);
-			} else if(listAP.size()==1) {
+			} else if (listAP.size() == 1) {
 				pred.setCisloPredMin(listAP.get(0).getCisloPred());
 			} else {
 				// pro jednoho predstavitele existuje vice vyskytu predstavitelu v archivu (kombinace modelovy klic a kod zeme)
@@ -401,7 +411,7 @@ public class PredstavitelController {
 			log.debug("###\t Uzivatel s roli ADMINS ->- presmerovavam na prislusnou stranku.");
 			return "redirect:/srv/monitoring/logging";
 		}
-		
+
 		predstavitelKalkulaceVytvoreni(req);
 
 		if (session.getAttribute("kalkulaceRRRRMM").toString().isEmpty()) {
@@ -412,7 +422,7 @@ public class PredstavitelController {
 				log.debug("###\t Neexistuji zadne kalkulace! Je nutne je nejdrive zadat.");
 				return "redirect:/srv/kalkulace/seznam";
 			}
-			
+
 			session.setAttribute("kalkulaceRRRRMM", kalkulace.getKalkulace());
 			return "redirect:/srv/predstavitel/seznam/" + kalkulace.getKalkulace();
 		} else {
@@ -425,7 +435,7 @@ public class PredstavitelController {
 	public String predstavitelSeznamSKalkulaci(@PathVariable int kalkulaceRRRRMM, Mt mt, MtKalkulace mtKalkulace, Model model, HttpServletRequest req, HttpSession session) throws SQLException,
 			UnknownHostException {
 		log.debug("###\t predstavitelSeznamSKalkulaci(" + session.getAttribute("kalkulaceRRRRMM") + ", " + session.getAttribute("vybranaMt") + "-" + session.getAttribute("vybranyZavod") + ")");
-		
+
 		session.setAttribute("errorMesage", "");
 
 		if (session.getAttribute("vybranaMt").toString().isEmpty() && session.getAttribute("vybranyZavod").toString().isEmpty()) {
@@ -523,8 +533,7 @@ public class PredstavitelController {
 		}
 
 		log.debug("###\t Zmena modeloveho roku - ulozeni posledni editace do MT_KALKULACE.");
-		List<MtKalkulace> mtKalkulacePoslEdit = serviceMtKalkulace.getMtKalkulace(session.getAttribute("vybranaMt").toString(), session.getAttribute("vybranyZavod")
-				.toString());
+		List<MtKalkulace> mtKalkulacePoslEdit = serviceMtKalkulace.getMtKalkulace(session.getAttribute("vybranaMt").toString(), session.getAttribute("vybranyZavod").toString());
 		for (MtKalkulace mtkx : mtKalkulacePoslEdit) {
 			mtkx.setPosledniEditace(new Date());
 			mtkx.setPosledniEditaceDuvod("Změna modelového roku u " + mtkx.getGz39tMt().getModelTr() + " - " + mtkx.getGz39tMt().getZavod());
@@ -599,7 +608,7 @@ public class PredstavitelController {
 		pk.setUtime(new Date());
 		pk.setUuser(req.getUserPrincipal().getName().toUpperCase());
 		servicePredstavitelKalkulace.setPredstavitelKalkulace(pk);
-		
+
 		servicePredstavitelPr.removePredstavitelPrAll(pk.getId());
 		servicePredstavitelMessage.removePredstavitelMessageAll(pk.getId());
 
@@ -607,7 +616,8 @@ public class PredstavitelController {
 		List<MtKalkulace> mtKalkulacePoslEdit = serviceMtKalkulace.getMtKalkulace(pk.getGz39tMtKalkulace().getGz39tMt().getModelTr(), pk.getGz39tMtKalkulace().getGz39tMt().getZavod());
 		for (MtKalkulace mtkx : mtKalkulacePoslEdit) {
 			mtkx.setPosledniEditace(new Date());
-			mtkx.setPosledniEditaceDuvod("Změna výbavy představitele " + pk.getGz39tPredstavitel().getCisloPred() + ", " + pk.getGz39tPredstavitel().getModelovyKlic().toUpperCase() + " - " + mtkx.getGz39tMt().getZavod());
+			mtkx.setPosledniEditaceDuvod("Změna výbavy představitele " + pk.getGz39tPredstavitel().getCisloPred() + ", " + pk.getGz39tPredstavitel().getModelovyKlic().toUpperCase() + " - "
+					+ mtkx.getGz39tMt().getZavod());
 			serviceMtKalkulace.setMtKalkulace(mtkx);
 		}
 		return "redirect:/srv/predstavitel/detail/" + idPredKalk;
@@ -632,7 +642,8 @@ public class PredstavitelController {
 		List<MtKalkulace> mtKalkulacePoslEdit = serviceMtKalkulace.getMtKalkulace(pk.getGz39tMtKalkulace().getGz39tMt().getModelTr(), pk.getGz39tMtKalkulace().getGz39tMt().getZavod());
 		for (MtKalkulace mtkx : mtKalkulacePoslEdit) {
 			mtkx.setPosledniEditace(new Date());
-			mtkx.setPosledniEditaceDuvod("Změna (zrušení) výbavy představitele " + pk.getGz39tPredstavitel().getCisloPred() + ", " + pk.getGz39tPredstavitel().getModelovyKlic().toUpperCase() + " - " + mtkx.getGz39tMt().getZavod());
+			mtkx.setPosledniEditaceDuvod("Změna (zrušení) výbavy představitele " + pk.getGz39tPredstavitel().getCisloPred() + ", " + pk.getGz39tPredstavitel().getModelovyKlic().toUpperCase() + " - "
+					+ mtkx.getGz39tMt().getZavod());
 			serviceMtKalkulace.setMtKalkulace(mtkx);
 		}
 
@@ -658,7 +669,8 @@ public class PredstavitelController {
 		List<MtKalkulace> mtKalkulacePoslEdit = serviceMtKalkulace.getMtKalkulace(pk.getGz39tMtKalkulace().getGz39tMt().getModelTr(), pk.getGz39tMtKalkulace().getGz39tMt().getZavod());
 		for (MtKalkulace mtkx : mtKalkulacePoslEdit) {
 			mtkx.setPosledniEditace(new Date());
-			mtkx.setPosledniEditaceDuvod("Změna (potlačení) výbavy představitele " + pk.getGz39tPredstavitel().getCisloPred() + ", " + pk.getGz39tPredstavitel().getModelovyKlic().toUpperCase() + " - " + mtkx.getGz39tMt().getZavod());
+			mtkx.setPosledniEditaceDuvod("Změna (potlačení) výbavy představitele " + pk.getGz39tPredstavitel().getCisloPred() + ", " + pk.getGz39tPredstavitel().getModelovyKlic().toUpperCase()
+					+ " - " + mtkx.getGz39tMt().getZavod());
 			serviceMtKalkulace.setMtKalkulace(mtkx);
 		}
 

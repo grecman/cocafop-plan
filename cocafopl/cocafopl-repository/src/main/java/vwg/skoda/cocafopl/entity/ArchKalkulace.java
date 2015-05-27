@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -11,7 +12,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-
 
 /**
  * The persistent class for the GZ40T_KALKULACE database table.
@@ -42,23 +42,23 @@ public class ArchKalkulace implements Serializable {
 	private String terkach;
 
 	//bi-directional many-to-one association to ArchCenikSap
-	@OneToMany(mappedBy="gz40tKalkulace")
+	@OneToMany(mappedBy="gz40tKalkulace", cascade={CascadeType.REMOVE})
 	private Set<ArchCenikSap> gz40tCenikSaps;
 
 	//bi-directional many-to-one association to ArchKurzCzk
-	@OneToMany(mappedBy="gz40tKalkulace")
+	@OneToMany(mappedBy="gz40tKalkulace", cascade={CascadeType.REMOVE})
 	private Set<ArchKurzCzk> gz40tKurzCzks;
 
 	//bi-directional many-to-one association to ArchKurzEur
-	@OneToMany(mappedBy="gz40tKalkulace")
+	@OneToMany(mappedBy="gz40tKalkulace", cascade={CascadeType.REMOVE})
 	private Set<ArchKurzEur> gz40tKurzEurs;
 
 	//bi-directional many-to-one association to ArchKusovnik
-	@OneToMany(mappedBy="gz40tKalkulace")
+	@OneToMany(mappedBy="gz40tKalkulace", cascade={CascadeType.REMOVE})
 	private Set<ArchKusovnik> gz40tKusovniks;
 
 	//bi-directional many-to-one association to ArchPredstavitel
-	@OneToMany(mappedBy="gz40tKalkulace")
+	@OneToMany(mappedBy="gz40tKalkulace", cascade={CascadeType.REMOVE})
 	private Set<ArchPredstavitel> gz40tPredstavitels;
 
 	public ArchKalkulace() {

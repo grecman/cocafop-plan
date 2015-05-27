@@ -14,7 +14,7 @@ import vwg.skoda.cocafopl.entity.Predstavitel;
 
 @Service
 public class PredstavitelService {
-	
+
 	static Logger log = Logger.getLogger(PredstavitelService.class);
 
 	@PersistenceContext(name = "PredstavitelService")
@@ -48,60 +48,66 @@ public class PredstavitelService {
 		log.trace("###\t\t getPredstavitelAll();");
 		return entityManager.createQuery("SELECT u FROM Predstavitel u ORDER BY u.predstavitel DESC ", Predstavitel.class).getResultList();
 	}
-	
-//	public List<Integer> getPredstavitelRoky() {
-//		log.trace("###\t\t getPredstavitelRoky();");
-//		List<Integer> gre = null;
-//		try {
-//			gre = entityManager.createQuery("SELECT u.rok FROM Predstavitel u GROUP BY u.rok ORDER BY u.rok DESC", Integer.class).getResultList();
-//		} catch (NoResultException e) {
-//			return null;
-//		}
-//		return gre;
-//	}
-	
-//	public List<Predstavitel> getPredstaviteleVRoce(int rok) {
-//		log.trace("###\t\t getPredstaviteleVRoce("+rok+");");
-//		List<Predstavitel> gre = null;
-//		try {
-//			gre = entityManager.createQuery("SELECT u FROM Predstavitel u WHERE u.rok=:rok ORDER BY u.rok DESC", Predstavitel.class).setParameter("rok", rok).getResultList();
-//		} catch (NoResultException e) {
-//			return null;
-//		}
-//		return gre;
-//	}
-	
+
 	public Predstavitel getPredstavitel(String mt, Integer cisloPred) {
-		log.trace("###\t\t getPredstavitel("+mt+", "+cisloPred+");");
+		log.trace("###\t\t getPredstavitel(" + mt + ", " + cisloPred + ");");
 		Predstavitel gre = null;
 		try {
-			gre = entityManager.createQuery("SELECT u FROM Predstavitel u WHERE u.gz39tMt.modelTr=:mt AND u.cisloPred=:cisloPred ", Predstavitel.class).setParameter("mt", mt).setParameter("cisloPred", cisloPred).getSingleResult();
+			gre = entityManager.createQuery("SELECT u FROM Predstavitel u WHERE u.gz39tMt.modelTr=:mt AND u.cisloPred=:cisloPred ", Predstavitel.class).setParameter("mt", mt)
+					.setParameter("cisloPred", cisloPred).getSingleResult();
 		} catch (NoResultException e) {
 			return null;
 		}
 		return gre;
 	}
 
-	public Predstavitel getPredstavitel(String mk, String kodZeme) {
-		log.trace("###\t\t getPredstavitel("+mk+", "+kodZeme+");");
-		Predstavitel gre = null;
-		try {
-			gre = entityManager.createQuery("SELECT u FROM Predstavitel u WHERE u.modelovyKlic=:mk AND u.kodZeme=:kodZeme ", Predstavitel.class)
-					.setParameter("mk", mk).setParameter("kodZeme", kodZeme).getSingleResult();
-		} catch (NoResultException e) {
-			return null;
-		}
-		return gre;
-	}
-	
+	// public Predstavitel getPredstavitel(String mk, String kodZeme) {
+	// log.trace("###\t\t getPredstavitel(" + mk + ", " + kodZeme + ");");
+	// Predstavitel gre = null;
+	// try {
+	// gre = entityManager.createQuery("SELECT u FROM Predstavitel u WHERE u.modelovyKlic=:mk AND u.kodZeme=:kodZeme ", Predstavitel.class).setParameter("mk", mk)
+	// .setParameter("kodZeme", kodZeme).getSingleResult();
+	// } catch (NoResultException e) {
+	// return null;
+	// }
+	// return gre;
+	// }
+
 	public List<Predstavitel> getPredstavitele(String mt, String zavod) {
-		log.trace("###\t\t getPredstavitel("+mt+", "+zavod+");");
+		log.trace("###\t\t getPredstavitel(" + mt + ", " + zavod + ");");
 		List<Predstavitel> gre = null;
 		try {
-			gre = entityManager.createQuery("SELECT u FROM Predstavitel u WHERE u.gz39tMt.modelTr=:mt AND u.gz39tMt.zavod=:zavod ORDER BY u.cisloPred ", Predstavitel.class).setParameter("mt", mt).setParameter("zavod", zavod).getResultList();
+			gre = entityManager.createQuery("SELECT u FROM Predstavitel u WHERE u.gz39tMt.modelTr=:mt AND u.gz39tMt.zavod=:zavod ORDER BY u.cisloPred ", Predstavitel.class).setParameter("mt", mt)
+					.setParameter("zavod", zavod).getResultList();
 		} catch (NoResultException e) {
 			return null;
 		}
 		return gre;
 	}
+
+	public Predstavitel getPredstavitelComix(String mt, String zavod, String mk) {
+		log.trace("###\t\t getPredstavitelComix(" + mt + ", " + zavod + ", " + mk + ");");
+		Predstavitel gre = null;
+		try {
+			gre = entityManager.createQuery("SELECT u FROM Predstavitel u WHERE u.gz39tMt.modelTr=:mt AND u.gz39tMt.zavod=:zavod AND u.modelovyKlic=:mk AND u.comix=1", Predstavitel.class)
+					.setParameter("mt", mt).setParameter("zavod", zavod).setParameter("zavod", zavod).setParameter("mk", mk).getSingleResult();
+		} catch (NoResultException e) {
+			return null;
+		}
+		return gre;
+	}
+
+	public Predstavitel getPredstavitelComix(int cisloPred, String mt, String zavod, String mk) {
+		log.trace("###\t\t getPredstavitelComix(" + cisloPred + ", " + mt + ", " + zavod + ", " + mk + ");");
+		Predstavitel gre = null;
+		try {
+			gre = entityManager
+					.createQuery("SELECT u FROM Predstavitel u WHERE u.cisloPred!=:cisloPred AND u.gz39tMt.modelTr=:mt AND u.gz39tMt.zavod=:zavod AND u.modelovyKlic=:mk AND u.comix=1", Predstavitel.class)
+					.setParameter("cisloPred", cisloPred).setParameter("mt", mt).setParameter("zavod", zavod).setParameter("zavod", zavod).setParameter("mk", mk).getSingleResult();
+		} catch (NoResultException e) {
+			return null;
+		}
+		return gre;
+	}
+
 }

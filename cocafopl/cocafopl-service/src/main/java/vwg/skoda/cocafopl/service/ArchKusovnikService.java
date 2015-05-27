@@ -8,6 +8,7 @@ import javax.persistence.PersistenceContext;
 
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import vwg.skoda.cocafopl.entity.ArchKusovnik;
 
@@ -30,11 +31,17 @@ public class ArchKusovnikService {
 		try {
 			gre = entityManager
 					.createQuery("SELECT a FROM ArchKusovnik a WHERE a.gz40tKalkulace.kalkulace=:kalkulace AND a.produkt=:produkt AND a.zavod=:zavod AND a.cdilu LIKE :cdilu ", ArchKusovnik.class)
-					.setParameter("kalkulace", kalkulace).setParameter("produkt", produkt).setParameter("zavod", zavod).setParameter("cdilu", cdilu).setMaxResults(1000).getResultList();
+					.setParameter("kalkulace", kalkulace).setParameter("produkt", produkt).setParameter("zavod", zavod).setParameter("cdilu", cdilu).getResultList();
 		} catch (NoResultException e) {
 			return null;
 		}
 		return gre;
+	}
+	
+	@Transactional
+	public void removeArchKusovnikAll(int kalkulace) {
+		log.trace("###\t\t removeArchKusovnikAll(" + kalkulace + ")");
+		entityManager.createQuery("DELETE FROM ArchKusovnik a WHERE a.gz40tKalkulace.kalkulace = :kalkulace ").setParameter("kalkulace", kalkulace).executeUpdate();
 	}
 	
 }

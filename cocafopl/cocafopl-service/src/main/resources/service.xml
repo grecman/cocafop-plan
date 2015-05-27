@@ -17,13 +17,19 @@
 			expression="org.springframework.stereotype.Controller" />
 	</context:component-scan>
 
-
-
 	<!-- persistentUnitName je konfigurovan v persistence.xml -->
 	<bean id="entityManagerFactory"
-		class="org.springframework.orm.jpa.LocalEntityManagerFactoryBean">
+		class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
 		<property name="persistenceUnitName" value="cocafoplPersistence" />
+		<property name="persistenceXmlLocation" value="classpath:META-INF/persistence.xml" />
+		<property name="jpaVendorAdapter" ref="jpaVendorAdapter" />
 	</bean>
+
+	<bean id="jpaVendorAdapter" class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
+		<property name="database" value="ORACLE" />
+		<property name="databasePlatform" value="org.hibernate.dialect.Oracle10gDialect" />
+	</bean>
+
 
 	<!-- Zapnuti podpory transakci -->
 	<tx:annotation-driven transaction-manager="transactionManager" />

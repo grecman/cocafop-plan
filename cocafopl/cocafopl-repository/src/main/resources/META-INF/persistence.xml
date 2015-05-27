@@ -13,11 +13,12 @@
 			ConnectString je nakonfigurovan v context.xml na lokalnim serveru (tomcat) -->
 		<non-jta-data-source>java:comp/env/jdbc/cocafoppl</non-jta-data-source>
 		
+		
 		<properties>
 			<property name="hibernate.connection.driver_class" value="oracle.jdbc.driver.OracleDriver" />
 			<property name="hibernate.dialect" value="org.hibernate.dialect.Oracle10gDialect" />
-			<!-- <property name="hibernate.default_schema" value="cocafoppl" /> -->
 		</properties>
+		
 
 	</persistence-unit>
 </persistence>
