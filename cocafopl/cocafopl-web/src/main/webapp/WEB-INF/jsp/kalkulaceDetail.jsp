@@ -40,6 +40,11 @@
 			$("#spinner").css("visibility", "visible");
 		});
 
+		$('.popup').click(function(event) {
+			event.preventDefault();
+			window.open($(this).attr("href"), "popupWindow", "width=850,height=850,scrollbars=yes,menubar=no,location=no");
+		});
+
 	});
 </script>
 </head>
@@ -103,7 +108,9 @@
 								<th>Poslední výpočet</th>
 								<th>Schváleno</th>
 								<th>Schválil</th>
-								<th></th>
+								<th><a href="${pageContext.servletContext.contextPath}/srv/kalkulace/detail/help" class="popup">
+										<SPAN style="color: #4BA82E; font-weight: bolder; font-size: large;">?</SPAN>
+									</a></th>
 							</tr>
 						</thead>
 						<tbody>
@@ -120,16 +127,16 @@
 											<c:choose>
 												<c:when test="${fn:contains(i.prAnoNe,'AN') or fn:contains(i.prAnoNe,'NA')}">
 													<img title="Část představitelů nemá PR-popis" src="${pageContext.servletContext.contextPath}/resources/ico/154.png" />
-													<c:set var="stavPR" value="MID" />
+													<!-- <c:set var="stavPR" value="MID" /> -->
 												</c:when>
 												<c:otherwise>
 													<c:if test="${fn:contains(i.prAnoNe,'N')}">
 														<img title="Žádný představitel nemá PR-popis" src="${pageContext.servletContext.contextPath}/resources/ico/151.png" />
-														<c:set var="stavPR" value="KO" />
+														<!-- 	<c:set var="stavPR" value="KO" /> -->
 													</c:if>
 													<c:if test="${fn:contains(i.prAnoNe,'A')}">
 														<img title="Všichni představitelé mají PR-popis" src="${pageContext.servletContext.contextPath}/resources/ico/152.png" />
-														<c:set var="stavPR" value="OK" />
+														<!--	<c:set var="stavPR" value="OK" /> -->
 														<c:set var="alesponJedenPrJeOk" value="OK" />
 													</c:if>
 												</c:otherwise>
@@ -146,7 +153,7 @@
 											</c:otherwise>
 										</c:choose></td>
 									<td></td>
-									<td align="center" title="${i.posledniVypocetUser}"><f:formatDate value="${i.posledniVypocet}" pattern="yyyy-MM-dd HH:mm:ss" /></td>
+									<td align="center" title="${i.posledniVypocetUser}"><f:formatDate value="${i.posledniVypocet}" pattern="yyyy-MM-dd HH:mm" /></td>
 									<td align="center"><f:formatDate value="${i.schvaleno}" pattern="yyyy-MM-dd HH:mm" /></td>
 									<td align="center">${i.schvalil}</td>
 									<td align="center"><c:if test="${(empty posledniArchivniKalkulace.kalkulace) or kalkulace.kalkulace>posledniArchivniKalkulace.kalkulace}">
@@ -174,7 +181,7 @@
 								<input type="button" id="tlacitkoSpustitVypocet" value="Spustit výpočet" class="heroBtn"></input>
 							</a>
 						</span>
-						<c:if test="${moznoEditovat and vsechnyMtSchvaleny=='OK'}">
+						<c:if test="${moznoEditovat and vsechnyMtSchvaleny=='OK' and kalkulace.kalkulace==prvniPracovniKalkulace}">
 							<span>
 								<a href="${pageContext.servletContext.contextPath}/srv/kalkulace/schvalit/${kalkulace.kalkulace}">
 									<input type="button" value="Schválit kalkulaci a archivovat" class="heroBtn" style="width: auto;"></input>

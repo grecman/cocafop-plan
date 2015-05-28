@@ -73,7 +73,7 @@
 								<th>Agenda</th>
 								<th>Čas zadání</th>
 								<th>Čas spuštění</th>
-								<th>Čas ukonční</th>
+								<th>Čas ukončení</th>
 								<th>Popis</th>
 								<th>Status</th>
 							</tr>

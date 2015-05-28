@@ -65,13 +65,16 @@ public class MonitoringController {
 			}
 
 			List<Protokol> allUserLogin = serviceProtokol.getAllLogin();
-			model.addAttribute("allUserLogin", allUserLogin.size());
+			model.addAttribute("allUserLoginCount", allUserLogin.size());
 			
 			Set<String> netusernames = new TreeSet<String>();
 			for (Protokol p : allUserLogin) {
 				netusernames.add(p.getNetusername());
 			}
-			model.addAttribute("allUsers", netusernames.size());
+			model.addAttribute("allUsersCount", netusernames.size());
+			
+			List<User> users = serviceUser.getUsers();
+			model.addAttribute("users", users);
 
 			model.addAttribute("db", serviceProtokol.getDbName());
 		} catch (Exception e) {
@@ -88,18 +91,15 @@ public class MonitoringController {
 		log.debug("###\t monitoringLogging()");
 		session.setAttribute("pageTitle", "Monitoring - logging");
 		
-//		User aktualUser = serviceUser.getUser(req.getUserPrincipal().getName().toUpperCase());
-//		if (aktualUser.getUserRole().contains("ADMINS")) {
-//			List<Protokol> protokol = serviceProtokol.getAll();
-//			model.addAttribute("protokol", protokol);
-//		} else {
-//			List<Protokol> protokol = serviceProtokol.getAllUserActivity(req.getUserPrincipal().getName().toUpperCase());
-//			model.addAttribute("protokol", protokol);
-//		}
+		User aktualUser = serviceUser.getUser(req.getUserPrincipal().getName().toUpperCase());
+		if (aktualUser.getUserRole().contains("ADMINS") || aktualUser.getUserRole().contains("APPROVERS")) {
+			List<Protokol> protokol = serviceProtokol.getAllWithoutLogin();
+			model.addAttribute("protokol", protokol);
+		} else {
+			List<Protokol> protokol = serviceProtokol.getAllUserActivity(req.getUserPrincipal().getName().toUpperCase());
+			model.addAttribute("protokol", protokol);
+		}
 		
-		List<Protokol> protokol = serviceProtokol.getAllWithoutLogin();
-		model.addAttribute("protokol", protokol);
-
 		return "/monitoringLogging";
 	}
 

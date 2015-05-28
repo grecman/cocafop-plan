@@ -415,14 +415,12 @@ public class PredstavitelController {
 		predstavitelKalkulaceVytvoreni(req);
 
 		if (session.getAttribute("kalkulaceRRRRMM").toString().isEmpty()) {
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyyMM");
-			Kalkulace kalkulace = serviceKalkulace.getKalkulace(Integer.valueOf(sdf.format(new Date())));
-
+			List<Kalkulace> prvniPracovniKalkulace = serviceKalkulace.getKalkulaceAll();
+			Kalkulace kalkulace = serviceKalkulace.getKalkulace(prvniPracovniKalkulace.get(prvniPracovniKalkulace.size()-1).getKalkulace());
 			if (kalkulace == null) {
 				log.debug("###\t Neexistuji zadne kalkulace! Je nutne je nejdrive zadat.");
 				return "redirect:/srv/kalkulace/seznam";
 			}
-
 			session.setAttribute("kalkulaceRRRRMM", kalkulace.getKalkulace());
 			return "redirect:/srv/predstavitel/seznam/" + kalkulace.getKalkulace();
 		} else {
@@ -593,6 +591,15 @@ public class PredstavitelController {
 			pp.setUtime(new Date());
 			pp.setUuser(req.getUserPrincipal().getName().toUpperCase());
 			servicePredstavitelPr.setPredstavitelPr(pp);
+			
+			log.debug("###\t Korekce PR popisu predstavitele - ulozeni posledni editace do MT_KALKULACE.");
+			List<MtKalkulace> mtKalkulacePoslEdit = serviceMtKalkulace.getMtKalkulace(pk.getGz39tMtKalkulace().getGz39tMt().getModelTr(), pk.getGz39tMtKalkulace().getGz39tMt().getZavod());
+			for (MtKalkulace mtkx : mtKalkulacePoslEdit) {
+				mtkx.setPosledniEditace(new Date());
+				mtkx.setPosledniEditaceDuvod("Korekce PR popisu představitele " + pk.getGz39tPredstavitel().getCisloPred() + ", " + pk.getGz39tPredstavitel().getModelovyKlic().toUpperCase() + " - "
+						+ mtkx.getGz39tMt().getZavod());
+				serviceMtKalkulace.setMtKalkulace(mtkx);
+			}
 		}
 		return "redirect:/srv/predstavitel/detail/" + idPredKalk;
 	}

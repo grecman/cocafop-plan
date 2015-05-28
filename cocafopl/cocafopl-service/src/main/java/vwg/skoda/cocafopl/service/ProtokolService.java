@@ -32,7 +32,7 @@ public class ProtokolService {
 	
 	public List<Protokol> getAllUserActivity(String netusername) {
 		log.debug("###\t\t getAllUserActivity("+netusername+");");
-		return entityManager.createQuery("SELECT a FROM Protokol a WHERE a.netusername=:netusername ORDER BY a.time desc", Protokol.class).setParameter("netusername", netusername).getResultList();
+		return entityManager.createQuery("SELECT a FROM Protokol a WHERE a.action != 'Login do aplikace' AND a.netusername=:netusername ORDER BY a.time desc", Protokol.class).setParameter("netusername", netusername).getResultList();
 	}
 	
 	public List<Protokol> getAllLogin() {

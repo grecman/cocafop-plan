@@ -55,7 +55,7 @@ public class PredstavitelPrService {
 		log.trace("###\t\t getPredstavitelPr(" + idPredstavitelKalkulace+");");
 		List<PredstavitelPr> gre;
 		try {
-			gre = entityManager.createQuery("SELECT u FROM PredstavitelPr u WHERE u.gz39tPredstavitelKalkulace.id=:idPredstavitelKalkulace ORDER BY u.rodina ", PredstavitelPr.class).setParameter("idPredstavitelKalkulace", idPredstavitelKalkulace).getResultList();
+			gre = entityManager.createQuery("SELECT u FROM PredstavitelPr u WHERE u.gz39tPredstavitelKalkulace.id=:idPredstavitelKalkulace ORDER BY u.pr ", PredstavitelPr.class).setParameter("idPredstavitelKalkulace", idPredstavitelKalkulace).getResultList();
 		} catch (NoResultException e) {
 			return null;
 		}

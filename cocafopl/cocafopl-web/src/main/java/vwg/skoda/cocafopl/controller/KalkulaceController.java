@@ -470,8 +470,10 @@ public class KalkulaceController {
 		}
 
 		if (session.getAttribute("kalkulaceRRRRMM").toString().isEmpty()) {
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyyMM");
-			session.setAttribute("kalkulaceRRRRMM", sdf.format(new Date()));
+			List<Kalkulace> prvniPracovniKalkulace = serviceKalkulace.getKalkulaceAll();
+			session.setAttribute("kalkulaceRRRRMM", prvniPracovniKalkulace.get(prvniPracovniKalkulace.size()-1).getKalkulace());
+			//SimpleDateFormat sdf = new SimpleDateFormat("yyyyMM");
+			//session.setAttribute("kalkulaceRRRRMM", sdf.format(new Date()));
 		}
 		return "redirect:/srv/kalkulace/detail/" + session.getAttribute("kalkulaceRRRRMM");
 	}
@@ -507,6 +509,9 @@ public class KalkulaceController {
 				break;
 			}
 		}
+		
+		List<Kalkulace> prvniPracovniKalkulace = serviceKalkulace.getKalkulaceAll();
+		model.addAttribute("prvniPracovniKalkulace", prvniPracovniKalkulace.get(prvniPracovniKalkulace.size()-1).getKalkulace());
 
 		List<MtKalkulaceView> mtkView = serviceMtKalkulaceView.getMtKalkulaceView(kal.getKalkulace());
 		model.addAttribute("mtk", mtkView);
@@ -518,6 +523,13 @@ public class KalkulaceController {
 			model.addAttribute("moznoEditovat", false);
 
 		return "/kalkulaceDetail";
+	}
+	
+	@RequestMapping("/detail/help")
+	public String kalkulaceDetailHelp(Model model, HttpServletRequest req, HttpSession session) throws SQLException, UnknownHostException {
+		log.debug("###\t kalkulaceDetailHelp()");
+
+		return "/kalkulaceDetailPopup";
 	}
 
 	@RequestMapping(value = "/detail/schvalitMt/{mt}/{zavod}/{kalkulace}")
@@ -635,7 +647,7 @@ public class KalkulaceController {
 				List<PredstavitelKalkulace> pkList = servicePredstavitelKalkulace.getPredstaviteleKalkulace(mtk.getGz39tMt().getModelTr(), mtk.getGz39tMt().getZavod(), mtk.getGz39tKalkulace()
 						.getKalkulace());
 				for (PredstavitelKalkulace pk : pkList) {
-					log.debug("###\t ...zakladam pro " + pk.getGz39tPredstavitel().getModelovyKlic() + " pred.c.: " + pk.getGz39tPredstavitel().getCisloPred() + "  do ArchPredstavitel");
+					log.trace("###\t ...zakladam pro " + pk.getGz39tPredstavitel().getModelovyKlic() + " pred.c.: " + pk.getGz39tPredstavitel().getCisloPred() + "  do ArchPredstavitel");
 					ArchPredstavitel apk = new ArchPredstavitel();
 					apk.setGz40tKalkulace(serviceArchKalkulace.getArchKalkulaceId(kalkulaceRRRRMM));
 					apk.setCisloPred(pk.getGz39tPredstavitel().getCisloPred());
