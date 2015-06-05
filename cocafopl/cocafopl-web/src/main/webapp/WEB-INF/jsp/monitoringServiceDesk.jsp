@@ -31,8 +31,7 @@
 				<H3>Návštěvní kniha</H3>
 				<DIV style="padding-left: 20px; font-size: 14px;">
 					Vaše poslední přihlášení: <B>${lastUserLogin}</B><BR /> Do aplikace jste se celkem přihlásil: <B>${userLogin}</B><BR /> <BR /> Aplikaci používá celkem:
-					<B>${allUsersCount}</B> uživatelů. <BR /> Počet všech přihlášení: <B>${allUserLoginCount}</B><BR />
-					<BR />
+					<B>${allUsersCount}</B> uživatelů. <BR /> Počet všech přihlášení: <B>${allUserLoginCount}</B><BR /> <BR />
 					<div class="tableContainer">
 						<table class="dataTable" id="tableIdx">
 							<col width="120px" />
@@ -80,6 +79,26 @@
 				</DIV>
 				<BR />
 				<HR />
+				<H3>Informace o prohlížeči</H3>
+				<script>
+					document.write("Jméno prohlížeče: "+navigator.appName);
+					document.write("<BR />User Agent: "+navigator.userAgent);
+					document.write("<BR />Číslo verze: "+navigator.appVersion);
+					document.write("<BR />Jednoduché číslo verze: "+parseInt(navigator.appVersion));
+					document.write("<BR />Kódové jméno aplikace: "+navigator.appCodeName);
+					
+					var isOpera = !!window.opera || navigator.userAgent.indexOf(' OPR/') >= 0;
+					document.write("<BR />Opera: "+isOpera);
+					var isFirefox = typeof InstallTrigger !== 'undefined'; // Firefox 1.0+
+					document.write("<BR />Firefox: "+isFirefox);
+					var isSafari = Object.prototype.toString.call(window.HTMLElement).indexOf('Constructor') > 0;
+					document.write("<BR />Safari: "+isSafari);
+					var isIE = /*@cc_on!@*/ false || !!document.documentMode; // At least IE6
+					document.write("<BR />IE: "+isIE);
+					var isChrome = !!window.chrome &amp;&amp; !isOpera;
+					document.write("<BR />Chrome: "+isChrome);
+				</script>
+				<BR /> <BR />
 			</div>
 		</div>
 		<div class="pageFooter">

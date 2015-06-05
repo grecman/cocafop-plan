@@ -99,8 +99,11 @@ public class KomunikaceController {
 			// o.setEquipment("PK22B1");
 
 			if (pk.getVybavyEdit() != null && pk.getVybavyEdit().startsWith("+")) {
+				// smysluplna korekce vybavy (př.: +AAA+BBB+CCC)
+				// jeste je tam varianta, ze kor.vybava == "Původní výbava potlačena!" ... v tomto pripade se nenaSETuje zadna vybava
 				o.setEquipment(pk.getVybavyEdit().replace("+", "").trim());
-			} else if (pk.getGz39tPredstavitel().getVybavy() != null) {
+			} else if (pk.getVybavyEdit() == null && pk.getGz39tPredstavitel().getVybavy() != null) {
+				// bere se puvodni nadefinovana vybava, protoze korigovana vybava neexistuje (vyjimka vyse)!
 				o.setEquipment(pk.getGz39tPredstavitel().getVybavy().replace("+", "").trim());
 			}
 
@@ -161,7 +164,7 @@ public class KomunikaceController {
 					Set<vwg.skoda.favas.mbv.Error> errorFavas = favas.getError();
 					if (errorFavas.size() > 0) {
 						for (vwg.skoda.favas.mbv.Error er : errorFavas) {
-							log.error("###\t\t errorFavas\t" + er.getErrNo() + ", " + er.getSource() + ", " + er.getText() + ", " + er.getWeight() + ", " + er.getType().toString());
+							log.error("###\t\t errorFavas\t" + er.getErrNo() + ", " + er.getSource() + ", " + er.getText() + ", " + er.getWeight() + ", " + er.getType());
 						}
 					}
 
@@ -182,13 +185,12 @@ public class KomunikaceController {
 
 			if (probehlaAlesponJednaKomunikace) {
 				log.trace("###\t\t Komunikace MBV/Favas - ulozeni posledni editace do MT_KALKULACE.");
-				List<MtKalkulace> mtKalkulacePoslEdit = serviceMtKalkulace.getMtKalkulace(pk.getGz39tMtKalkulace().getGz39tMt().getModelTr(), pk.getGz39tMtKalkulace().getGz39tMt().getZavod());
-				for (MtKalkulace mtkx : mtKalkulacePoslEdit) {
-					mtkx.setPosledniEditace(new Date());
-					mtkx.setPosledniEditaceDuvod("Komunikace MBV/Favas " + pk.getGz39tPredstavitel().getCisloPred() + ", " + pk.getGz39tPredstavitel().getModelovyKlic().toUpperCase() + " - "
-							+ mtkx.getGz39tMt().getZavod());
-					serviceMtKalkulace.setMtKalkulace(mtkx);
-				}
+				MtKalkulace mtKalkulacePoslEdit = serviceMtKalkulace.getMtKalkulace(pk.getGz39tMtKalkulace().getGz39tKalkulace().getKalkulace(), pk.getGz39tMtKalkulace().getGz39tMt().getModelTr(), pk
+						.getGz39tMtKalkulace().getGz39tMt().getZavod());
+				mtKalkulacePoslEdit.setPosledniEditace(new Date());
+				mtKalkulacePoslEdit.setPosledniEditaceDuvod("Komunikace MBV/Favas: " + pk.getGz39tPredstavitel().getCisloPred() + ", " + pk.getGz39tPredstavitel().getModelovyKlic().toUpperCase()
+						+ " - " + pk.getGz39tMtKalkulace().getGz39tMt().getZavod());
+				serviceMtKalkulace.setMtKalkulace(mtKalkulacePoslEdit);
 			}
 		}
 

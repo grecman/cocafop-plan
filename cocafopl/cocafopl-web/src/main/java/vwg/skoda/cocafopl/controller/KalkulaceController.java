@@ -132,12 +132,6 @@ public class KalkulaceController {
 		List<Mt> mtList = serviceMt.getMtActual();
 		model.addAttribute("mtList", mtList);
 
-		User aktualUser = serviceUser.getUser(req.getUserPrincipal().getName().toUpperCase());
-		if (aktualUser.getUserRole().contains("APPROVERS"))
-			model.addAttribute("moznoEditovat", true);
-		else
-			model.addAttribute("moznoEditovat", false);
-
 		return "/mtDefinice";
 	}
 
@@ -151,12 +145,6 @@ public class KalkulaceController {
 
 		List<Mt> mtList = serviceMt.getMtAll();
 		model.addAttribute("mtList", mtList);
-
-		User aktualUser = serviceUser.getUser(req.getUserPrincipal().getName().toUpperCase());
-		if (aktualUser.getUserRole().contains("APPROVERS"))
-			model.addAttribute("moznoEditovat", true);
-		else
-			model.addAttribute("moznoEditovat", false);
 
 		return "/mtDefinice";
 	}
@@ -297,12 +285,6 @@ public class KalkulaceController {
 	public String kalkulaceSeznam(UniObj uniObj, Model model, HttpServletRequest req, HttpSession session) throws SQLException, UnknownHostException {
 		log.debug("###\t kalkulaceSeznam(" + uniObj.getRok() + ")");
 		session.setAttribute("pageTitle", "Seznam kalkulací");
-
-		User aktualUser = serviceUser.getUser(req.getUserPrincipal().getName().toUpperCase());
-		if (aktualUser.getUserRole().contains("APPROVERS"))
-			model.addAttribute("moznoEditovat", true);
-		else
-			model.addAttribute("moznoEditovat", false);
 
 		List<Integer> listRoku = serviceKalkulace.getKalkulaceRoky();
 		model.addAttribute("listRoku", listRoku);
@@ -469,7 +451,7 @@ public class KalkulaceController {
 			return "redirect:/srv/kalkulace/seznam";
 		}
 
-		if (session.getAttribute("kalkulaceRRRRMM").toString().isEmpty()) {
+		if (session.getAttribute("kalkulaceRRRRMM")==null || session.getAttribute("kalkulaceRRRRMM").toString().isEmpty()) {
 			List<Kalkulace> prvniPracovniKalkulace = serviceKalkulace.getKalkulaceAll();
 			session.setAttribute("kalkulaceRRRRMM", prvniPracovniKalkulace.get(prvniPracovniKalkulace.size()-1).getKalkulace());
 			//SimpleDateFormat sdf = new SimpleDateFormat("yyyyMM");
@@ -515,12 +497,6 @@ public class KalkulaceController {
 
 		List<MtKalkulaceView> mtkView = serviceMtKalkulaceView.getMtKalkulaceView(kal.getKalkulace());
 		model.addAttribute("mtk", mtkView);
-
-		User aktualUser = serviceUser.getUser(req.getUserPrincipal().getName().toUpperCase());
-		if (aktualUser.getUserRole().contains("APPROVERS"))
-			model.addAttribute("moznoEditovat", true);
-		else
-			model.addAttribute("moznoEditovat", false);
 
 		return "/kalkulaceDetail";
 	}
@@ -693,7 +669,7 @@ public class KalkulaceController {
 			Protokol newProtokol = new Protokol();
 			newProtokol.setNetusername(req.getUserPrincipal().getName().toUpperCase());
 			newProtokol.setAction("Spuštěn výpocet");
-			newProtokol.setInfo(protokolInfo + " (počet představitelů)");
+			newProtokol.setInfo(protokolInfo + " [Mod.třída-závod (počet představitelů)]");
 			newProtokol.setTime(new Date());
 			newProtokol.setSessionid(req.getSession().getId());
 			serviceProtokol.addProtokol(newProtokol);
@@ -709,7 +685,7 @@ public class KalkulaceController {
 			serviceProtokol.addProtokol(newProtokol);
 		}
 
-		return "redirect:/srv/offline";
+		return "redirect:/srv/kalkulace/detail/" + kalkulaceRRRRMM;
 	}
 
 	@RequestMapping(value = "/schvalit/{kalkulaceRRRRMM}")

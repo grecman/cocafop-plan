@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <jsp:root xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:form="http://www.springframework.org/tags/form" xmlns:Spring="http://www.springframework.org/tags"
-	xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:f="http://java.sun.com/jsp/jstl/fmt" version="2.0">
+	xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:fn="http://java.sun.com/jsp/jstl/functions" xmlns:f="http://java.sun.com/jsp/jstl/fmt" version="2.0">
 	<jsp:output omit-xml-declaration="false" doctype-root-element="html" doctype-public="-//W3C//DTD XHTML 1.0 Strict//EN"
 		doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd" />
 	<jsp:directive.page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" />
@@ -19,31 +19,6 @@
 
 	$(document).ready(
 			function() {
-
-				$('#tableId').dataTable({
-					"paging" : false,
-					"ordering" : true,
-					"info" : false,
-					"bFilter" : false,
-					"iDisplayLength" : 25,
-					"language" : {
-						// datatables.net/reference/option/language
-						"lengthMenu" : "&#160;Zobrazit _MENU_ řádků na stránce.",
-						"info" : "&#160;Stránka: _PAGE_/_PAGES_, načteno _TOTAL_ záznamů.",
-						"infoEmpty" : "Nenalezeny žádné záznamy.",
-						"infoFiltered" : "&#160;(filtr: _TOTAL_ / _MAX_)",
-						"loadingRecords" : "Nahrávám...",
-						"processing" : "Pracuji...",
-						"search" : "Vyhledat:",
-						"zeroRecords" : "Nebyly nalezeny žádné záznamy.",
-						"paginate" : {
-							"first" : "První",
-							"last" : "Poslední",
-							"next" : "Další",
-							"previous" : "Předcházející"
-						}
-					}
-				});
 
 				$("#tableId tr").click(function() {
 					// Gre: NACTENI HODNOT ZE RADKU V TABULCE
@@ -118,11 +93,13 @@
 		<div class="pageBody">
 			<div class="mainAreaWide">
 				<div class="formBar">
-					<span>
-						<a href="#openModalNovaMt">
-							<input type="button" value="Nová modelová třída" class="heroBtn" style="width: 160px;" />
-						</a>
-					</span>
+					<c:if test="${fn:contains(userRole, 'APPROVERS')}">
+						<span>
+							<a href="#openModalNovaMt">
+								<input type="button" value="Nová modelová třída" class="heroBtn" style="width: 160px;" />
+							</a>
+						</span>
+					</c:if>
 					<span>
 						<a href="${pageContext.servletContext.contextPath}/srv/kalkulace/mtDefiniceZobrazitVse">
 							<input type="button" value="Zobrazit vše" class="heroBtn" />
@@ -163,7 +140,7 @@
 									<td align="left">${i.popis}</td>
 									<td align="center">${i.platnostOd}</td>
 									<td align="center">${i.platnostDo}</td>
-									<td align="center"><c:if test="${moznoEditovat}">
+									<td align="center"><c:if test="${fn:contains(userRole, 'APPROVERS')}">
 											<a href="${pageContext.servletContext.contextPath}/srv/kalkulace/editMtForm/${i.id}">
 												<img title="Editovat" style="border: 0px;" src="${pageContext.servletContext.contextPath}/resources/ico/edit.png" />
 											</a>&#160;
@@ -194,13 +171,12 @@
 					<TABLE>
 						<TR>
 							<TD style="width: 150px;">Modelová třída<SPAN style="color: red; font-weight: bold;">*</SPAN></TD>
-							<TD><form:input path="modelTr" id="modelTr" class="modelTr textovePole" cssStyle="width:30px;"></form:input>
-								<SPAN style="font-size: x-small; color: gray;"> Funkce automatického dokončování.</SPAN></TD>
+							<TD><form:input path="modelTr" id="modelTr" class="modelTr textovePole" cssStyle="width:30px;"></form:input> <SPAN
+									style="font-size: x-small; color: gray;"> Funkce automatického dokončování.</SPAN></TD>
 						</TR>
 						<TR>
 							<TD>Závod<SPAN style="color: red; font-weight: bold;">*</SPAN></TD>
-							<TD><form:input path="zavod" id="zavod" class="zavod textovePole" cssStyle="width:20px"></form:input>
-								<SPAN style="color: red; font-weight: bold;">!</SPAN></TD>
+							<TD><form:input path="zavod" id="zavod" class="zavod textovePole" cssStyle="width:20px"></form:input> <SPAN style="color: red; font-weight: bold;">!</SPAN></TD>
 						</TR>
 						<TR>
 							<TD>Kód země (výchozí)<SPAN style="color: red; font-weight: bold;">*</SPAN></TD>
@@ -219,8 +195,8 @@
 							<TD><form:input path="platnostDo" id="platnostDo" value="999912" class="textovePole" cssStyle="width:60px"></form:input></TD>
 						</TR>
 						<TR>
-							<TD colspan="2"><SPAN style="color: red; font-weight: bold;">!</SPAN>
-								<SPAN style="font-size: x-small; color: gray;"> Modelová třída a závod musí být unikátní, pokud toto nebude splněno, tak formulář nebude uložen!</SPAN></TD>
+							<TD colspan="2"><SPAN style="color: red; font-weight: bold;">!</SPAN> <SPAN style="font-size: x-small; color: gray;"> Modelová třída a závod
+									musí být unikátní, pokud toto nebude splněno, tak formulář nebude uložen!</SPAN></TD>
 						</TR>
 					</TABLE>
 				</form:form>
@@ -228,8 +204,7 @@
 			<div class="modalFooter">
 				<TABLE style="width: 100%;">
 					<TR>
-						<TD><SPAN style="color: red; font-weight: bold;">*</SPAN>
-							<SPAN style="font-size: x-small; color: gray;"> povinný údaj</SPAN></TD>
+						<TD><SPAN style="color: red; font-weight: bold;">*</SPAN> <SPAN style="font-size: x-small; color: gray;"> povinný údaj</SPAN></TD>
 						<TD align="right"><input type="button" id="formNovaMtButton" value="Uložit" class="heroBtn"></input></TD>
 					</TR>
 				</TABLE>

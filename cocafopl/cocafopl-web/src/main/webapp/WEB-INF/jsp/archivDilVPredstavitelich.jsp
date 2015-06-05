@@ -166,8 +166,8 @@
 						<span>
 							<input type="button" id="idButtonExport" value="Export EXCEL" class="heroBtn" style="background-color: gray;"></input>
 						</span>
-						<c:if test="${pocetNactenychZaznamu>500}">
-							<SPAN style="color: red;">Proveden velký výběr dat! Načteno ${pocetNactenychZaznamu} záznamu, zobrazeno bude pouze prvních 500.</SPAN>
+						<c:if test="${pocetNactenychZaznamu>maxLimitNaZobrazeni}">
+							<SPAN style="color: red;">Proveden velký výběr dat! Načteno ${pocetNactenychZaznamu} záznamu, zobrazeno bude pouze prvních ${maxLimitNaZobrazeni}.</SPAN>
 						</c:if>
 					</div>
 				</c:if>

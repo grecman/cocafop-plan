@@ -20,17 +20,19 @@ public class ArchCenikViewService {
 	private EntityManager entityManager;
 
 	public List<ArchCenikView> getArchCenikView(int kalkulace, String cdilu, String zavod, String dodavatel) {
-		log.trace("###\t\t getArchCenikView(" + kalkulace + ", " + cdilu + ", " + zavod +", "+dodavatel+ " );");
+		zavod = zavod.isEmpty() ? "%" : zavod;
+		dodavatel = dodavatel.isEmpty() ? "%" : "%" + dodavatel + "%";
+		log.debug("###\t\t getArchCenikView(" + kalkulace + ", " + cdilu + ", " + zavod + ", " + dodavatel + " );");
+
 		List<ArchCenikView> gre = null;
 		try {
 			gre = entityManager
-					.createQuery("SELECT u FROM ArchCenikView u WHERE u.kalkulace=:kalkulace AND u.cdilu LIKE :cdilu AND u.zavod=:zavod AND u.dodavatel LIKE :dodavatel ", ArchCenikView.class)
-					.setParameter("kalkulace", kalkulace).setParameter("cdilu", cdilu).setParameter("zavod", zavod).setParameter("dodavatel", dodavatel).getResultList();
+					.createQuery(
+							"SELECT u FROM ArchCenikView u WHERE u.kalkulace=:kalkulace AND u.cdilu LIKE :cdilu AND u.cizav LIKE :zavod AND UPPER(NVL(u.dodavatel,' ')) LIKE :dodavatel  ORDER BY u.cdilu,u.cizav,u.pred ",
+							ArchCenikView.class).setParameter("kalkulace", kalkulace).setParameter("cdilu", cdilu).setParameter("zavod", zavod).setParameter("dodavatel", dodavatel).getResultList();
 		} catch (NoResultException e) {
 			return null;
 		}
 		return gre;
 	}
-	
-
 }

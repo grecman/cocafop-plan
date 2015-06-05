@@ -16,14 +16,14 @@
 				<UL style="width: 750px;">
 					<LI><H3>Kontrola</H3>
 						<UL>
-							<img src="${pageContext.servletContext.contextPath}/resources/ico/151.png" /> - všichni představitelé vybrané kalkulace a modelové třídy nemají PR
+							<img src="${pageContext.servletContext.contextPath}/resources/ico/151.png" /> - žádný představitel vybrané kalkulace a modelové třídy nemá PR
 							popis.
 							<br />
 							<img src="${pageContext.servletContext.contextPath}/resources/ico/154.png" /> - některý z představitelů vybrané kalkulace a modelové třídy nemá PR
 							popis.
 							<br />
-							<img src="${pageContext.servletContext.contextPath}/resources/ico/152.png" /> - všichni představitelé vybrané kalkulace a modelové třídy obsahují PR
-							popis ze systému MBV/FAVAS.
+							<img src="${pageContext.servletContext.contextPath}/resources/ico/152.png" /> - všichni představitelé vybrané kalkulace a modelové třídy mají doplněny PR
+							popisy ze systému MBV/FAVAS.
 						</UL></LI>
 					<LI><H3>Poslední editace</H3>
 						<UL>
@@ -49,7 +49,7 @@
 						</UL></LI>
 					<LI><H3>Spustit výpočet</H3>
 						<UL>
-							Výpočet zle spustit (tzn, že se zobrazí tlačítko) pokud:
+							Výpočet lze spustit (tzn, že se zobrazí tlačítko) pokud:
 							<UL>
 								<LI>Uživatel má roli USERS nebo APPROVERS.</LI>
 								<LI>Alespoň jedna modelová třída má všechny okomunikované všechny představitele (<B>Kontrola</B>=<img

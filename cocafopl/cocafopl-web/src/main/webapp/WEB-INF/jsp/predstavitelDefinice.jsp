@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <jsp:root xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:form="http://www.springframework.org/tags/form" xmlns:Spring="http://www.springframework.org/tags"
-	xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:f="http://java.sun.com/jsp/jstl/fmt" version="2.0">
+	xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:fn="http://java.sun.com/jsp/jstl/functions" xmlns:f="http://java.sun.com/jsp/jstl/fmt" version="2.0">
 	<jsp:output omit-xml-declaration="false" doctype-root-element="html" doctype-public="-//W3C//DTD XHTML 1.0 Strict//EN"
 		doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd" />
 	<jsp:directive.page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" />
@@ -9,8 +9,20 @@
 <jsp:include page="lib.jsp" />
 <title>COCAFOP-Plan</title>
 <script>
-	var IdVRadku = 0;
 
+	/* test - browser */
+	var isFirefox = typeof InstallTrigger !== 'undefined'; // Firefox 1.0+
+	var isOpera = !!window.opera || navigator.userAgent.indexOf(' OPR/') >= 0;
+	var isSafari = Object.prototype.toString.call(window.HTMLElement).indexOf('Constructor') > 0;
+	var isIE = /*@cc_on!@*/ false || !!document.documentMode; // At least IE6
+	var isChrome = !!window.chrome &amp;&amp; !isOpera;
+	
+	if(isOpera || isSafari || isChrome || (isIE &amp;&amp; navigator.appVersion.match("MSIE 9.0"))){
+		alert("Tato obrazovka aplikace neni kompaktibilní s vaším prohlížečem!");
+		$(window.location).attr('href', '${pageContext.servletContext.contextPath}/srv/napoveda');
+	}
+
+	var IdVRadku = 0;
 	$(document).ready(function() {
 
 		$('#tableId').dataTable({
@@ -191,7 +203,7 @@
 													<img src="${pageContext.servletContext.contextPath}/resources/ico/zrusit.png" />
 												</c:otherwise>
 											</c:choose></td>
-										<td align="center"><c:if test="${moznoEditovat}">
+										<td align="center"><c:if test="${fn:contains(userRole, 'USERS')}">
 												<a href="${pageContext.servletContext.contextPath}/srv/predstavitel/definice/editForm/${i.id}">
 													<img title="Editovat" style="border: 0px;" src="${pageContext.servletContext.contextPath}/resources/ico/edit.png" />
 												</a>
@@ -205,23 +217,21 @@
 						</table>
 					</div>
 				</c:if>
-				<c:if test="${not(empty(mt.modelTr))}">
+				<c:if test="${not(empty(mt.modelTr)) and fn:contains(userRole, 'USERS')}">
 					<div class="formBar">
 						<span>
 							<a href="${pageContext.servletContext.contextPath}/srv/predstavitel/definice/novyPredForm">
 								<input type="button" value="Nový" class="heroBtn"></input>
 							</a>
 						</span>
-						<c:if test="${empty(listPredstavitelu) and not(empty(vybranaMtZavod))}">
-							<span>
-								<a href="${pageContext.servletContext.contextPath}/srv/predstavitel/definice/import">
-									<input type="button" value="Import EXCEL" class="heroBtn"  style="background-color: gray;"></input>
-								</a>
-							</span>
-						</c:if>
+						<span>
+							<a href="${pageContext.servletContext.contextPath}/srv/fileUpload/importCsv">
+								<input type="button" value="Import CSV" class="heroBtn"></input>
+							</a>
+						</span>
 						<c:if test="${not(empty(listPredstavitelu))}">
 							<span>
-								<input type="button" id="idButtonExport" value="Export EXCEL" class="heroBtn"  style="background-color: gray;"></input>
+								<input type="button" id="idButtonExport" value="Export EXCEL" class="heroBtn" style="background-color: gray;"></input>
 							</span>
 							<span>
 								<a href="#openModalMinuleCisloPred">

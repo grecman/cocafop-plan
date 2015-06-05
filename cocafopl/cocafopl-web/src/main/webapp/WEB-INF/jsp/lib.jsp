@@ -22,4 +22,7 @@
 	<script src="${pageContext.servletContext.contextPath}/resources/js/jquery.dataTables.js" type="text/javascript" charset="utf8">
 		/*-.-*/
 	</script> 	
+	<script src="${pageContext.servletContext.contextPath}/resources/js/jquery.table2excel.js" type="text/javascript" charset="utf8">
+		/*-.-*/
+	</script>
 </jsp:root>

@@ -5,61 +5,51 @@
 		doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd" />
 	<jsp:directive.page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" />
 	<html xmlns="http://www.w3.org/1999/xhtml">
-
-
 <head>
-
 <jsp:include page="lib.jsp" />
 <title>COCAFOP-Plan</title>
-
 <script>
 	$(document).ready(function() {
-
 		$('#tableId').dataTable({
-			"paging":   true,
-	        "ordering": true,
-	        "order": [[ 2, "desc" ]],
-	        "info":     true,
-	        "bFilter":  true,
-			"iDisplayLength": 25,
-			"language": {
-					// datatables.net/reference/option/language
-		            "lengthMenu": "&#160;Zobrazit _MENU_ řádků na stránce.",
-		            "info": "&#160;Stránka: _PAGE_/_PAGES_, načteno _TOTAL_ záznamů.",
-		            "infoEmpty": "Nenalezeny žádné záznamy.",
-		            "infoFiltered": "&#160;(filtr: _TOTAL_ / _MAX_)",
-		            "loadingRecords": "Nahrávám...",
-		            "processing":     "Pracuji...",
-		            "search":         "Vyhledat:",
-		            "zeroRecords":    "Nebyly nalezeny žádné záznamy.",
-		            "paginate": {
-		                "first":      "První",
-		                "last":       "Poslední",
-		                "next":       "Další",
-		                "previous":   "Předcházející"
-		            }
-		        }
+			"paging" : true,
+			"ordering" : true,
+			"order" : [ [ 2, "desc" ] ],
+			"info" : true,
+			"bFilter" : true,
+			"iDisplayLength" : 25,
+			"language" : {
+				// datatables.net/reference/option/language
+				"lengthMenu" : "&#160;Zobrazit _MENU_ řádků na stránce.",
+				"info" : "&#160;Stránka: _PAGE_/_PAGES_, načteno _TOTAL_ záznamů.",
+				"infoEmpty" : "Nenalezeny žádné záznamy.",
+				"infoFiltered" : "&#160;(filtr: _TOTAL_ / _MAX_)",
+				"loadingRecords" : "Nahrávám...",
+				"processing" : "Pracuji...",
+				"search" : "Vyhledat:",
+				"zeroRecords" : "Nebyly nalezeny žádné záznamy.",
+				"paginate" : {
+					"first" : "První",
+					"last" : "Poslední",
+					"next" : "Další",
+					"previous" : "Předcházející"
+				}
+			}
 		});
 
 		$("#tableId").on('click', 'tr', function() {
 			$(this).addClass('selectedTableRow').siblings().removeClass('selectedTableRow');
 		});
 	});
-
 </script>
-
 </head>
 <body class="pages">
-
 	<div class="page basePage">
-
 		<c:set scope="request" var="selectedMenu" value="offline" />
 		<jsp:include page="header.jsp" />
-
 		<div class="pageBody">
 			<div class="mainAreaWide">
 				<div class="tableContainer">
-					<table class="dataTable"  id="tableId">
+					<table class="dataTable" id="tableId">
 						<col width="80px" />
 						<col width="180px" />
 						<col width="160px" />
@@ -93,15 +83,12 @@
 						</tbody>
 					</table>
 				</div>
-
 			</div>
 		</div>
 	</div>
-
 	<div class="pageFooter">
 		<jsp:include page="footerInfo.jsp" />
 	</div>
-
 </body>
 	</html>
 </jsp:root>

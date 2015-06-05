@@ -10,6 +10,19 @@
 <title>COCAFOP-Plan</title>
 <script>
 	$(document).ready(function() {
+		
+		/* test - browser */
+		var isFirefox = typeof InstallTrigger !== 'undefined'; // Firefox 1.0+
+		var isOpera = !!window.opera || navigator.userAgent.indexOf(' OPR/') >= 0;
+		var isSafari = Object.prototype.toString.call(window.HTMLElement).indexOf('Constructor') > 0;
+		var isIE = /*@cc_on!@*/ false || !!document.documentMode; // At least IE6
+		var isChrome = !!window.chrome &amp;&amp; !isOpera;
+
+		if(isOpera || isSafari || isChrome || (isIE &amp;&amp; navigator.appVersion.match("MSIE 9.0"))){
+			alert("Tato obrazovka aplikace neni kompaktibilní s vaším prohlížečem!");
+			$(window.location).attr('href', '${pageContext.servletContext.contextPath}/srv/napoveda');
+		}		
+		
 		$('#tableId').dataTable({
 			"paging" : false,
 			"bFilter" : false,
@@ -68,13 +81,13 @@
 					<span style="margin-right: 0px;">&#160;Kalkulace:</span>
 					<span style="margin-top: 3px; margin-left: 2px; margin-right: 2px;">
 						<a href="${pageContext.servletContext.contextPath}/srv/kalkulace/detail/minusMesic">
-							<img title="Editace" src="${pageContext.servletContext.contextPath}/resources/ico/gre/go_left_30.png" />
+							<img src="${pageContext.servletContext.contextPath}/resources/ico/gre/go_left_30.png" />
 						</a>
 					</span>
 					<span style="font-size: 16px; margin-left: 0px; margin-right: 0px;">${kalkulace.kalkulace}</span>
 					<span style="margin-top: 3px; margin-left: 2px; margin-right: 2px;">
 						<a href="${pageContext.servletContext.contextPath}/srv/kalkulace/detail/plusMesic">
-							<img title="Editace" src="${pageContext.servletContext.contextPath}/resources/ico/gre/go_right_30.png" />
+							<img src="${pageContext.servletContext.contextPath}/resources/ico/gre/go_right_30.png" />
 						</a>
 					</span>
 					<span style="padding-left: 750px;">Poslední schválená kalkulace:</span>
@@ -157,13 +170,13 @@
 									<td align="center"><f:formatDate value="${i.schvaleno}" pattern="yyyy-MM-dd HH:mm" /></td>
 									<td align="center">${i.schvalil}</td>
 									<td align="center"><c:if test="${(empty posledniArchivniKalkulace.kalkulace) or kalkulace.kalkulace>posledniArchivniKalkulace.kalkulace}">
-											<c:if test="${empty(i.schvalil)}">
+											<c:if test="${empty(i.schvalil) and (fn:contains(userRole,'APPROVERS') or fn:contains(userRole,'USERS'))}">
 												<a href="${pageContext.servletContext.contextPath}/srv/kalkulace/detail/schvalitMt/${i.modelTr}/${i.zavod}/${i.kalkulace}">
 													<input type="button" value="Schválit" class="heroBtn"></input>
 												</a>
 												<c:set var="vsechnyMtSchvaleny" value="KO" />
 											</c:if>
-											<c:if test="${moznoEditovat and not(empty(i.schvalil))}">
+											<c:if test="${(not empty i.schvalil) and fn:contains(userRole,'APPROVERS')}">
 												<a href="${pageContext.servletContext.contextPath}/srv/kalkulace/detail/reSchvalitMt/${i.modelTr}/${i.zavod}/${i.kalkulace}">
 													<input type="button" value="Zrušit schválení" class="heroBtn"></input>
 												</a>
@@ -176,12 +189,14 @@
 				</div>
 				<div class="formBar">
 					<c:if test="${((empty posledniArchivniKalkulace.kalkulace) or kalkulace.kalkulace>posledniArchivniKalkulace.kalkulace) and alesponJedenPrJeOk=='OK'}">
-						<span>
-							<a href="${pageContext.servletContext.contextPath}/srv/kalkulace/spustitVypocet/${kalkulace.kalkulace}">
-								<input type="button" id="tlacitkoSpustitVypocet" value="Spustit výpočet" class="heroBtn"></input>
-							</a>
-						</span>
-						<c:if test="${moznoEditovat and vsechnyMtSchvaleny=='OK' and kalkulace.kalkulace==prvniPracovniKalkulace}">
+						<c:if test="${fn:contains(userRole,'APPROVERS') or fn:contains(userRole,'USERS')}">
+							<span>
+								<a href="${pageContext.servletContext.contextPath}/srv/kalkulace/spustitVypocet/${kalkulace.kalkulace}">
+									<input type="button" id="tlacitkoSpustitVypocet" value="Spustit výpočet" class="heroBtn"></input>
+								</a>
+							</span>
+						</c:if>
+						<c:if test="${fn:contains(userRole,'APPROVERS') and vsechnyMtSchvaleny=='OK' and kalkulace.kalkulace==prvniPracovniKalkulace}">
 							<span>
 								<a href="${pageContext.servletContext.contextPath}/srv/kalkulace/schvalit/${kalkulace.kalkulace}">
 									<input type="button" value="Schválit kalkulaci a archivovat" class="heroBtn" style="width: auto;"></input>

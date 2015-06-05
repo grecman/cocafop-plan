@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <jsp:root xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:form="http://www.springframework.org/tags/form" xmlns:Spring="http://www.springframework.org/tags"
-	xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:f="http://java.sun.com/jsp/jstl/fmt" version="2.0">
+	xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:fn="http://java.sun.com/jsp/jstl/functions" xmlns:f="http://java.sun.com/jsp/jstl/fmt" version="2.0">
 	<jsp:output omit-xml-declaration="false" doctype-root-element="html" doctype-public="-//W3C//DTD XHTML 1.0 Strict//EN"
 		doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd" />
 	<jsp:directive.page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" />
@@ -10,6 +10,18 @@
 <title>COCAFOP-Plan</title>
 <script>
 	$(document).ready(function() {
+		
+		/* test - browser */
+		var isFirefox = typeof InstallTrigger !== 'undefined'; // Firefox 1.0+
+		var isOpera = !!window.opera || navigator.userAgent.indexOf(' OPR/') >= 0;
+		var isSafari = Object.prototype.toString.call(window.HTMLElement).indexOf('Constructor') > 0;
+		var isIE = /*@cc_on!@*/ false || !!document.documentMode; // At least IE6
+		var isChrome = !!window.chrome &amp;&amp; !isOpera;
+
+		if(isOpera || isSafari || isChrome || (isIE &amp;&amp; navigator.appVersion.match("MSIE 9.0"))){
+			alert("Tato obrazovka aplikace neni kompaktibilní s vaším prohlížečem!");
+			$(window.location).attr('href', '${pageContext.servletContext.contextPath}/srv/napoveda');
+		}
 
 		$('#tableId').dataTable({
 			"paging" : false,
@@ -36,11 +48,12 @@
 			}
 		});
 
-		// 		$("#tableId tr").click(function() {
-		// 			// Gre: NACTENI HODNOT ZE RADKU V TABULCE
-		// 			// zde pouzivam jen ID daneho radku (tedy Id Mt) pro mazani.
-		// 			$(this).addClass('selectedTableRow').siblings().removeClass('selectedTableRow');
-		// 		});
+		$("#idButtonExport").click(function() {
+			$("#tableId").table2excel({
+				exclude : ".noExl",
+				name : "aaaGreca"
+			});
+		});
 
 		$("#formModelovyRokZmenaButton").click(function() {
 			var mrok = (!$("#mrok").val().match(/^[0-9]{4}$/) ? "Modelový rok je špatně zadán: " + $("#mrok").val() : "");
@@ -119,11 +132,13 @@
 								<SPAN style="background-color: white;">&#160;${mtk.gz39tMt.platnostOd}&#160;-&#160;${mtk.gz39tMt.platnostDo}&#160;</SPAN>
 								<SPAN style="margin-left: 20px; margin-right: 0px;">Modelový rok:</SPAN>
 								<SPAN style="background-color: white;">&#160;${mtk.mrok}&#160;</SPAN>
-								<SPAN>
-									<a href="#openModalModelovyrok">
-										<input type="button" value="Změnit" class="heroBtn" title="Změnit modelový rok"></input>
-									</a>
-								</SPAN>
+								<c:if test="${fn:contains(userRole, 'USERS')}">
+									<SPAN>
+										<a href="#openModalModelovyrok">
+											<input type="button" value="Změnit" class="heroBtn" title="Změnit modelový rok"></input>
+										</a>
+									</SPAN>
+								</c:if>
 							</c:otherwise>
 						</c:choose>
 					</c:if>
@@ -162,8 +177,10 @@
 									<th style="font-size: x-small;">Platnost OD</th>
 									<th style="font-size: x-small;">Platnost DO</th>
 									<th style="font-size: x-small;">Výbavy</th>
-									<th style="font-size: x-small;">Comix</th>
-									<th style="font-size: x-small;">MBV Favas</th>
+									<th style="font-size: x-small;" class="noExl">Comix</th>
+									<th style="font-size: x-small;" class="noExl">MBV Favas</th>
+									<th style="font-size: x-small; display: none;">Comix</th>
+									<th style="font-size: x-small; display: none;">MBV Favas</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -208,7 +225,7 @@
 													<span title="Původní výbava: ${i.gz39tPredstavitel.vybavy}" style="color: blue;">${i.vybavyEdit}</span>
 												</c:otherwise>
 											</c:choose></td>
-										<td align="center"><c:choose>
+										<td align="center" class="noExl"><c:choose>
 												<c:when test="${i.gz39tPredstavitel.comix}">
 													<img src="${pageContext.servletContext.contextPath}/resources/ico/ok.png" />
 												</c:when>
@@ -216,7 +233,7 @@
 													<img src="${pageContext.servletContext.contextPath}/resources/ico/zrusit.png" />
 												</c:otherwise>
 											</c:choose></td>
-										<td align="center"><c:choose>
+										<td align="center" class="noExl"><c:choose>
 												<c:when test="${i.existsPr>0}">
 													<img title="${i.utime}" src="${pageContext.servletContext.contextPath}/resources/ico/152.png" />
 												</c:when>
@@ -224,27 +241,31 @@
 													<img src="${pageContext.servletContext.contextPath}/resources/ico/151.png" />
 												</c:otherwise>
 											</c:choose></td>
+											<td style="display: none;">${i.gz39tPredstavitel.comix}</td>
+											<td style="display: none;">${i.existsPr}</td>
 									</tr>
 								</c:forEach>
 							</tbody>
 						</table>
 					</div>
 					<DIV style="color: red; font-weight: bold;">${errorMesage}</DIV>
-					<div class="formBar">
-						<span>
-							<a href="${pageContext.servletContext.contextPath}/srv/komunikaceFavas/${mtk.id}/0/vse">
-								<input type="button" id="tlacitkoProveritPrAll" value="Prověřit vše" class="heroBtn" title="Komunikace MBV/Favas"></input>
-							</a>
-						</span>
-						<span>
-							<a href="${pageContext.servletContext.contextPath}/srv/komunikaceFavas/${mtk.id}/0/zbyvajici">
-								<input type="button" id="tlacitkoProveritPr" value="Prověřit zbývající" class="heroBtn" title="Komunikace MBV/Favas"></input>
-							</a>
-						</span>
-						<span>
-							<input type="button" id="idButtonExport" value="Export EXCEL" class="heroBtn" style="background-color: gray;"></input>
-						</span>
-					</div>
+					<c:if test="${fn:contains(userRole, 'USERS')}">
+						<div class="formBar">
+							<span>
+								<a href="${pageContext.servletContext.contextPath}/srv/komunikaceFavas/${mtk.id}/0/vse">
+									<input type="button" id="tlacitkoProveritPrAll" value="Prověřit vše" class="heroBtn" title="Komunikace MBV/Favas"></input>
+								</a>
+							</span>
+							<span>
+								<a href="${pageContext.servletContext.contextPath}/srv/komunikaceFavas/${mtk.id}/0/zbyvajici">
+									<input type="button" id="tlacitkoProveritPr" value="Prověřit zbývající" class="heroBtn" title="Komunikace MBV/Favas"></input>
+								</a>
+							</span>
+							<span>
+								<input type="button" id="idButtonExport" value="Export EXCEL" class="heroBtn"></input>
+							</span>
+						</div>
+					</c:if>
 				</c:if>
 				<div class="whirly-loader" id="spinner" style="visibility: hidden; left: 50%; top: 50%; float: left; z-index: 200;">
 					<script>

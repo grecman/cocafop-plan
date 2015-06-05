@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <jsp:root xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:form="http://www.springframework.org/tags/form" xmlns:Spring="http://www.springframework.org/tags"
-	xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:f="http://java.sun.com/jsp/jstl/fmt" version="2.0">
+	xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:fn="http://java.sun.com/jsp/jstl/functions" xmlns:f="http://java.sun.com/jsp/jstl/fmt" version="2.0">
 	<jsp:output omit-xml-declaration="false" doctype-root-element="html" doctype-public="-//W3C//DTD XHTML 1.0 Strict//EN"
 		doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd" />
 	<jsp:directive.page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" />
@@ -116,7 +116,7 @@
 									<td align="center">${i.kalkulacniDatum}</td>
 									<td align="center"><a href="${pageContext.servletContext.contextPath}/srv/kalkulace/detail/${i.kalkulace}">
 											<img title="Detail kalkulace" style="border: 0px;" src="${pageContext.servletContext.contextPath}/resources/ico/browse.png" />
-										</a>&#160; <c:if test="${moznoEditovat}">
+										</a>&#160; <c:if test="${fn:contains(userRole, 'APPROVERS')}">
 											<a href="${pageContext.servletContext.contextPath}/srv/kalkulace/editKalkulaceForm/${i.idKalkulace}">
 												<img title="Editace" style="border: 0px;" src="${pageContext.servletContext.contextPath}/resources/ico/edit.png" />
 											</a>&#160;
@@ -127,7 +127,7 @@
 					</table>
 				</div>
 				<div class="formBar">
-					<c:if test="${moznoEditovat}">
+					<c:if test="${fn:contains(userRole, 'APPROVERS')}">
 						<span>
 							<a href="${pageContext.servletContext.contextPath}/srv/kalkulace/kalkulaceNova">
 								<input type="button" id="formEditMtButton" value="Přidat rok" class="heroBtn"></input>

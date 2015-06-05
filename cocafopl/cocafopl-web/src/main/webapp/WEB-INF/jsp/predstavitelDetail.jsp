@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <jsp:root xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:form="http://www.springframework.org/tags/form" xmlns:Spring="http://www.springframework.org/tags"
-	xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:f="http://java.sun.com/jsp/jstl/fmt" version="2.0">
+	xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:fn="http://java.sun.com/jsp/jstl/functions" xmlns:f="http://java.sun.com/jsp/jstl/fmt" version="2.0">
 	<jsp:output omit-xml-declaration="false" doctype-root-element="html" doctype-public="-//W3C//DTD XHTML 1.0 Strict//EN"
 		doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd" />
 	<jsp:directive.page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" />
@@ -193,6 +193,8 @@
 								</c:forEach></td>
 						</tr>
 						<tr style="height: 10px;" />
+					</c:if>
+					<c:if test="${not empty prMessage}">
 						<tr>
 							<td>Chyby MBV/FAVAS</td>
 							<td />
@@ -207,24 +209,27 @@
 						</tr>
 					</c:if>
 				</table>
-				<BR /><DIV style="color: red; font-weight: bold;">${errorMesage}</DIV>
+				<BR />
+				<DIV style="color: red; font-weight: bold;">${errorMesage}</DIV>
 				<div class="formBar">
-					<span>
-						<a href="${pageContext.servletContext.contextPath}/srv/komunikaceFavas/0/${pk.id}/vse">
-							<input type="button" value="Prověřit MBV/Favas" class="heroBtn" style="width: auto;"></input>
-						</a>
-					</span>
-					<span>
-						<!-- <input type="button" id="idButtonKorekceVybavy" value="Korekce výbavy" class="heroBtn"></input> -->
-						<a href="#openModalKorekceVybavy">
-							<input type="button" value="Korekce výbavy" class="heroBtn"></input>
-						</a>
-					</span>
-					<span>
-						<a href="#openModalKorekcePr">
-							<input type="button" value="Korekce PR čísla" class="heroBtn"></input>
-						</a>
-					</span>
+					<c:if test="${fn:contains(userRole, 'USERS')}">
+						<span>
+							<a href="${pageContext.servletContext.contextPath}/srv/komunikaceFavas/0/${pk.id}/vse">
+								<input type="button" value="Prověřit MBV/Favas" class="heroBtn" style="width: auto;"></input>
+							</a>
+						</span>
+						<span>
+							<!-- <input type="button" id="idButtonKorekceVybavy" value="Korekce výbavy" class="heroBtn"></input> -->
+							<a href="#openModalKorekceVybavy">
+								<input type="button" value="Korekce výbavy" class="heroBtn"></input>
+							</a>
+						</span>
+						<span>
+							<a href="#openModalKorekcePr">
+								<input type="button" value="Korekce PR čísla" class="heroBtn"></input>
+							</a>
+						</span>
+					</c:if>
 					<span>
 						<a href="${pageContext.servletContext.contextPath}/srv/predstavitel/seznam/${pk.gz39tMtKalkulace.gz39tKalkulace.kalkulace}">
 							<input type="button" value="Zpět" class="heroBtn"></input>

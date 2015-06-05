@@ -11,6 +11,8 @@ public class ArchCenikView implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private String cdilu;
+	
+	private Integer kalkulace;
 
 	@Column(name="CENA_IA_CZK")
 	private BigDecimal cenaIaCzk;
@@ -24,11 +26,17 @@ public class ArchCenikView implements Serializable {
 	@Column(name="CENA_IB_EUR")
 	private BigDecimal cenaIbEur;
 
-	@Column(name="CENA_MA")
-	private BigDecimal cenaMa;
+	@Column(name="CENA_MA_CZK")
+	private BigDecimal cenaMaCzk;
 
-	@Column(name="CENA_MB")
-	private BigDecimal cenaMb;
+	@Column(name="CENA_MB_CZK")
+	private BigDecimal cenaMbCzk;
+	
+	@Column(name="CENA_MA_EUR")
+	private BigDecimal cenaMaEur;
+
+	@Column(name="CENA_MB_EUR")
+	private BigDecimal cenaMbEur;
 
 	@Column(name="CENA_ORIG_LOCAL")
 	private BigDecimal cenaOrigLocal;
@@ -76,6 +84,14 @@ public class ArchCenikView implements Serializable {
 	public void setCdilu(String cdilu) {
 		this.cdilu = cdilu;
 	}
+	
+	public Integer getKalkulace() {
+		return kalkulace;
+	}
+
+	public void setKalkulace(Integer kalkulace) {
+		this.kalkulace = kalkulace;
+	}
 
 	public BigDecimal getCenaIaCzk() {
 		return this.cenaIaCzk;
@@ -109,20 +125,36 @@ public class ArchCenikView implements Serializable {
 		this.cenaIbEur = cenaIbEur;
 	}
 
-	public BigDecimal getCenaMa() {
-		return this.cenaMa;
+	public BigDecimal getCenaMaCzk() {
+		return cenaMaCzk;
 	}
 
-	public void setCenaMa(BigDecimal cenaMa) {
-		this.cenaMa = cenaMa;
+	public BigDecimal getCenaMbCzk() {
+		return cenaMbCzk;
 	}
 
-	public BigDecimal getCenaMb() {
-		return this.cenaMb;
+	public BigDecimal getCenaMaEur() {
+		return cenaMaEur;
 	}
 
-	public void setCenaMb(BigDecimal cenaMb) {
-		this.cenaMb = cenaMb;
+	public BigDecimal getCenaMbEur() {
+		return cenaMbEur;
+	}
+
+	public void setCenaMaCzk(BigDecimal cenaMaCzk) {
+		this.cenaMaCzk = cenaMaCzk;
+	}
+
+	public void setCenaMbCzk(BigDecimal cenaMbCzk) {
+		this.cenaMbCzk = cenaMbCzk;
+	}
+
+	public void setCenaMaEur(BigDecimal cenaMaEur) {
+		this.cenaMaEur = cenaMaEur;
+	}
+
+	public void setCenaMbEur(BigDecimal cenaMbEur) {
+		this.cenaMbEur = cenaMbEur;
 	}
 
 	public BigDecimal getCenaOrigLocal() {

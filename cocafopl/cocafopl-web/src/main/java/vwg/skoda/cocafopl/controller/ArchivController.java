@@ -14,6 +14,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import vwg.skoda.cocafopl.entity.ArchCenikView;
 import vwg.skoda.cocafopl.entity.ArchKalkulace;
 import vwg.skoda.cocafopl.entity.ArchKalkulaceMtZavView;
 import vwg.skoda.cocafopl.entity.ArchKalkulaceView;
@@ -27,6 +28,7 @@ import vwg.skoda.cocafopl.entity.MtProd;
 import vwg.skoda.cocafopl.entity.PrView;
 import vwg.skoda.cocafopl.entity.PredstavitelPr;
 import vwg.skoda.cocafopl.entity.User;
+import vwg.skoda.cocafopl.service.ArchCenikViewService;
 import vwg.skoda.cocafopl.service.ArchKalkulaceMtZavViewService;
 import vwg.skoda.cocafopl.service.ArchKalkulaceService;
 import vwg.skoda.cocafopl.service.ArchKalkulaceViewService;
@@ -56,6 +58,9 @@ public class ArchivController {
 	private ArchKusovnikService serviceArchKusovnik;
 
 	@Autowired
+	private ArchCenikViewService serviceArchCenikView;
+
+	@Autowired
 	private ArchKusyProvViewService serviceArchKusyProvView;
 
 	@Autowired
@@ -75,12 +80,14 @@ public class ArchivController {
 
 	@Autowired
 	private PrViewService servicePrView;
-	
+
 	@Autowired
 	private ArchKurzCzkService serviceArchKurzCzk;
-	
+
 	@Autowired
 	private ArchKurzEurService serviceArchKurzEur;
+	
+	Integer maxLimitNaZobrazeni = 1000;
 
 	@RequestMapping("/kalkulace")
 	public String archivKalkulace(Model model, HttpServletRequest req, HttpServletResponse res, HttpSession session) throws SQLException {
@@ -157,13 +164,12 @@ public class ArchivController {
 		List<ArchKusovnik> ak = serviceArchKusovnik.getArchKusovnik(Integer.valueOf(session.getAttribute("archKalkulaceRRRRMM").toString()), session.getAttribute("vybranyProdukt").toString(), session
 				.getAttribute("vybranyZavod").toString(), "%" + archKusovnik.getCdilu().toUpperCase().trim() + "%");
 
-		if (ak.size() > 1000) {
-			model.addAttribute("mocVelkyPocetVybranychZazmanuZKusovniku", true);
-			model.addAttribute("archKusList", ak.subList(0, 1000));
+		if (ak.size() > maxLimitNaZobrazeni) {
+			model.addAttribute("archKusList", ak.subList(0, maxLimitNaZobrazeni));
 		} else {
-			model.addAttribute("mocVelkyPocetVybranychZazmanuZKusovniku", false);
 			model.addAttribute("archKusList", ak);
 		}
+		model.addAttribute("maxLimitNaZobrazeni", maxLimitNaZobrazeni);
 		model.addAttribute("pocetNactenychZaznamu", ak.size());
 
 		return "/archivKusovnik";
@@ -172,9 +178,45 @@ public class ArchivController {
 	// ###################################################################################################################################################################
 
 	@RequestMapping("/cenik")
-	public String archivCenik(Model model, HttpServletRequest req, HttpServletResponse res, HttpSession session) throws SQLException {
+	public String archivCenik(ArchKalkulace archKalkulace, Model model, HttpServletRequest req, HttpServletResponse res, HttpSession session) throws SQLException {
 		log.debug("###\t archivCenik()");
 		session.setAttribute("pageTitle", "Archív - ceník");
+
+		session.setAttribute("archKalkulaceRRRRMM", "");
+		session.setAttribute("vybranaMt", "");
+		session.setAttribute("vybranyZavod", "");
+
+		List<ArchKalkulaceView> ak = serviceArchKalkuaceView.getArchKalkulaceViewAll();
+		model.addAttribute("archKalkulaceList", ak);
+		return "/archivCenik";
+	}
+
+	@RequestMapping("/cenik/param")
+	public String archivCenikParam(ArchKalkulace archKalkulace, ArchCenikView archCenikView, Model model, HttpServletRequest req, HttpServletResponse res, HttpSession session) throws SQLException {
+		log.debug("###\t archivCenikParam(" + archKalkulace.getKalkulace() + " / " + session.getAttribute("archKalkulaceRRRRMM") + ")");
+
+		if (session.getAttribute("archKalkulaceRRRRMM").toString().isEmpty()) {
+			session.setAttribute("archKalkulaceRRRRMM", archKalkulace.getKalkulace());
+		}
+		return "/archivCenik";
+	}
+
+	@RequestMapping("/cenik/list")
+	public String archivCenikList(ArchCenikView archCenikView, Model model, HttpServletRequest req, HttpServletResponse res, HttpSession session) throws SQLException {
+		log.debug("###\t archivCenikList(" + session.getAttribute("archKalkulaceRRRRMM") + ", '%" + archCenikView.getCdilu().toUpperCase().trim() + "%', " + archCenikView.getCizav() + ", "
+				+ archCenikView.getDodavatel() + ")");
+
+		List<ArchCenikView> ac = serviceArchCenikView.getArchCenikView(Integer.valueOf(session.getAttribute("archKalkulaceRRRRMM").toString()), "%" + archCenikView.getCdilu().toUpperCase().trim()
+				+ "%", archCenikView.getCizav(), archCenikView.getDodavatel().toUpperCase());
+
+		if (ac.size() > maxLimitNaZobrazeni) {
+			model.addAttribute("archCenikList", ac.subList(0, maxLimitNaZobrazeni));
+		} else {
+			model.addAttribute("archCenikList", ac);
+		}
+		model.addAttribute("maxLimitNaZobrazeni", maxLimitNaZobrazeni);
+		model.addAttribute("pocetNactenychZaznamu", ac.size());
+
 		return "/archivCenik";
 	}
 
@@ -321,14 +363,12 @@ public class ArchivController {
 		List<ArchKusyProvView> akp = serviceArchKusyProvView.getArchKusyProvView(Integer.valueOf(session.getAttribute("archKalkulaceRRRRMM").toString()), session.getAttribute("vybranaMt").toString(),
 				session.getAttribute("vybranyZavod").toString(), archKusyProvView.getCisloPred(), "%" + archKusyProvView.getCdilu().toUpperCase().trim() + "%");
 
-		if (akp.size() > 1000) {
-			model.addAttribute("mocVelkyPocetVybranychZazmanuZKusovniku", true);
-			model.addAttribute("archKusyNaProvList", akp.subList(0, 1000));
+		if (akp.size() > maxLimitNaZobrazeni) {
+			model.addAttribute("archKusyNaProvList", akp.subList(0, maxLimitNaZobrazeni));
 		} else {
-			model.addAttribute("mocVelkyPocetVybranychZazmanuZKusovniku", false);
 			model.addAttribute("archKusyNaProvList", akp);
 		}
-
+		model.addAttribute("maxLimitNaZobrazeni", maxLimitNaZobrazeni);
 		model.addAttribute("pocetNactenychZaznamu", akp.size());
 
 		return "/archivKusyNaProvedeni";
@@ -368,14 +408,12 @@ public class ArchivController {
 		List<ArchKusyProvView> akp = serviceArchKusyProvView.getArchKusyProvView(Integer.valueOf(session.getAttribute("archKalkulaceRRRRMM").toString()), "%"
 				+ archKusyProvView.getCdilu().toUpperCase().trim() + "%");
 
-		if (akp.size() > 1000) {
-			model.addAttribute("mocVelkyPocetVybranychZazmanuZKusovniku", true);
-			model.addAttribute("archDilVPredList", akp.subList(0, 1000));
+		if (akp.size() > maxLimitNaZobrazeni) {
+			model.addAttribute("archDilVPredList", akp.subList(0, maxLimitNaZobrazeni));
 		} else {
-			model.addAttribute("mocVelkyPocetVybranychZazmanuZKusovniku", false);
 			model.addAttribute("archDilVPredList", akp);
 		}
-
+		model.addAttribute("maxLimitNaZobrazeni", maxLimitNaZobrazeni);
 		model.addAttribute("pocetNactenychZaznamu", akp.size());
 
 		return "/archivDilVPredstavitelich";
@@ -391,38 +429,39 @@ public class ArchivController {
 		session.setAttribute("vybranaMt", "");
 		session.setAttribute("vybranyZavod", "");
 		session.setAttribute("vybranyKurzovniListek", "");
-		
+
 		List<ArchKalkulaceView> ak = serviceArchKalkuaceView.getArchKalkulaceViewAll();
 		model.addAttribute("archKalkulaceList", ak);
 		return "/archivKurzovniListek";
 	}
-	
+
 	@RequestMapping("/kurzovniListek/list/czk")
 	public String archivKurzovniListekCzk(ArchKurzCzk archKurzCzk, ArchKalkulace archKalkulace, Model model, HttpServletRequest req, HttpServletResponse res, HttpSession session) throws SQLException {
-		log.debug("###\t archivKurzovniListekCzk("+ archKalkulace.getKalkulace() + " / " + session.getAttribute("archKalkulaceRRRRMM") +")");
-		
+		log.debug("###\t archivKurzovniListekCzk(" + archKalkulace.getKalkulace() + " / " + session.getAttribute("archKalkulaceRRRRMM") + ")");
+
 		if (session.getAttribute("archKalkulaceRRRRMM").toString().isEmpty()) {
 			session.setAttribute("archKalkulaceRRRRMM", archKalkulace.getKalkulace());
 		}
 		List<ArchKurzCzk> kl = serviceArchKurzCzk.getArchKurzCzk(Integer.valueOf(session.getAttribute("archKalkulaceRRRRMM").toString()));
 		model.addAttribute("archKurzovniListekList", kl);
-		
+
 		session.setAttribute("vybranyKurzovniListek", "czk");
-		
+
 		return "/archivKurzovniListek";
 	}
+
 	@RequestMapping("/kurzovniListek/list/eur")
 	public String archivKurzovniListekEur(ArchKurzCzk archKurzCzk, ArchKalkulace archKalkulace, Model model, HttpServletRequest req, HttpServletResponse res, HttpSession session) throws SQLException {
-		log.debug("###\t archivKurzovniListekCzk("+ archKalkulace.getKalkulace() + " / " + session.getAttribute("archKalkulaceRRRRMM") +")");
-		
+		log.debug("###\t archivKurzovniListekCzk(" + archKalkulace.getKalkulace() + " / " + session.getAttribute("archKalkulaceRRRRMM") + ")");
+
 		if (session.getAttribute("archKalkulaceRRRRMM").toString().isEmpty()) {
 			session.setAttribute("archKalkulaceRRRRMM", archKalkulace.getKalkulace());
 		}
 		List<ArchKurzEur> kl = serviceArchKurzEur.getArchKurzEur(Integer.valueOf(session.getAttribute("archKalkulaceRRRRMM").toString()));
 		model.addAttribute("archKurzovniListekList", kl);
-		
+
 		session.setAttribute("vybranyKurzovniListek", "eur");
-		
+
 		return "/archivKurzovniListek";
 	}
 

@@ -119,12 +119,6 @@ public class PredstavitelController {
 		log.debug("###\t predstavitelDefiniceList(" + mt.getId() + " / " + session.getAttribute("vybranaMt") + "-" + session.getAttribute("vybranyZavod") + ")");
 		session.setAttribute("pageTitle", "Definice představitele");
 
-		User aktualUser = serviceUser.getUser(req.getUserPrincipal().getName().toUpperCase());
-		if (aktualUser.getUserRole().contains("USERS"))
-			model.addAttribute("moznoEditovat", true);
-		else
-			model.addAttribute("moznoEditovat", false);
-
 		// jednou sem prijdu kdyz vyberu MT ze selectBoxu (znam jeji ID), jindy uplne odjinut a mam MT a zavod v session
 		Mt mtx = null;
 		if (mt.getId() > 0) {
@@ -413,8 +407,7 @@ public class PredstavitelController {
 		}
 
 		predstavitelKalkulaceVytvoreni(req);
-
-		if (session.getAttribute("kalkulaceRRRRMM").toString().isEmpty()) {
+		if (session.getAttribute("kalkulaceRRRRMM")==null || session.getAttribute("kalkulaceRRRRMM").toString().isEmpty()) {
 			List<Kalkulace> prvniPracovniKalkulace = serviceKalkulace.getKalkulaceAll();
 			Kalkulace kalkulace = serviceKalkulace.getKalkulace(prvniPracovniKalkulace.get(prvniPracovniKalkulace.size()-1).getKalkulace());
 			if (kalkulace == null) {
