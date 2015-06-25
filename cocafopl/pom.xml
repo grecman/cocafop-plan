@@ -21,6 +21,8 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>1.6</java.version>
+		
+<!-- 		
 		<junit.version>4.11</junit.version>
 		<spring.version>3.2.4.RELEASE</spring.version>
 		<hibernate.version>4.2.2.Final</hibernate.version>
@@ -29,11 +31,11 @@
 		<hsqldb.version>2.3.0</hsqldb.version>
 		<slf4j.version>1.7.5</slf4j.version>
 		<log4j.version>1.2.17</log4j.version>
-		<spring.security.version>3.2.0.RELEASE</spring.security.version>
+		<spring.security.version>3.2.0.RELEASE</spring.security.version> -->
 	</properties>
 
+<!-- 
 	<dependencies>
-
 		<dependency>
 			<groupId>vwg.skoda.favas.mbv.FavasComm</groupId>
 			<artifactId>FavasComm</artifactId>
@@ -46,7 +48,6 @@
 			<version>1.4.2.RELEASE</version>
 		</dependency>
 
-		<!-- JPA Persistence Dependencies -->
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-entitymanager</artifactId>
@@ -60,7 +61,6 @@
 		</dependency>
 
 
-		<!-- logging -->
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
@@ -83,7 +83,6 @@
 			<scope>provided</scope>
 		</dependency>
 
-		<!-- Spring dependencies -->
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-core</artifactId>
@@ -164,7 +163,7 @@
 		</dependency>
 
 	</dependencies>
-
+ -->
 	<build>
 		<finalName>${project.artifactId}</finalName>
 		<plugins>

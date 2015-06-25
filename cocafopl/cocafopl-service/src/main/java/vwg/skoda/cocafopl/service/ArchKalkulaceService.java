@@ -66,6 +66,17 @@ public class ArchKalkulaceService {
 		}
 		return gre;
 	}
+	
+	public List<ArchKalkulace> getArchKalkulaceAllSchvalene() {
+		log.trace("###\t\t getArchKalkulaceAllSchvalene();");
+		List<ArchKalkulace> gre = null;
+		try {
+			gre = entityManager.createQuery("SELECT u FROM ArchKalkulace u WHERE u.schvalil IS NOT NULL ORDER BY u.kalkulace DESC ", ArchKalkulace.class).getResultList();
+		} catch (NoResultException e) {
+			return null;
+		}
+		return gre;
+	}
 
 	public Integer getTerka() {
 		log.trace("###\t\t getTerka();");

@@ -8,6 +8,17 @@
 <head>
 <jsp:include page="lib.jsp" />
 <title>COCAFOP-Plan</title>
+<script>
+	$(document).ready(function() {
+
+		$("#idButtonExport").click(function() {
+			$("#tableId").table2excel({
+				exclude : ".noExl",
+				filename : "aaaGreca"
+			});
+		});
+	});
+</script>
 </head>
 <body class="pages">
 	<div class="page basePage">
@@ -113,7 +124,7 @@
 							<col width="45px" />
 							<thead>
 								<tr>
-									<th style="display: none;">Id</th>
+									<th style="display: none;" class="noExl">Id</th>
 									<th style="font-size: x-small;" title="Číslo představitele">Č. před.</th>
 									<th style="font-size: x-small;" title="Modelový klíč">Model. klíč</th>
 									<th style="font-size: x-small;" title="Rozloženost">Rozl.</th>
@@ -134,7 +145,7 @@
 							<tbody>
 								<c:forEach items="${archPredList}" var="i">
 									<tr>
-										<td style="display: none;">${i.id}</td>
+										<td style="display: none;" class="noExl">${i.id}</td>
 										<td align="center">${i.cisloPred}</td>
 										<td align="left"><a href="${pageContext.servletContext.contextPath}/srv/archiv/predstavitel/detail/${i.id}">
 												<span style="color: #4BA82E; font-weight: bold; margin-left: 0px; margin-right: 0px;">${i.modelovyKlic}</span>
@@ -166,7 +177,7 @@
 					</div>
 					<div class="formBar">
 						<span>
-							<input type="button" id="idButtonExport" value="Export EXCEL" class="heroBtn" style="background-color: gray;"></input>
+							<input type="button" id="idButtonExport" value="Export EXCEL" class="heroBtn"></input>
 						</span>
 					</div>
 				</c:if>

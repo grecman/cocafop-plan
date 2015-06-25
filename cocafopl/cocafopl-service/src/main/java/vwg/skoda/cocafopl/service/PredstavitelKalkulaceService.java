@@ -72,19 +72,19 @@ public class PredstavitelKalkulaceService {
 		return gre;
 	}
 	
-//	public List<PredstavitelKalkulace> getPredstaviteleKalkulace(String mt, String zavod) {
-//		log.trace("###\t\t getPredstaviteleKalkulace("  + mt + "-" +zavod+  ");");
-//		List<PredstavitelKalkulace> gre = null;
-//		try {
-//			gre = entityManager
-//					.createQuery(
-//							"select pk FROM PredstavitelKalkulace pk WHERE pk.gz39tMtKalkulace.gz39tMt.modelTr=:mt AND pk.gz39tMtKalkulace.gz39tMt.zavod=:zavod ORDER BY pk.gz39tPredstavitel.cisloPred ",
-//							PredstavitelKalkulace.class).setParameter("mt", mt).setParameter("zavod", zavod).getResultList();
-//		} catch (NoResultException e) {
-//			return null;
-//		}
-//		return gre;
-//	}
+	public List<PredstavitelKalkulace> getPredstaviteleKalkulace(String mt, String zavod) {
+		log.trace("###\t\t getPredstaviteleKalkulace("  + mt + "-" +zavod+  ");");
+		List<PredstavitelKalkulace> gre = null;
+		try {
+			gre = entityManager
+					.createQuery(
+							"select pk FROM PredstavitelKalkulace pk WHERE pk.gz39tMtKalkulace.gz39tMt.modelTr=:mt AND pk.gz39tMtKalkulace.gz39tMt.zavod=:zavod ORDER BY pk.gz39tPredstavitel.cisloPred ",
+							PredstavitelKalkulace.class).setParameter("mt", mt).setParameter("zavod", zavod).getResultList();
+		} catch (NoResultException e) {
+			return null;
+		}
+		return gre;
+	}
 	
 	public List<PredstavitelKalkulace> getPredstaviteleKalkulace(long idPredstavitel) {
 		log.trace("###\t\t getPredstaviteleKalkulace(" + idPredstavitel + ");");

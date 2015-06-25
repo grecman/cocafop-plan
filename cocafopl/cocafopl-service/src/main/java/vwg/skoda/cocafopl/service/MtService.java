@@ -59,7 +59,7 @@ public class MtService {
 		log.trace("###\t\t getMt(" + mt+"-"+zavod + ");");
 		Mt gre;
 		try {
-			gre = entityManager.createQuery("SELECT u FROM Mt u WHERE u.modelTr=:modetTr AND u.zavod=:zavod ", Mt.class).setParameter("modetTr", mt).setParameter("zavod", zavod).getSingleResult();
+			gre = entityManager.createQuery("SELECT u FROM Mt u WHERE u.modelTr=:modetTr AND u.zavod=:zavod  ORDER BY u.modelTr, u.zavod ", Mt.class).setParameter("modetTr", mt).setParameter("zavod", zavod).getSingleResult();
 		} catch (NoResultException e) {
 			return null;
 		}
@@ -70,7 +70,7 @@ public class MtService {
 		log.trace("###\t\t getMtPlatneK(" + rrrrmm + ");");
 		List<Mt> gre;
 		try {
-			gre = entityManager.createQuery("SELECT u FROM Mt u WHERE u.platnostOd <= :plat AND u.platnostDo >= :plat ", Mt.class).setParameter("plat", rrrrmm).getResultList();
+			gre = entityManager.createQuery("SELECT u FROM Mt u WHERE u.platnostOd <= :plat AND u.platnostDo >= :plat  ORDER BY u.modelTr, u.zavod ", Mt.class).setParameter("plat", rrrrmm).getResultList();
 		} catch (NoResultException e) {
 			return null;
 		}

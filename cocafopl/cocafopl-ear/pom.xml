@@ -32,7 +32,7 @@
 					</modules>
 
 					<finalName>${ear.file}</finalName>
-					<!-- <outputDirectory>${ear.directory}</outputDirectory>  -->
+					<outputDirectory>${ear.directory}</outputDirectory> 
 					
 					<skinnyWars>true</skinnyWars>
 					<archive>

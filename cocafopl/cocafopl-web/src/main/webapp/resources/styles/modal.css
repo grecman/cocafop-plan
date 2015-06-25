@@ -5,13 +5,13 @@
 	bottom: 0;
 	left: 0;
 	background: rgba(0, 0, 0, 0.4);
-	/* z-index musi byt mensi nez z-index funkce autocomplete (jquery) */
-	z-index: 1000;
+	z-index: -1;
 	opacity: 0;
 	-webkit-transition: opacity 400ms ease-in;
 	-moz-transition: opacity 400ms ease-in;
 	transition: opacity 400ms ease-in;
 	pointer-events: none;
+	
 }
 
 /* z-index musi byt vetsi nez u modalu, proto to tady navysuji (class v jquery) */
@@ -22,6 +22,8 @@
 
 .modalWindow:target {
 	opacity: 1;
+	/* z-index musi byt mensi nez z-index funkce autocomplete (jquery) */
+	z-index: 1000;
 	pointer-events: auto;
 }
 

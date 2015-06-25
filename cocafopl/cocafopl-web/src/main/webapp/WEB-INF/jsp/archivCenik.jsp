@@ -36,6 +36,13 @@
 								}
 							}
 						});
+						
+						$("#idButtonExport").click(function() {
+							$("#tableId").table2excel({
+								exclude : ".noExl",
+								name : "aaaGreca"
+							});
+						});
 
 						$("#formButton")
 								.click(
@@ -180,7 +187,7 @@
 					</div>
 					<div class="formBar">
 						<span>
-							<input type="button" id="idButtonExport" value="Export EXCEL" class="heroBtn" style="background-color: gray;"></input>
+							<input type="button" id="idButtonExport" value="Export EXCEL" class="heroBtn"></input>
 						</span>
 						<c:if test="${pocetNactenychZaznamu>maxLimitNaZobrazeni}">
 							<SPAN style="color: red;">Proveden velký výběr dat! Načteno ${pocetNactenychZaznamu} záznamu, zobrazeno bude pouze prvních ${maxLimitNaZobrazeni}.</SPAN>

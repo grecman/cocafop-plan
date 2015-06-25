@@ -29,7 +29,19 @@ public class ArchKalkulaceMtZavViewService {
 		List<ArchKalkulaceMtZavView> gre = null;
 		try {
 			gre = entityManager
-					.createQuery("SELECT u FROM ArchKalkulaceMtZavView u ORDER BY u.kalkulace DESC ", ArchKalkulaceMtZavView.class).getResultList();
+					.createQuery("SELECT u FROM ArchKalkulaceMtZavView u ORDER BY u.kalkulace DESC, u.modelTr ", ArchKalkulaceMtZavView.class).getResultList();
+		} catch (NoResultException e) {
+			return null;
+		}
+		return gre;
+	}
+	
+	public List<ArchKalkulaceMtZavView> getArchKalkulaceMtZavViewShvalene() {
+		log.trace("###\t\t getArchKalkulaceMtZavViewShvalene();");
+		List<ArchKalkulaceMtZavView> gre = null;
+		try {
+			gre = entityManager
+					.createQuery("SELECT u FROM ArchKalkulaceMtZavView u WHERE u.schvalil IS NOT NULL ORDER BY u.kalkulace DESC ", ArchKalkulaceMtZavView.class).getResultList();
 		} catch (NoResultException e) {
 			return null;
 		}

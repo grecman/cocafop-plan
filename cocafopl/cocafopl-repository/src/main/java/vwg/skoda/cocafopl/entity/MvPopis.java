@@ -17,18 +17,11 @@ public class MvPopis implements Serializable {
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="GZ39T_MV_POPIS_ID_GENERATOR")
 	private long id;
 	
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="DATUM_KOMUNIKACE")
-	private Date datumKomunikace;
+	@Column(name="KALKULACNI_DATUM")
+	private String kalkulacniDatum;
 	
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="DATUM_VYPOCTU")
-	private Date datumVypoctu;
-
 	@Column(name="KOD_ZEME")
 	private String kodZeme;
-
-	private String message;
 
 	@Column(name="MODELOVA_TRIDA")
 	private String modelovaTrida;
@@ -51,8 +44,11 @@ public class MvPopis implements Serializable {
 	private String uuser;
 
 	private String vybavy;
-	
 
+	private Integer kalkulace;
+	
+	private String zavod;	
+	
 
 	//bi-directional many-to-one association to MvPopisMessage
 	@OneToMany(mappedBy="gz39tMvPopis")
@@ -65,10 +61,36 @@ public class MvPopis implements Serializable {
 	//bi-directional many-to-one association to Kalkulace
 	@ManyToOne
 	@JoinColumn(name="ID_USER")
-	private User gz39tMvPopis;
+	private User gz39tUser;
 
+	
+	
+	public Integer getKalkulace() {
+		return kalkulace;
+	}
+
+	public void setKalkulace(Integer kalkulace) {
+		this.kalkulace = kalkulace;
+	}
+
+	public String getVybavy() {
+		return vybavy;
+	}
+
+	public void setVybavy(String vybavy) {
+		this.vybavy = vybavy;
+	}
 
 	public MvPopis() {
+	}
+	
+	
+	public String getZavod() {
+		return zavod;
+	}
+
+	public void setZavod(String zavod) {
+		this.zavod = zavod;
 	}
 
 	public long getId() {
@@ -76,23 +98,15 @@ public class MvPopis implements Serializable {
 	}
 
 	public User getGz39tMvPopis() {
-		return gz39tMvPopis;
+		return gz39tUser;
 	}
 
-	public Date getDatumKomunikace() {
-		return datumKomunikace;
-	}
-
-	public Date getDatumVypoctu() {
-		return datumVypoctu;
+	public String getKalkulacniDatum() {
+		return kalkulacniDatum;
 	}
 
 	public String getKodZeme() {
 		return kodZeme;
-	}
-
-	public String getMessage() {
-		return message;
 	}
 
 	public String getModelovaTrida() {
@@ -127,10 +141,6 @@ public class MvPopis implements Serializable {
 		return uuser;
 	}
 
-	public String getVybavy() {
-		return vybavy;
-	}
-
 	public List<MvPopisMessage> getGz39tMvPopisMessages() {
 		return gz39tMvPopisMessages;
 	}
@@ -143,24 +153,16 @@ public class MvPopis implements Serializable {
 		this.id = id;
 	}
 
-	public void setGz39tMvPopis(User gz39tMvPopis) {
-		this.gz39tMvPopis = gz39tMvPopis;
+	public void setGz39tUser(User gz39tUser) {
+		this.gz39tUser = gz39tUser;
 	}
 
-	public void setDatumKomunikace(Date datumKomunikace) {
-		this.datumKomunikace = datumKomunikace;
-	}
-
-	public void setDatumVypoctu(Date datumVypoctu) {
-		this.datumVypoctu = datumVypoctu;
+	public void setKalkulacniDatum(String datumKomunikace) {
+		this.kalkulacniDatum = datumKomunikace;
 	}
 
 	public void setKodZeme(String kodZeme) {
 		this.kodZeme = kodZeme;
-	}
-
-	public void setMessage(String message) {
-		this.message = message;
 	}
 
 	public void setModelovaTrida(String modelovaTrida) {
@@ -195,10 +197,6 @@ public class MvPopis implements Serializable {
 		this.uuser = uuser;
 	}
 
-	public void setVybavy(String vybavy) {
-		this.vybavy = vybavy;
-	}
-
 	public void setGz39tMvPopisMessages(List<MvPopisMessage> gz39tMvPopisMessages) {
 		this.gz39tMvPopisMessages = gz39tMvPopisMessages;
 	}
@@ -206,5 +204,6 @@ public class MvPopis implements Serializable {
 	public void setGz39tMvPopisPrs(List<MvPopisPr> gz39tMvPopisPrs) {
 		this.gz39tMvPopisPrs = gz39tMvPopisPrs;
 	}
+
 
 }

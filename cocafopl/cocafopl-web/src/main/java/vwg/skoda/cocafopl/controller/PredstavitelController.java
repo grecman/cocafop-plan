@@ -1,5 +1,7 @@
 package vwg.skoda.cocafopl.controller;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.UnknownHostException;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
@@ -9,6 +11,7 @@ import java.util.HashSet;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
@@ -30,10 +33,10 @@ import vwg.skoda.cocafopl.entity.PredstavitelMessage;
 import vwg.skoda.cocafopl.entity.PredstavitelPr;
 import vwg.skoda.cocafopl.entity.Protokol;
 import vwg.skoda.cocafopl.entity.User;
+import vwg.skoda.cocafopl.obj.UniObj;
 import vwg.skoda.cocafopl.service.ArchKalkulaceService;
 import vwg.skoda.cocafopl.service.ArchPredstavitelService;
 import vwg.skoda.cocafopl.service.KalkulaceService;
-import vwg.skoda.cocafopl.service.MessageExceptionService;
 import vwg.skoda.cocafopl.service.MtKalkulaceService;
 import vwg.skoda.cocafopl.service.MtProdService;
 import vwg.skoda.cocafopl.service.MtService;
@@ -45,6 +48,7 @@ import vwg.skoda.cocafopl.service.PredstavitelPrService;
 import vwg.skoda.cocafopl.service.PredstavitelService;
 import vwg.skoda.cocafopl.service.ProtokolService;
 import vwg.skoda.cocafopl.service.UserService;
+import vwg.skoda.cocafopl.output.*;
 
 @Controller
 @RequestMapping("/predstavitel")
@@ -84,9 +88,6 @@ public class PredstavitelController {
 
 	@Autowired
 	private KalkulaceService serviceKalkulace;
-
-	@Autowired
-	private MessageExceptionService serviceMessageException;
 
 	@Autowired
 	private ArchKalkulaceService serviceArchKalkuace;
@@ -303,15 +304,15 @@ public class PredstavitelController {
 		pred.setCisloPredMin(p.getCisloPredMin());
 
 		// zajisteni unikatnosti MK a COMIX=TRUE
-		Predstavitel predstavitelDoComixu = servicePredstavitel.getPredstavitelComix(pred.getCisloPred(),pred.getGz39tMt().getModelTr(), pred.getGz39tMt().getZavod(), pred.getGz39tMt().getModelTr()
+		Predstavitel predstavitelDoComixu = servicePredstavitel.getPredstavitelComix(pred.getCisloPred(), pred.getGz39tMt().getModelTr(), pred.getGz39tMt().getZavod(), pred.getGz39tMt().getModelTr()
 				+ p.getModelovyKlic().toUpperCase());
-		if(predstavitelDoComixu == null){
+		if (predstavitelDoComixu == null) {
 			pred.setComix(p.getComix());
-		} else{
+		} else {
 			log.debug("###\t\t ... predstavitel se stejnym MK a 'zaskrtnutym' COMIXem jiz existuje! Comix bude uložen jako FALSE.");
 			pred.setComix(false);
 		}
-		
+
 		pred.setEuNorma(p.getEuNorma().toUpperCase());
 		pred.setKodZeme(p.getKodZeme() == null ? null : p.getKodZeme().toUpperCase());
 		pred.setModelovyKlic(pred.getGz39tMt().getModelTr() + p.getModelovyKlic().toUpperCase());
@@ -407,9 +408,9 @@ public class PredstavitelController {
 		}
 
 		predstavitelKalkulaceVytvoreni(req);
-		if (session.getAttribute("kalkulaceRRRRMM")==null || session.getAttribute("kalkulaceRRRRMM").toString().isEmpty()) {
+		if (session.getAttribute("kalkulaceRRRRMM") == null || session.getAttribute("kalkulaceRRRRMM").toString().isEmpty()) {
 			List<Kalkulace> prvniPracovniKalkulace = serviceKalkulace.getKalkulaceAll();
-			Kalkulace kalkulace = serviceKalkulace.getKalkulace(prvniPracovniKalkulace.get(prvniPracovniKalkulace.size()-1).getKalkulace());
+			Kalkulace kalkulace = serviceKalkulace.getKalkulace(prvniPracovniKalkulace.get(prvniPracovniKalkulace.size() - 1).getKalkulace());
 			if (kalkulace == null) {
 				log.debug("###\t Neexistuji zadne kalkulace! Je nutne je nejdrive zadat.");
 				return "redirect:/srv/kalkulace/seznam";
@@ -423,8 +424,8 @@ public class PredstavitelController {
 	}
 
 	@RequestMapping("/seznam/{kalkulaceRRRRMM}")
-	public String predstavitelSeznamSKalkulaci(@PathVariable int kalkulaceRRRRMM, Mt mt, MtKalkulace mtKalkulace, Model model, HttpServletRequest req, HttpSession session) throws SQLException,
-			UnknownHostException {
+	public String predstavitelSeznamSKalkulaci(@PathVariable int kalkulaceRRRRMM, UniObj uniObj, Mt mt, MtKalkulace mtKalkulace, Model model, HttpServletRequest req, HttpSession session)
+			throws SQLException, UnknownHostException {
 		log.debug("###\t predstavitelSeznamSKalkulaci(" + session.getAttribute("kalkulaceRRRRMM") + ", " + session.getAttribute("vybranaMt") + "-" + session.getAttribute("vybranyZavod") + ")");
 
 		session.setAttribute("errorMesage", "");
@@ -503,34 +504,90 @@ public class PredstavitelController {
 	}
 
 	@RequestMapping("/seznam/zmenaModelovehoRoku")
-	public String predstavitelSeznamZmenaModelovehoRoku(MtKalkulace mtKalkulace, Model model, HttpServletRequest req, HttpSession session) throws SQLException, UnknownHostException {
-		log.debug("###\t predstavitelSeznamZmenaModelovehoRoku(" + mtKalkulace.getMrok() + ", " + session.getAttribute("kalkulaceRRRRMM") + ", " + session.getAttribute("vybranaMt") + ")");
+	public String predstavitelSeznamZmenaModelovehoRoku(UniObj uniObj, Model model, HttpServletRequest req, HttpSession session) throws SQLException, UnknownHostException {
+		log.debug("###\t predstavitelSeznamZmenaModelovehoRoku(" + uniObj.getRok() + ", " + uniObj.getZmenaMrok() + ", " + session.getAttribute("kalkulaceRRRRMM") + ", "
+				+ session.getAttribute("vybranaMt") + "-" + session.getAttribute("vybranyZavod") + ")");
 
-		MtKalkulace mtk = serviceMtKalkulace.getMtKalkulace((Integer) session.getAttribute("kalkulaceRRRRMM"), session.getAttribute("vybranaMt").toString(), session.getAttribute("vybranyZavod")
-				.toString());
-		mtk.setMrok(mtKalkulace.getMrok());
-		mtk.setUtime(new Date());
-		mtk.setUuser(req.getUserPrincipal().getName().toUpperCase());
-		serviceMtKalkulace.setMtKalkulace(mtk);
+		String infoProtokol = null;
+		if (uniObj.getZmenaMrok()) {
+			// zmena MROKu pro vsechny kalkulace
+			List<MtKalkulace> mtKalk = serviceMtKalkulace.getMtKalkulace(session.getAttribute("vybranaMt").toString(), session.getAttribute("vybranyZavod").toString());
+			for (MtKalkulace mtk : mtKalk) {
+				mtk.setMrok(Integer.valueOf(uniObj.getRok()));
+				mtk.setUtime(new Date());
+				mtk.setUuser(req.getUserPrincipal().getName().toUpperCase());
+				mtk.setPosledniEditace(new Date());
+				mtk.setPosledniEditaceDuvod("Změna modelového roku u " + mtk.getGz39tMt().getModelTr() + " - " + mtk.getGz39tMt().getZavod() + " na " + uniObj.getRok());
+				serviceMtKalkulace.setMtKalkulace(mtk);
+			}
 
+			List<PredstavitelKalkulace> pk = servicePredstavitelKalkulace.getPredstaviteleKalkulace(session.getAttribute("vybranaMt").toString(), session.getAttribute("vybranyZavod").toString());
+			log.debug("###\t ...zmenil se modelovy rok - mazu PR cisla a PR messages pro postihnute predstavitele.");
+			for (PredstavitelKalkulace predstavitelKalk : pk) {
+				servicePredstavitelPr.removePredstavitelPrAll(predstavitelKalk.getId());
+				servicePredstavitelMessage.removePredstavitelMessageAll(predstavitelKalk.getId());
+				predstavitelKalk.setExistsPr(null);
+				servicePredstavitelKalkulace.setPredstavitelKalkulace(predstavitelKalk);
+			}
+			infoProtokol = "pro " + session.getAttribute("vybranaMt").toString() + "-" + session.getAttribute("vybranyZavod").toString() + " na " + uniObj.getRok() + " (pro všechny kalkulace)!";
+		} else {
+			// zmena MROKu pro jednu kalkulaci
+			MtKalkulace mtk = serviceMtKalkulace.getMtKalkulace((Integer) session.getAttribute("kalkulaceRRRRMM"), session.getAttribute("vybranaMt").toString(), session.getAttribute("vybranyZavod")
+					.toString());
+			mtk.setMrok(Integer.valueOf(uniObj.getRok()));
+			mtk.setUtime(new Date());
+			mtk.setUuser(req.getUserPrincipal().getName().toUpperCase());
+			mtk.setPosledniEditace(new Date());
+			mtk.setPosledniEditaceDuvod("Změna modelového roku u " + mtk.getGz39tMt().getModelTr() + " - " + mtk.getGz39tMt().getZavod() + " na " + uniObj.getRok());
+			serviceMtKalkulace.setMtKalkulace(mtk);
+
+			List<PredstavitelKalkulace> pk = servicePredstavitelKalkulace.getPredstaviteleKalkulace(session.getAttribute("vybranaMt").toString(), session.getAttribute("vybranyZavod").toString(),
+					(Integer) session.getAttribute("kalkulaceRRRRMM"));
+			log.debug("###\t ...zmenil se modelovy rok - mazu PR cisla a PR messages pro postihnute predstavitele.");
+			for (PredstavitelKalkulace predstavitelKalk : pk) {
+				servicePredstavitelPr.removePredstavitelPrAll(predstavitelKalk.getId());
+				servicePredstavitelMessage.removePredstavitelMessageAll(predstavitelKalk.getId());
+				predstavitelKalk.setExistsPr(null);
+				servicePredstavitelKalkulace.setPredstavitelKalkulace(predstavitelKalk);
+			}
+			infoProtokol = "pro kalkulaci " + session.getAttribute("kalkulaceRRRRMM") + ", " + session.getAttribute("vybranaMt").toString() + "-" + session.getAttribute("vybranyZavod").toString()
+					+ " na " + uniObj.getRok() + "!";
+		}
+
+		Protokol newProtokol = new Protokol();
+		newProtokol.setNetusername(req.getUserPrincipal().getName().toUpperCase());
+		newProtokol.setAction("Změna modelového roku");
+		newProtokol.setInfo(infoProtokol);
+		newProtokol.setTime(new Date());
+		newProtokol.setSessionid(req.getSession().getId());
+		serviceProtokol.addProtokol(newProtokol);
+
+		return "redirect:/srv/predstavitel/seznam/" + session.getAttribute("kalkulaceRRRRMM");
+	}
+
+	@RequestMapping("/seznam/exportXls")
+	public String predstavitelSeznamExportXls(HttpServletRequest req, HttpSession session, HttpServletResponse res) throws SQLException, IOException {
+		log.debug("###\t predstavitelSeznamExportXls(" + session.getAttribute("kalkulaceRRRRMM") + ", " + session.getAttribute("vybranaMt").toString() + "-"
+				+ session.getAttribute("vybranyZavod").toString() + ")");
 		List<PredstavitelKalkulace> pk = servicePredstavitelKalkulace.getPredstaviteleKalkulace(session.getAttribute("vybranaMt").toString(), session.getAttribute("vybranyZavod").toString(),
-				(Integer) session.getAttribute("kalkulaceRRRRMM"));
-		log.debug("###\t ...zmenil se modelovy rok - mazu PR cisla a PR messages pro postihnute predstavitele.");
-		for (PredstavitelKalkulace predstavitelKalk : pk) {
-			servicePredstavitelPr.removePredstavitelPrAll(predstavitelKalk.getId());
-			servicePredstavitelMessage.removePredstavitelMessageAll(predstavitelKalk.getId());
-			predstavitelKalk.setExistsPr(null);
-			servicePredstavitelKalkulace.setPredstavitelKalkulace(predstavitelKalk);
+				Integer.valueOf(session.getAttribute("kalkulaceRRRRMM").toString().toString()));
+		for (PredstavitelKalkulace p : pk) {
+			System.out.println(p.getGz39tPredstavitel().getCisloPred()+"\t"+p.getGz39tPredstavitel().getModelovyKlic());
 		}
+		
+		try {
+			vwg.skoda.postak.Mail mail = new vwg.skoda.postak.Mail();
+			mail.setTo("petr.grecman@skoda-auto.cz");
+			mail.setFrom("Skoda.Apps.COCAFOPPL.SUPPORT@skoda-auto.cz");
+			mail.setSubject("gre");
+			mail.setBody("10:15 Posíláme novou sestavu");
+			mail.send();
+		} catch (MalformedURLException e1) {
+			log.error("###\t Chyba mailovani (postak): "+e1);
+		} 
 
-		log.debug("###\t Zmena modeloveho roku - ulozeni posledni editace do MT_KALKULACE.");
-		List<MtKalkulace> mtKalkulacePoslEdit = serviceMtKalkulace.getMtKalkulace(session.getAttribute("vybranaMt").toString(), session.getAttribute("vybranyZavod").toString());
-		for (MtKalkulace mtkx : mtKalkulacePoslEdit) {
-			mtkx.setPosledniEditace(new Date());
-			mtkx.setPosledniEditaceDuvod("Změna modelového roku u " + mtkx.getGz39tMt().getModelTr() + " - " + mtkx.getGz39tMt().getZavod());
-			serviceMtKalkulace.setMtKalkulace(mtkx);
-		}
-
+		ExportXls e = new ExportXls();
+		e.exportSeznamPredstavitel(pk ,res);
 		return "redirect:/srv/predstavitel/seznam/" + session.getAttribute("kalkulaceRRRRMM");
 	}
 
@@ -584,7 +641,7 @@ public class PredstavitelController {
 			pp.setUtime(new Date());
 			pp.setUuser(req.getUserPrincipal().getName().toUpperCase());
 			servicePredstavitelPr.setPredstavitelPr(pp);
-			
+
 			log.debug("###\t Korekce PR popisu predstavitele - ulozeni posledni editace do MT_KALKULACE.");
 			List<MtKalkulace> mtKalkulacePoslEdit = serviceMtKalkulace.getMtKalkulace(pk.getGz39tMtKalkulace().getGz39tMt().getModelTr(), pk.getGz39tMtKalkulace().getGz39tMt().getZavod());
 			for (MtKalkulace mtkx : mtKalkulacePoslEdit) {

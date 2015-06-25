@@ -13,9 +13,7 @@
 		<timestamp>${maven.build.timestamp}</timestamp>
 		<war.file>cocafoppl</war.file>
 		<war.directory>g:/.Projects/IT/SAB/builds/COCAFOPPL/</war.directory>
-
 	</properties>
-
 
 	<dependencies>
 
@@ -23,6 +21,18 @@
 			<groupId>vwg.skoda.cocafopl</groupId>
 			<artifactId>cocafopl-service</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+
+		<dependency>
+			<groupId>vwg.skoda</groupId>
+			<artifactId>jpqw</artifactId>
+			<version>1</version>
+		</dependency>
+
+		<dependency>
+			<groupId>vwg.skoda.postak</groupId>
+			<artifactId>PostakClient</artifactId>
+			<version>1.0</version>
 		</dependency>
 
 		<dependency>
@@ -46,23 +56,39 @@
 		</dependency>
 
 		<dependency>
-			<groupId>vwg.skoda</groupId>
-			<artifactId>jpqw</artifactId>
-			<version>1</version>
-		</dependency>
-
-		<dependency>
 			<groupId>commons-fileupload</groupId>
 			<artifactId>commons-fileupload</artifactId>
 			<version>1.2</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>commons-io</groupId>
 			<artifactId>commons-io</artifactId>
 			<version>1.4</version>
 		</dependency>
 
+		<dependency>
+			<groupId>vwg.skoda.favas.mbv.FavasComm</groupId>
+			<artifactId>FavasComm</artifactId>
+			<version>1.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-compress</artifactId>
+			<version>1.9</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi</artifactId>
+			<version>3.10-FINAL</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi-ooxml</artifactId>
+			<version>3.10-FINAL</version>
+		</dependency>
 	</dependencies>
 
 	<build>

@@ -17,12 +17,12 @@
 		var isSafari = Object.prototype.toString.call(window.HTMLElement).indexOf('Constructor') > 0;
 		var isIE = /*@cc_on!@*/ false || !!document.documentMode; // At least IE6
 		var isChrome = !!window.chrome &amp;&amp; !isOpera;
-
+		/*
 		if(isOpera || isSafari || isChrome || (isIE &amp;&amp; navigator.appVersion.match("MSIE 9.0"))){
 			alert("Tato obrazovka aplikace neni kompaktibilní s vaším prohlížečem!");
 			$(window.location).attr('href', '${pageContext.servletContext.contextPath}/srv/napoveda');
 		}		
-		
+		*/
 		$('#tableId').dataTable({
 			"paging" : false,
 			"bFilter" : false,

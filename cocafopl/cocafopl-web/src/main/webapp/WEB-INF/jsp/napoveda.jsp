@@ -94,7 +94,7 @@
 									<TD><form:input class="textovePole" cssStyle="width:150px" path="tema"></form:input></TD>
 									<TD><form:input class="textovePole" cssStyle="width:1000px" path="popis"></form:input></TD>
 									<TD><form:input class="textovePole" cssStyle="width:50px" path="poradi"></form:input></TD>
-									<TD><input type="submit" value="Přidej" class="submit" /></TD>
+									<TD style="padding-left: 7px;"><input type="submit" value="Přidej" class="submit" /></TD>
 								</TR>
 							</tbody>
 						</TABLE>

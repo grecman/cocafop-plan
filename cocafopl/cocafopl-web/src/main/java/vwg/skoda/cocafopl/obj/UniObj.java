@@ -1,6 +1,13 @@
 package vwg.skoda.cocafopl.obj;
 
+import java.util.Date;
+
+
 public class UniObj {
+	
+	private Integer kalkulace;
+	
+	private Date datum;
 	
 	private Integer cisloPred;
 
@@ -20,6 +27,8 @@ public class UniObj {
 	
 	private String modelovyKlic;
 	
+	private String modelovaTrida;
+	
 	private String typ;
 	
 	private String vybava;
@@ -32,6 +41,83 @@ public class UniObj {
 	
 	private Integer cetnost;
 	
+	private String datumDDMMRRRR;
+	
+	private String popis;
+	
+	private String vybavyZaklad;
+	
+	private String vybavyVybav;
+	
+	private String zavod;
+	
+	private Boolean zmenaMrok;
+	
+		
+	public Boolean getZmenaMrok() {
+		return zmenaMrok;
+	}
+
+	public void setZmenaMrok(Boolean zmenaMrok) {
+		this.zmenaMrok = zmenaMrok;
+	}
+
+	public String getZavod() {
+		return zavod;
+	}
+
+	public void setZavod(String zavod) {
+		this.zavod = zavod;
+	}
+
+	public Integer getKalkulace() {
+		return kalkulace;
+	}
+
+	public Date getDatum() {
+		return datum;
+	}
+
+	public void setKalkulace(Integer kalkulace) {
+		this.kalkulace = kalkulace;
+	}
+
+	public void setDatum(Date datum) {
+		this.datum = datum;
+	}
+
+	public String getDatumDDMMRRRR() {
+		return datumDDMMRRRR;
+	}
+
+	public void setDatumDDMMRRRR(String datumDDMMRRRR) {
+		this.datumDDMMRRRR = datumDDMMRRRR;
+	}
+
+	public String getPopis() {
+		return popis;
+	}
+
+	public String getVybavyZaklad() {
+		return vybavyZaklad;
+	}
+
+	public String getVybavyVybav() {
+		return vybavyVybav;
+	}
+
+	public void setPopis(String popis) {
+		this.popis = popis;
+	}
+
+	public void setVybavyZaklad(String vybavyZaklad) {
+		this.vybavyZaklad = vybavyZaklad;
+	}
+
+	public void setVybavyVybav(String vybavyVybav) {
+		this.vybavyVybav = vybavyVybav;
+	}
+
 	public String getRok() {
 		return rok;
 	}
@@ -150,6 +236,14 @@ public class UniObj {
 
 	public void setPlatnostDo(Integer platnostDo) {
 		this.platnostDo = platnostDo;
+	}
+
+	public String getModelovaTrida() {
+		return modelovaTrida;
+	}
+
+	public void setModelovaTrida(String modelovaTrida) {
+		this.modelovaTrida = modelovaTrida;
 	}
 	
 	

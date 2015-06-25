@@ -16,14 +16,13 @@
 				<UL style="width: 750px;">
 					<LI><H3>Kontrola</H3>
 						<UL>
-							<img src="${pageContext.servletContext.contextPath}/resources/ico/151.png" /> - žádný představitel vybrané kalkulace a modelové třídy nemá PR
-							popis.
+							<img src="${pageContext.servletContext.contextPath}/resources/ico/151.png" /> - žádný představitel vybrané kalkulace a modelové třídy nemá PR popis.
 							<br />
 							<img src="${pageContext.servletContext.contextPath}/resources/ico/154.png" /> - některý z představitelů vybrané kalkulace a modelové třídy nemá PR
 							popis.
 							<br />
-							<img src="${pageContext.servletContext.contextPath}/resources/ico/152.png" /> - všichni představitelé vybrané kalkulace a modelové třídy mají doplněny PR
-							popisy ze systému MBV/FAVAS.
+							<img src="${pageContext.servletContext.contextPath}/resources/ico/152.png" /> - všichni představitelé vybrané kalkulace a modelové třídy mají doplněny
+							PR popisy ze systému MBV/FAVAS.
 						</UL></LI>
 					<LI><H3>Poslední editace</H3>
 						<UL>
@@ -60,6 +59,7 @@
 							<UL>
 								<LI>Kontrola, zda-li neexistuje v Offline zpracování nějaký předchozí aktivní výpočet pro představitelé. Pokud neexistuje, tak se tento požadavek
 									zařadí do fronty zpracování pro offline dávku a se vyplní "Čas zadaní" na obrazovce "Offline zpracování".</LI>
+								<LI>Smažou se údaje o poslední editaci.</LI>
 								<LI>Smažou se všechny příznaky "Schváleno" u jednotlivých modelovách tříd ve vybrané kalkulaci.</LI>
 								<LI>Z archívu se smaže celý pracovní svat předchozího zpracování.</LI>
 								<LI>Do archívu se nahraje základní definice (popis) představitelů.</LI>

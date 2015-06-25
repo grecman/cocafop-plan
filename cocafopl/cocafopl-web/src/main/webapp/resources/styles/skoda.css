@@ -29,6 +29,11 @@ body.pages {
 	margin: 0;
 }
 
+img {
+	border: 0px;
+	border-style: none;	
+}
+
 a {
 	color: inherit;
 	text-decoration: none;

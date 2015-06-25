@@ -26,7 +26,7 @@ public class User implements Serializable {
 	private long id;
 	
 	//bi-directional many-to-one association to MtKalkulace
-	@OneToMany(mappedBy="gz39tMvPopis")
+	@OneToMany(mappedBy="gz39tUser")
 	private Set<MvPopis> gz39tMvPopiss;
 
 	private String email;

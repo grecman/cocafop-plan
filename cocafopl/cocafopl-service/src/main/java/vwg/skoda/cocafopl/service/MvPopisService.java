@@ -3,6 +3,7 @@ package vwg.skoda.cocafopl.service;
 import java.util.List;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 
 import org.apache.log4j.Logger;
@@ -37,20 +38,28 @@ public class MvPopisService {
 	}
 
 	@Transactional
-	public void removeMvPopis(MvPopis MvPopis) {
-		log.trace("###\t\t removeMvPopis(" + MvPopis + ")");
-		MvPopis u = getMvPopis(MvPopis.getId());
+	public void removeMvPopis(MvPopis mvPopis) {
+		log.trace("###\t\t removeMvPopis(" + mvPopis + ")");
+		MvPopis u = getMvPopis(mvPopis.getId());
 		entityManager.remove(u);
 	}
 
-	public List<MvPopis> getMvPopisAll() {
-		log.trace("###\t\t getMvPopisAll();");
-		return entityManager.createQuery("SELECT u FROM MvPopis u ", MvPopis.class).getResultList();
+	@Transactional
+	public void removeMvPopisAll(String user) {
+		log.trace("###\t\t removeMvPopisAll(" + user + ")");
+		entityManager.createQuery("DELETE FROM MvPopis a WHERE a.gz39tUser.netusername=:user ").setParameter("user", user).executeUpdate();
+	}
+	
+	public List<MvPopis> getMvPopis(String user) {
+		log.trace("###\t\t getMvPopis(" + user + ");");
+		List<MvPopis> gre;
+		try {
+			gre = entityManager.createQuery("SELECT a FROM MvPopis a WHERE a.gz39tUser.netusername = :user ", MvPopis.class).setParameter("user", user).getResultList();
+		} catch (NoResultException e) {
+			return null;
+		}
+		return gre;
 	}
 
-	// public MvPopis getMvPopis(String ????) {
-	// log.trace("###\t\t getMvPopis("+????+");");
-	// return entityManager.createQuery("SELECT u FROM MvPopis u WHERE u.?????=:????", MvPopis.class).setParameter("????", ????).getSingleResult();
-	// }
 
 }

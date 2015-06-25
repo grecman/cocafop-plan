@@ -52,7 +52,7 @@ public class ArchivController {
 	private UserService serviceUser;
 
 	@Autowired
-	private ArchKalkulaceService serviceArchKalkuace;
+	private ArchKalkulaceService serviceArchKalkulace;
 
 	@Autowired
 	private ArchKusovnikService serviceArchKusovnik;
@@ -70,10 +70,10 @@ public class ArchivController {
 	private ArchPredstavitelPrService serviceArchPredstavitelPr;
 
 	@Autowired
-	private ArchKalkulaceViewService serviceArchKalkuaceView;
+	private ArchKalkulaceViewService serviceArchKalkulaceView;
 
 	@Autowired
-	private ArchKalkulaceMtZavViewService serviceArchKalkuaceMtZavView;
+	private ArchKalkulaceMtZavViewService serviceArchKalkulaceMtZavView;
 
 	@Autowired
 	private MtProdService serviceMtProd;
@@ -103,7 +103,7 @@ public class ArchivController {
 			return "redirect:/srv/monitoring/logging";
 		}
 
-		List<ArchKalkulaceView> ak = serviceArchKalkuaceView.getArchKalkulaceViewAll();
+		List<ArchKalkulaceView> ak = serviceArchKalkulaceView.getArchKalkulaceViewAll();
 		model.addAttribute("archKalkulace", ak);
 
 		return "/archivKalkulace";
@@ -120,7 +120,7 @@ public class ArchivController {
 		session.setAttribute("vybranyProdukt", "");
 		session.setAttribute("vybranyZavod", "");
 
-		List<ArchKalkulaceView> ak = serviceArchKalkuaceView.getArchKalkulaceViewAll();
+		List<ArchKalkulaceView> ak = serviceArchKalkulaceView.getArchKalkulaceViewAll();
 		model.addAttribute("archKalkulaceList", ak);
 		return "/archivKusovnik";
 	}
@@ -137,7 +137,7 @@ public class ArchivController {
 		session.setAttribute("vybranyProdukt", "");
 		session.setAttribute("vybranyZavod", "");
 
-		List<ArchKalkulaceMtZavView> akMtZavView = serviceArchKalkuaceMtZavView.getArchKalkulaceMtZavView(Integer.valueOf(session.getAttribute("archKalkulaceRRRRMM").toString()));
+		List<ArchKalkulaceMtZavView> akMtZavView = serviceArchKalkulaceMtZavView.getArchKalkulaceMtZavView(Integer.valueOf(session.getAttribute("archKalkulaceRRRRMM").toString()));
 		model.addAttribute("mtZavodList", akMtZavView);
 
 		return "/archivKusovnik";
@@ -148,7 +148,7 @@ public class ArchivController {
 			throws SQLException {
 		log.debug("###\t archivKusovnikParam(" + session.getAttribute("archKalkulaceRRRRMM") + ", " + archKalkulaceMtZavView.getIdPom() + ")");
 
-		ArchKalkulaceMtZavView akv = serviceArchKalkuaceMtZavView.getArchKalkulaceMtZavViewId(archKalkulaceMtZavView.getIdPom());
+		ArchKalkulaceMtZavView akv = serviceArchKalkulaceMtZavView.getArchKalkulaceMtZavViewId(archKalkulaceMtZavView.getIdPom());
 		session.setAttribute("vybranyProdukt", akv.getProdukt());
 		session.setAttribute("vybranyZavod", akv.getZavod());
 		session.setAttribute("vybranaMt", akv.getModelTr());
@@ -186,7 +186,7 @@ public class ArchivController {
 		session.setAttribute("vybranaMt", "");
 		session.setAttribute("vybranyZavod", "");
 
-		List<ArchKalkulaceView> ak = serviceArchKalkuaceView.getArchKalkulaceViewAll();
+		List<ArchKalkulaceView> ak = serviceArchKalkulaceView.getArchKalkulaceViewAll();
 		model.addAttribute("archKalkulaceList", ak);
 		return "/archivCenik";
 	}
@@ -231,7 +231,7 @@ public class ArchivController {
 		session.setAttribute("vybranaMt", "");
 		session.setAttribute("vybranyZavod", "");
 
-		List<ArchKalkulace> ak = serviceArchKalkuace.getArchKalkulaceAll();
+		List<ArchKalkulace> ak = serviceArchKalkulace.getArchKalkulaceAll();
 		model.addAttribute("archKalkulaceList", ak);
 
 		return "/archivPredstavitel";
@@ -248,7 +248,7 @@ public class ArchivController {
 		session.setAttribute("vybranaMt", "");
 		session.setAttribute("vybranyZavod", "");
 
-		List<ArchKalkulaceMtZavView> akMtZavView = serviceArchKalkuaceMtZavView.getArchKalkulaceMtZavView(Integer.valueOf(session.getAttribute("archKalkulaceRRRRMM").toString()));
+		List<ArchKalkulaceMtZavView> akMtZavView = serviceArchKalkulaceMtZavView.getArchKalkulaceMtZavView(Integer.valueOf(session.getAttribute("archKalkulaceRRRRMM").toString()));
 		model.addAttribute("mtZavodList", akMtZavView);
 
 		return "/archivPredstavitel";
@@ -262,9 +262,9 @@ public class ArchivController {
 
 		ArchKalkulaceMtZavView akMtZavView = null;
 		if (archKalkulaceMtZavView.getIdPom() != null) {
-			akMtZavView = serviceArchKalkuaceMtZavView.getArchKalkulaceMtZavViewId(archKalkulaceMtZavView.getIdPom());
+			akMtZavView = serviceArchKalkulaceMtZavView.getArchKalkulaceMtZavViewId(archKalkulaceMtZavView.getIdPom());
 		} else if (!session.getAttribute("vybranaMt").toString().isEmpty()) {
-			akMtZavView = serviceArchKalkuaceMtZavView.getArchKalkulaceMtZavView(Integer.valueOf(session.getAttribute("archKalkulaceRRRRMM").toString()), session.getAttribute("vybranaMt").toString(),
+			akMtZavView = serviceArchKalkulaceMtZavView.getArchKalkulaceMtZavView(Integer.valueOf(session.getAttribute("archKalkulaceRRRRMM").toString()), session.getAttribute("vybranaMt").toString(),
 					session.getAttribute("vybranyZavod").toString());
 		}
 
@@ -321,7 +321,7 @@ public class ArchivController {
 		session.setAttribute("vybranaMt", "");
 		session.setAttribute("vybranyZavod", "");
 
-		List<ArchKalkulaceView> ak = serviceArchKalkuaceView.getArchKalkulaceViewAll();
+		List<ArchKalkulaceView> ak = serviceArchKalkulaceView.getArchKalkulaceViewAll();
 		model.addAttribute("archKalkulaceList", ak);
 		return "/archivKusyNaProvedeni";
 	}
@@ -337,7 +337,7 @@ public class ArchivController {
 		session.setAttribute("vybranaMt", "");
 		session.setAttribute("vybranyZavod", "");
 
-		List<ArchKalkulaceMtZavView> akMtZavView = serviceArchKalkuaceMtZavView.getArchKalkulaceMtZavView(Integer.valueOf(session.getAttribute("archKalkulaceRRRRMM").toString()));
+		List<ArchKalkulaceMtZavView> akMtZavView = serviceArchKalkulaceMtZavView.getArchKalkulaceMtZavView(Integer.valueOf(session.getAttribute("archKalkulaceRRRRMM").toString()));
 		model.addAttribute("mtZavodList", akMtZavView);
 
 		return "/archivKusyNaProvedeni";
@@ -348,7 +348,7 @@ public class ArchivController {
 			HttpSession session) throws SQLException {
 		log.debug("###\t archivKusyNaProvedenikParam(" + session.getAttribute("archKalkulaceRRRRMM") + ", " + archKalkulaceMtZavView.getIdPom() + ")");
 
-		ArchKalkulaceMtZavView akv = serviceArchKalkuaceMtZavView.getArchKalkulaceMtZavViewId(archKalkulaceMtZavView.getIdPom());
+		ArchKalkulaceMtZavView akv = serviceArchKalkulaceMtZavView.getArchKalkulaceMtZavViewId(archKalkulaceMtZavView.getIdPom());
 		session.setAttribute("vybranyZavod", akv.getZavod());
 		session.setAttribute("vybranaMt", akv.getModelTr());
 
@@ -384,7 +384,7 @@ public class ArchivController {
 		session.setAttribute("vybranaMt", "");
 		session.setAttribute("vybranyZavod", "");
 
-		List<ArchKalkulaceView> ak = serviceArchKalkuaceView.getArchKalkulaceViewAll();
+		List<ArchKalkulaceView> ak = serviceArchKalkulaceView.getArchKalkulaceViewAll();
 		model.addAttribute("archKalkulaceList", ak);
 		return "/archivDilVPredstavitelich";
 	}
@@ -430,7 +430,7 @@ public class ArchivController {
 		session.setAttribute("vybranyZavod", "");
 		session.setAttribute("vybranyKurzovniListek", "");
 
-		List<ArchKalkulaceView> ak = serviceArchKalkuaceView.getArchKalkulaceViewAll();
+		List<ArchKalkulaceView> ak = serviceArchKalkulaceView.getArchKalkulaceViewAll();
 		model.addAttribute("archKalkulaceList", ak);
 		return "/archivKurzovniListek";
 	}

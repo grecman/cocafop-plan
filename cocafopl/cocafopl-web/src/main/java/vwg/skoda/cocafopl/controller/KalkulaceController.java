@@ -1,5 +1,7 @@
 package vwg.skoda.cocafopl.controller;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.UnknownHostException;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
@@ -451,11 +453,11 @@ public class KalkulaceController {
 			return "redirect:/srv/kalkulace/seznam";
 		}
 
-		if (session.getAttribute("kalkulaceRRRRMM")==null || session.getAttribute("kalkulaceRRRRMM").toString().isEmpty()) {
+		if (session.getAttribute("kalkulaceRRRRMM") == null || session.getAttribute("kalkulaceRRRRMM").toString().isEmpty()) {
 			List<Kalkulace> prvniPracovniKalkulace = serviceKalkulace.getKalkulaceAll();
-			session.setAttribute("kalkulaceRRRRMM", prvniPracovniKalkulace.get(prvniPracovniKalkulace.size()-1).getKalkulace());
-			//SimpleDateFormat sdf = new SimpleDateFormat("yyyyMM");
-			//session.setAttribute("kalkulaceRRRRMM", sdf.format(new Date()));
+			session.setAttribute("kalkulaceRRRRMM", prvniPracovniKalkulace.get(prvniPracovniKalkulace.size() - 1).getKalkulace());
+			// SimpleDateFormat sdf = new SimpleDateFormat("yyyyMM");
+			// session.setAttribute("kalkulaceRRRRMM", sdf.format(new Date()));
 		}
 		return "redirect:/srv/kalkulace/detail/" + session.getAttribute("kalkulaceRRRRMM");
 	}
@@ -491,16 +493,16 @@ public class KalkulaceController {
 				break;
 			}
 		}
-		
+
 		List<Kalkulace> prvniPracovniKalkulace = serviceKalkulace.getKalkulaceAll();
-		model.addAttribute("prvniPracovniKalkulace", prvniPracovniKalkulace.get(prvniPracovniKalkulace.size()-1).getKalkulace());
+		model.addAttribute("prvniPracovniKalkulace", prvniPracovniKalkulace.get(prvniPracovniKalkulace.size() - 1).getKalkulace());
 
 		List<MtKalkulaceView> mtkView = serviceMtKalkulaceView.getMtKalkulaceView(kal.getKalkulace());
 		model.addAttribute("mtk", mtkView);
 
 		return "/kalkulaceDetail";
 	}
-	
+
 	@RequestMapping("/detail/help")
 	public String kalkulaceDetailHelp(Model model, HttpServletRequest req, HttpSession session) throws SQLException, UnknownHostException {
 		log.debug("###\t kalkulaceDetailHelp()");
@@ -557,25 +559,16 @@ public class KalkulaceController {
 	/* ============================================================================================================= */
 
 	@RequestMapping(value = "/spustitVypocet/{kalkulaceRRRRMM}")
-	public String spustitVypocet(@PathVariable int kalkulaceRRRRMM, Model model, HttpServletRequest req, HttpSession session) throws SQLException, UnknownHostException {
+	public String spustitVypocet(@PathVariable int kalkulaceRRRRMM, Model model, HttpServletRequest req, HttpSession session) throws SQLException, IOException {
 		log.debug("###\t spustitVypocet(" + kalkulaceRRRRMM + ")");
-//			try {
-//				Thread.sleep(10000);
-//			} catch (InterruptedException e) {
-//				System.out.println(e);
-//			}
+		// try {
+		// Thread.sleep(10000);
+		// } catch (InterruptedException e) {
+		// System.out.println(e);
+		// }
 
 		List<Offline> offVypocet = serviceOffline.getOfflineAgendaNeukoncena("Představitelé - výpočet");
 		if (offVypocet.isEmpty()) {
-			
-			Offline off = new Offline();
-			off.setAgenda("Představitelé - výpočet");
-			off.setCasZadani(new Date());
-			off.setStatus("Nový");
-			off.setUzivatel(req.getUserPrincipal().getName().toUpperCase());
-			off.setParametr(String.valueOf(kalkulaceRRRRMM));
-			off.setPopis("Výpočet spuštěn pro: " +String.valueOf(kalkulaceRRRRMM));
-			serviceOffline.addOffline(off);
 
 			log.debug("###\t ...mazu pripadny priznak SCHAVLENO u vsech modelovych trid v entite MtKalkulace");
 			List<MtKalkulace> mtkList = serviceMtKalkulace.getMtKalkulace(kalkulaceRRRRMM);
@@ -590,7 +583,7 @@ public class KalkulaceController {
 			List<ArchKalkulace> akSmazat = serviceArchKalkulace.getArchKalkulaceAll();
 			for (ArchKalkulace akDel : akSmazat) {
 				if (akDel.getSchvaleno() == null) {
-					log.debug("###\t ...mazani archivu pro kalkulaci "+akDel.getKalkulace());
+					log.debug("###\t ...mazani archivu pro kalkulaci " + akDel.getKalkulace());
 					log.debug("###\t\t ...predstavitele");
 					serviceArchPredstavitel.removeArchPredstavitelAll(akDel.getKalkulace());
 					log.debug("###\t\t ...kurzovni listky");
@@ -659,12 +652,28 @@ public class KalkulaceController {
 
 					protokolPredCount++;
 				}
-				protokolInfo = protokolInfo + mtk.getGz39tMt().getModelTr() + "-" + mtk.getGz39tMt().getZavod() + " (" + protokolPredCount + "),  ";
+				protokolInfo = protokolInfo + mtk.getGz39tMt().getModelTr() + "-" + mtk.getGz39tMt().getZavod() + " (" + protokolPredCount + "), ";
 				protokolPredCount = 0;
 				mtk.setPosledniVypocet(new Date());
 				mtk.setPosledniVypocetUser(req.getUserPrincipal().getName().toUpperCase());
+				mtk.setPosledniEditace(null);
+				mtk.setPosledniEditaceDuvod(null);
 				serviceMtKalkulace.setMtKalkulace(mtk);
 			}
+
+			if (protokolInfo != null || protokolInfo.length() > 0) {
+				// GRE: zahazuji posledni dna znaky (carku a mezeru) ... kosmetika :)
+				protokolInfo = protokolInfo.substring(0, protokolInfo.length() - 2);
+			}
+
+			Offline off = new Offline();
+			off.setAgenda("Představitelé - výpočet");
+			off.setCasZadani(new Date());
+			off.setStatus("Nový");
+			off.setUzivatel(req.getUserPrincipal().getName().toUpperCase());
+			off.setParametr(String.valueOf(kalkulaceRRRRMM));
+			off.setPopis(String.valueOf(kalkulaceRRRRMM) + ", " + protokolInfo);
+			serviceOffline.addOffline(off);
 
 			Protokol newProtokol = new Protokol();
 			newProtokol.setNetusername(req.getUserPrincipal().getName().toUpperCase());
@@ -673,6 +682,19 @@ public class KalkulaceController {
 			newProtokol.setTime(new Date());
 			newProtokol.setSessionid(req.getSession().getId());
 			serviceProtokol.addProtokol(newProtokol);
+
+			SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
+			try {
+				vwg.skoda.postak.Mail mail = new vwg.skoda.postak.Mail();
+				mail.setTo("petr.grecman@skoda-auto.cz");
+				mail.setFrom("Skoda.Apps.COCAFOPPL.SUPPORT@skoda-auto.cz");
+				mail.setSubject("COCAFOPPL - spuštěn výpočet");
+				mail.setBody("Kalkulace: " + String.valueOf(kalkulaceRRRRMM) + "\nMod.třída-závod (počet představitelů): " + protokolInfo + "\nUživatel: "
+						+ req.getUserPrincipal().getName().toUpperCase() + "\nČas: " + sdf.format(new Date()));
+				mail.send();
+			} catch (MalformedURLException e1) {
+				log.error("###\t Chyba mailovani (postak): " + e1);
+			}
 
 		} else {
 			log.debug("###\t Vypocet nebude spuštěn, protože v době zadání již jeden nedokončený požadavek ve frontě je!");
@@ -689,7 +711,7 @@ public class KalkulaceController {
 	}
 
 	@RequestMapping(value = "/schvalit/{kalkulaceRRRRMM}")
-	public String schvalitKalkulaci(@PathVariable int kalkulaceRRRRMM, Model model, HttpServletRequest req, HttpSession session) throws SQLException, UnknownHostException {
+	public String schvalitKalkulaci(@PathVariable int kalkulaceRRRRMM, Model model, HttpServletRequest req, HttpSession session) throws SQLException, IOException {
 		log.debug("###\t schvalitKalkulaci(" + kalkulaceRRRRMM + ")");
 
 		ArchKalkulace k = serviceArchKalkulace.getArchKalkulaceId(kalkulaceRRRRMM);
@@ -709,6 +731,18 @@ public class KalkulaceController {
 			newProtokol.setTime(new Date());
 			newProtokol.setSessionid(req.getSession().getId());
 			serviceProtokol.addProtokol(newProtokol);
+
+			SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
+			try {
+				vwg.skoda.postak.Mail mail = new vwg.skoda.postak.Mail();
+				mail.setTo("petr.grecman@skoda-auto.cz");
+				mail.setFrom("Skoda.Apps.COCAFOPPL.SUPPORT@skoda-auto.cz");
+				mail.setSubject("COCAFOPPL - schválení kalkulace");
+				mail.setBody("Kalkulace: " + String.valueOf(kalkulaceRRRRMM) + "\nUživatel: " + req.getUserPrincipal().getName().toUpperCase() + "\nČas: " + sdf.format(new Date()));
+				mail.send();
+			} catch (MalformedURLException e1) {
+				log.error("###\t Chyba mailovani (postak): " + e1);
+			}
 
 		} else {
 			log.debug("###\t ... pokus o schvaleni kalkulace ve ktere nebylo nic spocitano!!!");

@@ -11,17 +11,17 @@
 <script>
 	$(document).ready(function() {
 		
-		/* test - browser */
+		/* test - browser (GRE: uz nepouzivam) */
 		var isFirefox = typeof InstallTrigger !== 'undefined'; // Firefox 1.0+
 		var isOpera = !!window.opera || navigator.userAgent.indexOf(' OPR/') >= 0;
 		var isSafari = Object.prototype.toString.call(window.HTMLElement).indexOf('Constructor') > 0;
 		var isIE = /*@cc_on!@*/ false || !!document.documentMode; // At least IE6
 		var isChrome = !!window.chrome &amp;&amp; !isOpera;
-
+		/*
 		if(isOpera || isSafari || isChrome || (isIE &amp;&amp; navigator.appVersion.match("MSIE 9.0"))){
 			alert("Tato obrazovka aplikace neni kompaktibilní s vaším prohlížečem!");
 			$(window.location).attr('href', '${pageContext.servletContext.contextPath}/srv/napoveda');
-		}
+		}*/
 
 		$('#tableId').dataTable({
 			"paging" : false,
@@ -47,14 +47,14 @@
 				}
 			}
 		});
-
+/*
 		$("#idButtonExport").click(function() {
 			$("#tableId").table2excel({
 				exclude : ".noExl",
 				name : "aaaGreca"
 			});
 		});
-
+*/
 		$("#formModelovyRokZmenaButton").click(function() {
 			var mrok = (!$("#mrok").val().match(/^[0-9]{4}$/) ? "Modelový rok je špatně zadán: " + $("#mrok").val() : "");
 			var result = mrok;
@@ -241,8 +241,8 @@
 													<img src="${pageContext.servletContext.contextPath}/resources/ico/151.png" />
 												</c:otherwise>
 											</c:choose></td>
-											<td style="display: none;">${i.gz39tPredstavitel.comix}</td>
-											<td style="display: none;">${i.existsPr}</td>
+										<td style="display: none;">${i.gz39tPredstavitel.comix}</td>
+										<td style="display: none;">${i.existsPr}</td>
 									</tr>
 								</c:forEach>
 							</tbody>
@@ -262,7 +262,9 @@
 								</a>
 							</span>
 							<span>
-								<input type="button" id="idButtonExport" value="Export EXCEL" class="heroBtn"></input>
+								<a href="${pageContext.servletContext.contextPath}/srv//predstavitel/seznam/exportXls">
+									<input type="button" id="XXXidButtonExport" value="Export EXCEL" class="heroBtn"></input>
+								</a>
 							</span>
 						</div>
 					</c:if>
@@ -290,16 +292,19 @@
 					<h3>Zadání nové modelové třídy</h3>
 				</div>
 				<div class="modalContent">
-					<form:form commandName="mtKalkulace" id="formModelovyRokZmena"
-						action="${pageContext.servletContext.contextPath}/srv/predstavitel/seznam/zmenaModelovehoRoku/">
+					<form:form commandName="uniObj" id="formModelovyRokZmena" action="${pageContext.servletContext.contextPath}/srv/predstavitel/seznam/zmenaModelovehoRoku/">
 						<TABLE>
 							<TR>
 								<TD style="width: 110px;">Modelový rok<SPAN style="color: red; font-weight: bold;">*</SPAN></TD>
-								<TD><form:input path="mrok" id="mrok" class="textovePole" cssStyle="width:40px"></form:input></TD>
+								<TD><form:input path="rok" id="mrok" class="textovePole" cssStyle="width:40px"></form:input></TD>
+							</TR>
+							<TR>
+								<TD style="width: 110px;">Změnit u všech kalkulací</TD>
+								<TD><form:checkbox path="zmenaMrok" checked="yes"></form:checkbox></TD>
 							</TR>
 							<TR style="height: 40px;">
 								<TD colspan="2"><SPAN style="color: red; font-weight: bold;">!&#160;</SPAN> <SPAN style="font-size: x-small; color: gray;"> Po uložení bude
-										u všech představitelů dané kalkulace a modelové třídy smazán stávající PR popis.</SPAN></TD>
+										u všech představitelů, které jsou předmětem změny modelového roku smazán stávající PR popis.</SPAN></TD>
 							</TR>
 						</TABLE>
 					</form:form>

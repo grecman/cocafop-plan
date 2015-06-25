@@ -1,4 +1,7 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?><entities>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE something>
+<!-- DOCTYPE rusi v eclipsu warning: No grammar constraints (DTD or XML schema) -->
+<entities>
 	<entity>
 		<entity-name>vwg.skoda.cocafopl.entity.Predstavitel</entity-name>
 		<entity-width>120</entity-width>

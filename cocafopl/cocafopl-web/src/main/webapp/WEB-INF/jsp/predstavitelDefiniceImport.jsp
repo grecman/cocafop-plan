@@ -62,13 +62,13 @@
 			<div class="mainAreaWide">
 				<H2>Import bude provedem pro modelovou třídu ${vybranaMt} a závod ${vybranyZavod}</H2>
 				<TABLE>
-					<col width="240px" />
+					<col width="260px" />
 					<col width="*" />
 					<TBODY>
 						<form:form method="post" id="formNahratSoubor" action="${pageContext.servletContext.contextPath}/srv/fileUpload/checkFile" modelAttribute="uploadForm"
 							enctype="multipart/form-data">
 							<TR height="35px">
-								<TD style="font-weight: bold;">1. krok - vybrat soubor&#160;&#160;<SPAN onmouseover='$("#obrazky").show()' onmouseout='$("#obrazky").hide()'
+								<TD style="font-weight: bold;">1. krok - vybrat soubor&#160;&#160;<SPAN onmouseover="jQuery(&#039;&#035;obrazky&#039;).show()" onmouseout="jQuery(&#039;&#035;obrazky&#039;).hide()"
 										style="color: blue;">(VZOR)</SPAN></TD>
 								<TD><input name="filePredstaviteleCocafoppl" type="file" id="inputFile" style="background: none; width: 300px; color: red; padding-left: 0px;" />
 								</TD>
