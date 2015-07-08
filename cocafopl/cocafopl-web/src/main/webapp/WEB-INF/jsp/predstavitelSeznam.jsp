@@ -262,8 +262,8 @@
 								</a>
 							</span>
 							<span>
-								<a href="${pageContext.servletContext.contextPath}/srv//predstavitel/seznam/exportXls">
-									<input type="button" id="XXXidButtonExport" value="Export EXCEL" class="heroBtn"></input>
+								<a href="${pageContext.servletContext.contextPath}/srv/predstavitel/seznamSKalkulaci/exportXls">
+									<input type="button" value="Export EXCEL" class="heroBtn"></input>
 								</a>
 							</span>
 						</div>

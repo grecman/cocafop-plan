@@ -80,8 +80,8 @@
 					<col width="180px" />
 					<col width="205px" />
 					<tr>
-						<td>Číslo představitele</td>
-						<td><SPAN style="background-color: white;">&#160;${pk.gz39tPredstavitel.cisloPred}&#160;</SPAN></td>
+						<td title="${pk.gz39tPredstavitel.id}">Číslo představitele</td>
+						<td title="${pk.gz39tPredstavitel.id}"><SPAN style="background-color: white;">&#160;${pk.gz39tPredstavitel.cisloPred}&#160;</SPAN></td>
 					</tr>
 					<tr style="height: 10px;" />
 					<tr>
@@ -148,7 +148,7 @@
 					<tr style="height: 10px;" />
 					<c:if test="${pk.existsPr>0}">
 						<tr>
-							<td>PR popis původní</td>
+							<td title="${pk.id}">PR popis původní</td>
 							<td />
 							<td />
 							<td />
@@ -174,7 +174,7 @@
 						</tr>
 						<tr style="height: 10px;" />
 						<tr>
-							<td>PR popis korigovaný</td>
+							<td title="${pk.id}">PR popis korigovaný</td>
 						</tr>
 						<tr>
 							<td style="background-color: white; font-family: monospace;" colspan="7"><c:forEach items="${prPodminky}" var="i">

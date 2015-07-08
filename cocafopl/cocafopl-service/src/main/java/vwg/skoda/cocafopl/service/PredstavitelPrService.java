@@ -66,7 +66,7 @@ public class PredstavitelPrService {
 		log.trace("###\t\t getPredstavitelPrNudle(" + idPredstavitelKalkulace+");");
 		String gre;
 		try {
-			StringBuffer sql = new StringBuffer("SELECT '+'||LISTAGG(decode(pr_editovane,null,pr,pr_editovane),'+') within group (order by rodina) FROM cocafoppl.GZ39T_PREDSTAVITEL_PR WHERE id_predstavitel_kalkulace="+idPredstavitelKalkulace);
+			StringBuffer sql = new StringBuffer("SELECT '+'||LISTAGG(decode(pr_editovane,null,pr,pr_editovane),'+') within group (order by pr) FROM cocafoppl.GZ39T_PREDSTAVITEL_PR WHERE id_predstavitel_kalkulace="+idPredstavitelKalkulace);
 			gre =  (String) entityManager.createNativeQuery(sql.toString()).getSingleResult();
 		} catch (NoResultException e) {
 			return null;

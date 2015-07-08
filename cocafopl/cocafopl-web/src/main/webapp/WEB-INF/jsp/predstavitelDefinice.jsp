@@ -231,7 +231,9 @@
 						</span>
 						<c:if test="${not(empty(listPredstavitelu))}">
 							<span>
-								<input type="button" id="idButtonExport" value="Export EXCEL" class="heroBtn" style="background-color: gray;"></input>
+								<a href="${pageContext.servletContext.contextPath}/srv/predstavitel/definice/exportXls">
+									<input type="button" value="Export EXCEL" class="heroBtn"></input>
+								</a>
 							</span>
 							<span>
 								<a href="#openModalMinuleCisloPred">

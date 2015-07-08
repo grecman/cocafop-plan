@@ -177,7 +177,9 @@
 					</div>
 					<div class="formBar">
 						<span>
-							<input type="button" id="idButtonExport" value="Export EXCEL" class="heroBtn"></input>
+							<a href="${pageContext.servletContext.contextPath}/srv/archiv/predstavitel/exportXls">
+								<input type="button" value="Export EXCEL" class="heroBtn"></input>
+							</a>
 						</span>
 					</div>
 				</c:if>

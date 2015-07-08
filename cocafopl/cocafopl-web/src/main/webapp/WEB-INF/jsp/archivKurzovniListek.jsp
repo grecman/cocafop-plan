@@ -147,7 +147,9 @@
 					</div>
 					<div class="formBar">
 						<span>
-							<input type="button" id="idButtonExport" value="Export EXCEL" class="heroBtn" style="background-color: gray;"></input>
+							<a href="${pageContext.servletContext.contextPath}/srv/archiv/kurzovniListek/exportXls">
+								<input type="button" value="Export EXCEL" class="heroBtn"></input>
+							</a>
 						</span>
 					</div>
 				</c:if>

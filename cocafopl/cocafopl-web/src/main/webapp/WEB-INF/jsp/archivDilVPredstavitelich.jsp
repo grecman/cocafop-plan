@@ -9,56 +9,58 @@
 <jsp:include page="lib.jsp" />
 <title>COCAFOP-Plan</title>
 <script>
-	$(document).ready(function() {
-		$('#tableId').dataTable({
-			"paging" : true,
-			"ordering" : true,
-			"order" : [ [0, "asc" ], [ 2, "asc" ], [ 4, "asc" ], [ 5, "asc" ] ],
-			"info" : true,
-			"bFilter" : true,
-			"iDisplayLength" : 25,
-			"language" : {
-				// datatables.net/reference/option/language
-				"lengthMenu" : "&#160;Zobrazit _MENU_ řádků na stránce.",
-				"info" : "&#160;Stránka: _PAGE_/_PAGES_, načteno _TOTAL_ záznamů.",
-				"infoEmpty" : "Nenalezeny žádné záznamy.",
-				"infoFiltered" : "&#160;(filtr: _TOTAL_ / _MAX_)",
-				"loadingRecords" : "Nahrávám...",
-				"processing" : "Pracuji...",
-				"search" : "Vyhledat:",
-				"zeroRecords" : "Nebyly nalezeny žádné záznamy.",
-				"paginate" : {
-					"first" : "První",
-					"last" : "Poslední",
-					"next" : "Další",
-					"previous" : "Předcházející"
-				}
-			}
-		});
-		
-		$("#formButton")
-		.click(
-				function() {
-					var cdilu = (!$("#cdilu").val().match(/^[_a-zA-Z0-9\u0020]{3,15}$/) ? "V masce pro číslo dílu musí být alespoň 3 znaky (čísla/písmena).\nPolovené je i podtržítko pro zástupný znak. Příklad: 5E_827550_"
-							: "");
-					var result = cdilu;
-					if (result.length == 0) {
-						$("#formId").submit();
-					} else {
-						alert(result);
-					}
-				});
+	$(document)
+			.ready(
+					function() {
+						$('#tableId').dataTable({
+							"paging" : true,
+							"ordering" : true,
+							"order" : [ [ 0, "asc" ], [ 2, "asc" ], [ 4, "asc" ], [ 5, "asc" ] ],
+							"info" : true,
+							"bFilter" : true,
+							"iDisplayLength" : 25,
+							"language" : {
+								// datatables.net/reference/option/language
+								"lengthMenu" : "&#160;Zobrazit _MENU_ řádků na stránce.",
+								"info" : "&#160;Stránka: _PAGE_/_PAGES_, načteno _TOTAL_ záznamů.",
+								"infoEmpty" : "Nenalezeny žádné záznamy.",
+								"infoFiltered" : "&#160;(filtr: _TOTAL_ / _MAX_)",
+								"loadingRecords" : "Nahrávám...",
+								"processing" : "Pracuji...",
+								"search" : "Vyhledat:",
+								"zeroRecords" : "Nebyly nalezeny žádné záznamy.",
+								"paginate" : {
+									"first" : "První",
+									"last" : "Poslední",
+									"next" : "Další",
+									"previous" : "Předcházející"
+								}
+							}
+						});
 
-		$("#tableId").on('click', 'tr', function() {
-			$(this).addClass('selectedTableRow').siblings().removeClass('selectedTableRow');
-		});
-		$("#idButtonExport").click(function() {
-			$("#tableId").table2excel({
-				exclude : ".noExl",
-				name : "aaaGreca"
-			});
-		});
-	});
+						$("#formButton")
+								.click(
+										function() {
+											var cdilu = (!$("#cdilu").val().match(/^[_a-zA-Z0-9\u0020]{3,15}$/) ? "V masce pro číslo dílu musí být alespoň 3 znaky (čísla/písmena).\nPolovené je i podtržítko pro zástupný znak. Příklad: 5E_827550_"
+													: "");
+											var result = cdilu;
+											if (result.length == 0) {
+												$("#formId").submit();
+											} else {
+												alert(result);
+											}
+										});
+
+						$("#tableId").on('click', 'tr', function() {
+							$(this).addClass('selectedTableRow').siblings().removeClass('selectedTableRow');
+						});
+						$("#idButtonExport").click(function() {
+							$("#tableId").table2excel({
+								exclude : ".noExl",
+								name : "aaaGreca"
+							});
+						});
+					});
 </script>
 </head>
 <body class="pages">
@@ -168,10 +170,14 @@
 							</tbody>
 						</table>
 					</div>
+				</c:if>
+				<c:if test="${not empty maskaDilu}">
 					<div class="formBar">
-						<span>
-							<input type="button" id="idButtonExport" value="Export EXCEL" class="heroBtn"></input>
-						</span>
+						<SPAN>
+							<a href="${pageContext.servletContext.contextPath}/srv/archiv/dilVPredstavitelich/exportXls">
+								<input type="button" value="Export EXCEL" class="heroBtn"></input>
+							</a>
+						</SPAN>
 						<c:if test="${pocetNactenychZaznamu>maxLimitNaZobrazeni}">
 							<SPAN style="color: red;">Proveden velký výběr dat! Načteno ${pocetNactenychZaznamu} záznamu, zobrazeno bude pouze prvních ${maxLimitNaZobrazeni}.</SPAN>
 						</c:if>

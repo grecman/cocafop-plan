@@ -185,9 +185,11 @@
 						</table>
 					</div>
 					<div class="formBar">
-						<span>
-							<input type="button" id="idButtonExport" value="Export EXCEL" class="heroBtn" style="background-color: gray;"></input>
-						</span>
+						<SPAN>
+							<a href="${pageContext.servletContext.contextPath}/srv/archiv/kusyNaProvedeni/exportXls">
+								<input type="button" value="Export EXCEL" class="heroBtn"></input>
+							</a>
+						</SPAN>
 						<c:if test="${pocetNactenychZaznamu>maxLimitNaZobrazeni}">
 							<SPAN style="color: red;">Proveden velký výběr dat! Načteno ${pocetNactenychZaznamu} záznamu, zobrazeno bude pouze prvních ${maxLimitNaZobrazeni}.</SPAN>
 						</c:if>

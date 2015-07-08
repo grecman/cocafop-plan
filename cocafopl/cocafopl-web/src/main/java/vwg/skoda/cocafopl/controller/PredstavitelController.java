@@ -1,7 +1,6 @@
 package vwg.skoda.cocafopl.controller;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.UnknownHostException;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
@@ -36,6 +35,7 @@ import vwg.skoda.cocafopl.entity.User;
 import vwg.skoda.cocafopl.obj.UniObj;
 import vwg.skoda.cocafopl.service.ArchKalkulaceService;
 import vwg.skoda.cocafopl.service.ArchPredstavitelService;
+import vwg.skoda.cocafopl.service.ExportXlsService;
 import vwg.skoda.cocafopl.service.KalkulaceService;
 import vwg.skoda.cocafopl.service.MtKalkulaceService;
 import vwg.skoda.cocafopl.service.MtProdService;
@@ -48,7 +48,6 @@ import vwg.skoda.cocafopl.service.PredstavitelPrService;
 import vwg.skoda.cocafopl.service.PredstavitelService;
 import vwg.skoda.cocafopl.service.ProtokolService;
 import vwg.skoda.cocafopl.service.UserService;
-import vwg.skoda.cocafopl.output.*;
 
 @Controller
 @RequestMapping("/predstavitel")
@@ -97,6 +96,9 @@ public class PredstavitelController {
 
 	@Autowired
 	private PrViewService servicePrView;
+
+	@Autowired
+	private ExportXlsService serviceExportXls;
 
 	@RequestMapping("/definice")
 	public String predstavitelDefinice(Mt mt, Model model, HttpSession session, HttpServletRequest req) throws SQLException, UnknownHostException {
@@ -386,6 +388,19 @@ public class PredstavitelController {
 		}
 		return "redirect:/srv/predstavitel/definice/list";
 	}
+	
+	
+	@RequestMapping("/definice/exportXls")
+	public String predstavitelSeznamExportXls(HttpServletRequest req, HttpSession session, HttpServletResponse res) throws SQLException, IOException {
+		log.debug("###\t predstavitelSeznamExportXls(" + session.getAttribute("vybranaMt").toString() + "-" + session.getAttribute("vybranyZavod").toString() + ")");
+
+		List<Predstavitel> p = servicePredstavitel.getPredstavitele(session.getAttribute("vybranaMt").toString(), session.getAttribute("vybranyZavod").toString());
+
+		serviceExportXls.exportPredstavitelSeznam(p, res);
+		res.flushBuffer();
+
+		return "redirect:/srv/predstavitel/seznam/" + session.getAttribute("kalkulaceRRRRMM");
+	}
 
 	/* ******************************************************************************************************************************************** */
 
@@ -565,29 +580,16 @@ public class PredstavitelController {
 		return "redirect:/srv/predstavitel/seznam/" + session.getAttribute("kalkulaceRRRRMM");
 	}
 
-	@RequestMapping("/seznam/exportXls")
-	public String predstavitelSeznamExportXls(HttpServletRequest req, HttpSession session, HttpServletResponse res) throws SQLException, IOException {
-		log.debug("###\t predstavitelSeznamExportXls(" + session.getAttribute("kalkulaceRRRRMM") + ", " + session.getAttribute("vybranaMt").toString() + "-"
+	@RequestMapping("/seznamSKalkulaci/exportXls")
+	public String predstavitelSeznamSKalkulaciExportXls(HttpServletRequest req, HttpSession session, HttpServletResponse res) throws SQLException, IOException {
+		log.debug("###\t predstavitelSeznamSKalkulaciExportXls(" + session.getAttribute("kalkulaceRRRRMM") + ", " + session.getAttribute("vybranaMt").toString() + "-"
 				+ session.getAttribute("vybranyZavod").toString() + ")");
 		List<PredstavitelKalkulace> pk = servicePredstavitelKalkulace.getPredstaviteleKalkulace(session.getAttribute("vybranaMt").toString(), session.getAttribute("vybranyZavod").toString(),
 				Integer.valueOf(session.getAttribute("kalkulaceRRRRMM").toString().toString()));
-		for (PredstavitelKalkulace p : pk) {
-			System.out.println(p.getGz39tPredstavitel().getCisloPred()+"\t"+p.getGz39tPredstavitel().getModelovyKlic());
-		}
-		
-		try {
-			vwg.skoda.postak.Mail mail = new vwg.skoda.postak.Mail();
-			mail.setTo("petr.grecman@skoda-auto.cz");
-			mail.setFrom("Skoda.Apps.COCAFOPPL.SUPPORT@skoda-auto.cz");
-			mail.setSubject("gre");
-			mail.setBody("10:15 Posíláme novou sestavu");
-			mail.send();
-		} catch (MalformedURLException e1) {
-			log.error("###\t Chyba mailovani (postak): "+e1);
-		} 
 
-		ExportXls e = new ExportXls();
-		e.exportSeznamPredstavitel(pk ,res);
+		serviceExportXls.exportPredstavitelKalkulaceSeznam(pk, res);
+		res.flushBuffer();
+
 		return "redirect:/srv/predstavitel/seznam/" + session.getAttribute("kalkulaceRRRRMM");
 	}
 

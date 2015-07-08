@@ -38,6 +38,20 @@ public class ArchKusovnikService {
 		return gre;
 	}
 	
+	
+	public List<ArchKusovnik> getArchKusovnik(int kalkulace, String produkt, String zavod) {
+		log.trace("###\t\t getArchKusovnik(" + kalkulace + ", " + produkt + ", " + zavod + ");");
+		List<ArchKusovnik> gre = null;
+		try {
+			gre = entityManager
+					.createQuery("SELECT a FROM ArchKusovnik a WHERE a.gz40tKalkulace.kalkulace=:kalkulace AND a.produkt=:produkt AND a.zavod=:zavod ", ArchKusovnik.class)
+					.setParameter("kalkulace", kalkulace).setParameter("produkt", produkt).setParameter("zavod", zavod).getResultList();
+		} catch (NoResultException e) {
+			return null;
+		}
+		return gre;
+	}
+	
 	@Transactional
 	public void removeArchKusovnikAll(int kalkulace) {
 		log.trace("###\t\t removeArchKusovnikAll(" + kalkulace + ")");

@@ -1,5 +1,6 @@
 package vwg.skoda.cocafopl.controller;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -38,6 +39,7 @@ import vwg.skoda.cocafopl.service.ArchKusovnikService;
 import vwg.skoda.cocafopl.service.ArchKusyProvViewService;
 import vwg.skoda.cocafopl.service.ArchPredstavitelPrService;
 import vwg.skoda.cocafopl.service.ArchPredstavitelService;
+import vwg.skoda.cocafopl.service.ExportXlsService;
 import vwg.skoda.cocafopl.service.MtProdService;
 import vwg.skoda.cocafopl.service.PrViewService;
 import vwg.skoda.cocafopl.service.UserService;
@@ -86,7 +88,10 @@ public class ArchivController {
 
 	@Autowired
 	private ArchKurzEurService serviceArchKurzEur;
-	
+
+	@Autowired
+	private ExportXlsService serviceExportXls;
+
 	Integer maxLimitNaZobrazeni = 1000;
 
 	@RequestMapping("/kalkulace")
@@ -119,6 +124,7 @@ public class ArchivController {
 		session.setAttribute("vybranaMt", "");
 		session.setAttribute("vybranyProdukt", "");
 		session.setAttribute("vybranyZavod", "");
+		session.setAttribute("maskaDilu", "");
 
 		List<ArchKalkulaceView> ak = serviceArchKalkulaceView.getArchKalkulaceViewAll();
 		model.addAttribute("archKalkulaceList", ak);
@@ -136,6 +142,7 @@ public class ArchivController {
 		session.setAttribute("vybranaMt", "");
 		session.setAttribute("vybranyProdukt", "");
 		session.setAttribute("vybranyZavod", "");
+		session.setAttribute("maskaDilu", "");
 
 		List<ArchKalkulaceMtZavView> akMtZavView = serviceArchKalkulaceMtZavView.getArchKalkulaceMtZavView(Integer.valueOf(session.getAttribute("archKalkulaceRRRRMM").toString()));
 		model.addAttribute("mtZavodList", akMtZavView);
@@ -171,8 +178,23 @@ public class ArchivController {
 		}
 		model.addAttribute("maxLimitNaZobrazeni", maxLimitNaZobrazeni);
 		model.addAttribute("pocetNactenychZaznamu", ak.size());
+		session.setAttribute("maskaDilu", "%" + archKusovnik.getCdilu().toUpperCase().trim() + "%");
 
 		return "/archivKusovnik";
+	}
+
+	@RequestMapping("/kusovnik/exportXls")
+	public String archivKusovnikExportXls(HttpServletRequest req, HttpSession session, HttpServletResponse res) throws SQLException, IOException {
+		log.debug("###\t archivKusovnikExportXls(" + session.getAttribute("archKalkulaceRRRRMM").toString() + ", " + session.getAttribute("vybranyProdukt").toString() + "-"
+				+ session.getAttribute("vybranyZavod").toString() + ", " + session.getAttribute("maskaDilu") + ")");
+
+		List<ArchKusovnik> ak = serviceArchKusovnik.getArchKusovnik(Integer.valueOf(session.getAttribute("archKalkulaceRRRRMM").toString()), session.getAttribute("vybranyProdukt").toString(), session
+				.getAttribute("vybranyZavod").toString(), session.getAttribute("maskaDilu").toString());
+
+		serviceExportXls.exportArchivKusovnik(ak, res);
+		res.flushBuffer();
+
+		return "redirect:/srv/predstavitel/seznam/" + session.getAttribute("kalkulaceRRRRMM");
 	}
 
 	// ###################################################################################################################################################################
@@ -185,6 +207,8 @@ public class ArchivController {
 		session.setAttribute("archKalkulaceRRRRMM", "");
 		session.setAttribute("vybranaMt", "");
 		session.setAttribute("vybranyZavod", "");
+		session.setAttribute("maskaDilu", "");
+		session.setAttribute("maskaDodavatel", "");
 
 		List<ArchKalkulaceView> ak = serviceArchKalkulaceView.getArchKalkulaceViewAll();
 		model.addAttribute("archKalkulaceList", ak);
@@ -207,7 +231,7 @@ public class ArchivController {
 				+ archCenikView.getDodavatel() + ")");
 
 		List<ArchCenikView> ac = serviceArchCenikView.getArchCenikView(Integer.valueOf(session.getAttribute("archKalkulaceRRRRMM").toString()), "%" + archCenikView.getCdilu().toUpperCase().trim()
-				+ "%", archCenikView.getCizav(), archCenikView.getDodavatel().toUpperCase());
+				+ "%", archCenikView.getCizav(), archCenikView.getDodavatel());
 
 		if (ac.size() > maxLimitNaZobrazeni) {
 			model.addAttribute("archCenikList", ac.subList(0, maxLimitNaZobrazeni));
@@ -217,7 +241,25 @@ public class ArchivController {
 		model.addAttribute("maxLimitNaZobrazeni", maxLimitNaZobrazeni);
 		model.addAttribute("pocetNactenychZaznamu", ac.size());
 
+		session.setAttribute("maskaDilu", "%" + archCenikView.getCdilu().toUpperCase().trim() + "%");
+		session.setAttribute("vybranyZavod", archCenikView.getCizav());
+		session.setAttribute("maskaDodavatel", archCenikView.getDodavatel());
+
 		return "/archivCenik";
+	}
+
+	@RequestMapping("/cenik/exportXls")
+	public String archivCenikExportXls(HttpServletRequest req, HttpSession session, HttpServletResponse res) throws SQLException, IOException {
+		log.debug("###\t archivCenikExportXls(" + session.getAttribute("archKalkulaceRRRRMM").toString() + ", " + session.getAttribute("maskaDilu") + ", " + session.getAttribute("vybranyZavod")
+				+ ", " + session.getAttribute("maskaDodavatel") + ")");
+
+		List<ArchCenikView> ac = serviceArchCenikView.getArchCenikView(Integer.valueOf(session.getAttribute("archKalkulaceRRRRMM").toString()), session.getAttribute("maskaDilu").toString(),
+				(String) session.getAttribute("vybranyZavod"), (String) session.getAttribute("maskaDodavatel"));
+
+		serviceExportXls.exportArchivCenik(ac, res);
+		res.flushBuffer();
+
+		return "redirect:/srv/predstavitel/seznam/" + session.getAttribute("kalkulaceRRRRMM");
 	}
 
 	// ###################################################################################################################################################################
@@ -264,8 +306,8 @@ public class ArchivController {
 		if (archKalkulaceMtZavView.getIdPom() != null) {
 			akMtZavView = serviceArchKalkulaceMtZavView.getArchKalkulaceMtZavViewId(archKalkulaceMtZavView.getIdPom());
 		} else if (!session.getAttribute("vybranaMt").toString().isEmpty()) {
-			akMtZavView = serviceArchKalkulaceMtZavView.getArchKalkulaceMtZavView(Integer.valueOf(session.getAttribute("archKalkulaceRRRRMM").toString()), session.getAttribute("vybranaMt").toString(),
-					session.getAttribute("vybranyZavod").toString());
+			akMtZavView = serviceArchKalkulaceMtZavView.getArchKalkulaceMtZavView(Integer.valueOf(session.getAttribute("archKalkulaceRRRRMM").toString()),
+					session.getAttribute("vybranaMt").toString(), session.getAttribute("vybranyZavod").toString());
 		}
 
 		model.addAttribute("akMtZavView", akMtZavView);
@@ -310,6 +352,20 @@ public class ArchivController {
 		return "/predstavitelDetailPrPopup";
 	}
 
+	@RequestMapping("/predstavitel/exportXls")
+	public String archivPredstavitelExportXls(HttpServletRequest req, HttpSession session, HttpServletResponse res) throws SQLException, IOException {
+		log.debug("###\t archivPredstavitelExportXls(" + session.getAttribute("archKalkulaceRRRRMM").toString() + ", " + session.getAttribute("vybranaMt").toString() + "-"
+				+ session.getAttribute("vybranyZavod").toString() + ")");
+
+		List<ArchPredstavitel> ap = serviceArchPredstavitel.getArchPredstavitel(Integer.valueOf(session.getAttribute("archKalkulaceRRRRMM").toString()), session.getAttribute("vybranaMt").toString(),
+				session.getAttribute("vybranyZavod").toString());
+
+		serviceExportXls.exportArchivPredstavitel(ap, res);
+		res.flushBuffer();
+
+		return "redirect:/srv/predstavitel/seznam/" + session.getAttribute("kalkulaceRRRRMM");
+	}
+
 	// ###################################################################################################################################################################
 
 	@RequestMapping("/kusyNaProvedeni")
@@ -320,6 +376,8 @@ public class ArchivController {
 		session.setAttribute("archKalkulaceRRRRMM", "");
 		session.setAttribute("vybranaMt", "");
 		session.setAttribute("vybranyZavod", "");
+		session.setAttribute("maskaDilu", "");
+		session.setAttribute("vybraneCisloPred", "");
 
 		List<ArchKalkulaceView> ak = serviceArchKalkulaceView.getArchKalkulaceViewAll();
 		model.addAttribute("archKalkulaceList", ak);
@@ -336,6 +394,8 @@ public class ArchivController {
 		}
 		session.setAttribute("vybranaMt", "");
 		session.setAttribute("vybranyZavod", "");
+		session.setAttribute("maskaDilu", "");
+		session.setAttribute("vybraneCisloPred", "");
 
 		List<ArchKalkulaceMtZavView> akMtZavView = serviceArchKalkulaceMtZavView.getArchKalkulaceMtZavView(Integer.valueOf(session.getAttribute("archKalkulaceRRRRMM").toString()));
 		model.addAttribute("mtZavodList", akMtZavView);
@@ -371,7 +431,24 @@ public class ArchivController {
 		model.addAttribute("maxLimitNaZobrazeni", maxLimitNaZobrazeni);
 		model.addAttribute("pocetNactenychZaznamu", akp.size());
 
+		session.setAttribute("maskaDilu", "%" + archKusyProvView.getCdilu().toUpperCase().trim() + "%");
+		session.setAttribute("vybraneCisloPred", archKusyProvView.getCisloPred());
+
 		return "/archivKusyNaProvedeni";
+	}
+
+	@RequestMapping("/kusyNaProvedeni/exportXls")
+	public String archivKusyNaProvedeniExportXls(HttpServletRequest req, HttpSession session, HttpServletResponse res) throws SQLException, IOException {
+		log.debug("###\t archivKusyNaProvedeniExportXls(" + session.getAttribute("archKalkulaceRRRRMM").toString() + ", " + session.getAttribute("vybranaMt").toString() + "-"
+				+ session.getAttribute("vybranyZavod").toString() + ", " + session.getAttribute("vybraneCisloPred") + ", " + session.getAttribute("maskaDilu") + ")");
+
+		List<ArchKusyProvView> akp = serviceArchKusyProvView.getArchKusyProvView(Integer.valueOf(session.getAttribute("archKalkulaceRRRRMM").toString()), session.getAttribute("vybranaMt").toString(),
+				session.getAttribute("vybranyZavod").toString(), (Integer) session.getAttribute("vybraneCisloPred"), session.getAttribute("maskaDilu").toString());
+
+		serviceExportXls.exportArchivKusyNaProvedeni(akp, res);
+		res.flushBuffer();
+
+		return "redirect:/srv/predstavitel/seznam/" + session.getAttribute("kalkulaceRRRRMM");
 	}
 
 	// ###################################################################################################################################################################
@@ -383,6 +460,7 @@ public class ArchivController {
 		session.setAttribute("archKalkulaceRRRRMM", "");
 		session.setAttribute("vybranaMt", "");
 		session.setAttribute("vybranyZavod", "");
+		session.setAttribute("maskaDilu", "");
 
 		List<ArchKalkulaceView> ak = serviceArchKalkulaceView.getArchKalkulaceViewAll();
 		model.addAttribute("archKalkulaceList", ak);
@@ -416,7 +494,21 @@ public class ArchivController {
 		model.addAttribute("maxLimitNaZobrazeni", maxLimitNaZobrazeni);
 		model.addAttribute("pocetNactenychZaznamu", akp.size());
 
+		session.setAttribute("maskaDilu", "%" + archKusyProvView.getCdilu().toUpperCase().trim() + "%");
+
 		return "/archivDilVPredstavitelich";
+	}
+
+	@RequestMapping("/dilVPredstavitelich/exportXls")
+	public String archivDilVPredstavitelichExportXls(HttpServletRequest req, HttpSession session, HttpServletResponse res) throws SQLException, IOException {
+		log.debug("###\t archivDilVPredstavitelichExportXls(" + session.getAttribute("archKalkulaceRRRRMM") + ", " + session.getAttribute("maskaDilu") + ")");
+
+		List<ArchKusyProvView> dvp = serviceArchKusyProvView.getArchKusyProvView(Integer.valueOf(session.getAttribute("archKalkulaceRRRRMM").toString()), session.getAttribute("maskaDilu").toString());
+
+		serviceExportXls.exportArchivDilVPredstavitelich(dvp, res);
+		res.flushBuffer();
+
+		return "redirect:/srv/predstavitel/seznam/" + session.getAttribute("kalkulaceRRRRMM");
 	}
 
 	// ###################################################################################################################################################################
@@ -463,6 +555,20 @@ public class ArchivController {
 		session.setAttribute("vybranyKurzovniListek", "eur");
 
 		return "/archivKurzovniListek";
+	}
+	
+	@RequestMapping("/kurzovniListek/exportXls")
+	public String archivKurzovniListekExportXls(HttpServletRequest req, HttpSession session, HttpServletResponse res) throws SQLException, IOException {
+		log.debug("###\t archivDilVPredstavitelichExportXls(" + session.getAttribute("archKalkulaceRRRRMM") +")");
+
+		//List<ArchKusyProvView> dvp = serviceArchKusyProvView.getArchKusyProvView(Integer.valueOf(session.getAttribute("archKalkulaceRRRRMM").toString()), session.getAttribute("maskaDilu").toString());
+		List<ArchKurzCzk> klCzk = serviceArchKurzCzk.getArchKurzCzk(Integer.valueOf(session.getAttribute("archKalkulaceRRRRMM").toString()));
+		List<ArchKurzEur> klEur = serviceArchKurzEur.getArchKurzEur(Integer.valueOf(session.getAttribute("archKalkulaceRRRRMM").toString()));
+		
+		serviceExportXls.exportArchivKurzovniListek(klCzk,klEur, res);
+		res.flushBuffer();
+
+		return "redirect:/srv/predstavitel/seznam/" + session.getAttribute("kalkulaceRRRRMM");
 	}
 
 }

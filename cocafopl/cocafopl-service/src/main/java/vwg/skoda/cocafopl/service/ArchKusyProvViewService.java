@@ -55,4 +55,17 @@ public class ArchKusyProvViewService {
 		return gre;
 	}
 
+	public List<ArchKusyProvView> getArchKusyProvView(int kalkulace, String mt, String zavod) {
+		log.trace("###\t\t getArchKusyProvView(" + kalkulace + ", " + mt + "-" + zavod + ");");
+		List<ArchKusyProvView> gre = null;
+		try {
+			gre = entityManager.createQuery("SELECT a FROM ArchKusyProvView a WHERE a.id.kalkulace=:kalkulace AND a.modelTr=:mt AND a.zavod=:zavod  ", ArchKusyProvView.class)
+					.setParameter("kalkulace", kalkulace).setParameter("mt", mt).setParameter("zavod", zavod).getResultList();
+		} catch (NoResultException e) {
+			return null;
+		}
+
+		return gre;
+	}
+
 }

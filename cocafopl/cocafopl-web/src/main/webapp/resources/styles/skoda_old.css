@@ -1,0 +1,1166 @@
+@CHARSET "UTF-8";
+
+* {
+	box-sizing: inherit;
+	-moz-box-sizing: inherit;
+	-ms-flex-wrap: wrap;
+}
+
+div {
+	margin: 0;
+	padding: 0;
+}
+
+html {
+	height: 100%;
+	color: black;
+}
+
+body {
+	height: 100%;
+	z-index: 0;
+	font-family: Verdana, "Arial CE", Arial, "Helvetica CE", sans-serif;
+	font-size: 13px;
+	line-height: 18px;
+}
+
+body.pages {
+	width: 100%;
+	margin: 0;
+}
+
+img {
+	border: 0px;
+	border-style: none;
+}
+
+a {
+	color: inherit;
+	text-decoration: none;
+}
+
+a:VISITED {
+	color: inherit;
+}
+
+a:HOVER {
+	/*text-decoration: underline;*/
+	
+}
+
+textarea {
+	font-family: monospace;
+}
+
+form {
+	xwidth: inherit;
+	xheight: inherit;
+	background: inherit;
+}
+
+.sedaObrProSpinner {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	left: 0px;
+	top: 0px;
+	background-color: lightgray;
+	opacity: 0.5;
+	z-index: 150;
+}
+
+.logo {
+	background: #FFFFFF 30px -6px url("../images/SA-logo.png") no-repeat;
+	padding: 37px 0 0 0;
+	border-bottom: 1px solid black;
+}
+
+.page {
+	background-color: #ECECEC;
+	min-width: 1300px;
+	font-size: 12px;
+	min-height: 100%;
+	position: relative;
+	height: auto !important;
+	margin: 0px auto;
+	min-width: 1300px;
+}
+
+.basePage {
+	background-color: #ECECEC;
+	min-width: 1300px;
+}
+
+.header .menu {
+	background-color: #4BA82E;
+	height: 26px;
+	color: white;
+	clear: both;
+	padding-top: 7px;
+	text-align: left;
+}
+
+.header {
+	text-align: center;
+}
+
+.header .menu a {
+	margin-left: 10px;
+	padding: 4px 25px 6px;
+	height: 24px;
+	font-size: 16px;
+}
+
+/*
+.header .menu span em {
+	margin-left: 10px;
+	padding: 4px 25px 6px;
+	height: 24px;
+	font-size: 16px;
+	color: green;
+}
+*/
+.header .menu a:HOVER {
+	background-color: #FFFFFF;
+	color: #4BA82E;
+	text-decoration: none;
+}
+
+.header a.selected {
+	color: black;
+}
+
+.page .header .title {
+	display: block;
+	float: left;
+	text-align: left;
+	font-size: 16px;
+	font-weight: bold;
+	padding-left: 35px;
+	height: 22px;
+}
+
+.page .header .info {
+	text-align: right;
+	display: block;
+	width: 20em;
+	float: right;
+	padding-top: 2px;
+}
+
+.page .header .info a:HOVER {
+	background-color: #FFFFFF;
+	color: black;
+	text-decoration: none;
+}
+
+.page .header .pageTitle {
+	display: inline;
+	text-align: center;
+	font-weight: bold;
+	font-size: 16px;
+}
+
+.info .user {
+	display: inline;
+}
+
+.info .lang {
+	display: inline;
+}
+
+.lang select, .lang form {
+	display: inline;
+}
+
+.page .header .menu {
+	display: block;
+	width: 100%;
+	clear: both;
+}
+
+.page .header .menu a.actual {
+	color: black;
+}
+
+.submenu {
+	display: block;
+	width: 100%;
+	background-color: black;
+	margin-bottom: 1ex;
+}
+
+.submenu .items {
+	display: block;
+	width: 100%;
+	padding-top: 2px;
+	padding-bottom: 2px;
+}
+
+.submenu .items a {
+	color: white;
+	margin-left: 16px;
+	white-space: nowrap;
+	vertical-align: middle;
+	padding: 4px 17px 5px;
+}
+
+.submenu a:HOVER {
+	background-color: #FFFFFF;
+	color: black;
+	text-decoration: none;
+}
+
+.submenu a.selected {
+	background-color: #FFFFFF;
+	color: #4BA82E;
+}
+
+.pageFooter {
+	position: absolute;
+	bottom: 0px;
+	width: 100%;
+}
+
+.infoFooter {
+	padding-top: 5px;
+	padding-bottom: 5px;
+	width: 100%;
+	border-top: 1px solid black;
+	background-color: #dfe0e0;
+}
+
+.infoFooter .copyright {
+	display: inline;
+}
+
+.infoFooter .buildInf {
+	display: block;
+	width: 1em;
+	height: 1.5ex;
+	text-align: right;
+	float: right;
+	margin-right: 3px;
+}
+
+input.textovePole {
+	font-family: inherit;
+	background: white;
+	color: black;
+	/*width:250px;*/
+	height: 20px;
+	text-align: left;
+	border-radius: 3px;
+	border-style: solid;
+	border-width: thin;
+}
+
+.buildInf .info {
+	visibility: hidden;
+	position: absolute;
+	display: block;
+	z-index: 100;
+	width: 50em;
+	height: 19em;
+	right: 0;
+	bottom: 0;
+	overflow: scroll;
+	text-align: left;
+	background-color: white;
+}
+
+.buildInf:HOVER .info {
+	visibility: visible;
+}
+
+.buttonBar {
+	width: 100%;
+	background-color: #c7c8c8;
+	height: 35px;
+}
+
+.buttonBar span {
+	float: left;
+	margin-top: 6px;
+	margin-left: 10px;
+	margin-right: 10px;
+	margin-left: 10px;
+}
+
+.formBar {
+	width: 100%;
+	background-color: lightgray;
+	height: 38px;
+}
+
+.formBar span {
+	float: left;
+	margin-top: 10px;
+	margin-right: 10px;
+	margin-left: 10px;
+}
+
+.formBar input {
+	float: left;
+	margin-top: -3px;
+}
+
+.heroBtn, .lowLevelBtn {
+	width: 140px;
+	height: 18px;
+	font-weight: bold;
+	padding-right: 15px;
+	border: 0px;
+	font-family: Verdana, ​ "Arial CE", ​Arial, ​ "Helvetica CE", ​sans-serif;
+}
+
+.heroBtn {
+	color: white;
+	background-color: #4ba82e;
+}
+
+a.heroBtn, a.lowLevelBtn {
+	display: block;
+	padding: 3px 0;
+	text-align: center;
+}
+
+input.heroBtn, input.lowLevelBtn {
+	display: block;
+	padding: 3px 0;
+	text-align: center;
+}
+
+span.heroBtn, span.lowLevelBtn {
+	display: block;
+	text-align: center;
+	padding: 3px 0;
+}
+
+span.heroBtn {
+	background-color: #e8f4e4;
+}
+
+span.heroBtn:hover {
+	background-color: #e8f4e4;
+}
+
+span.heroBtn em, span.lowLevelBtn em {
+	color: white;
+	padding-top: 2px;
+}
+
+.heroBtn:hover {
+	background-color: #35861c;
+	text-decoration: none;
+}
+
+.lowLevelBtn {
+	color: #FFF;
+	background: #555555;
+}
+
+.lowLevelBtn:hover {
+	background-color: #2b2b2b;
+	text-decoration: none;
+}
+
+span.lowLevelBtn {
+	background-color: #cccccc;
+}
+
+span.lowLevelBtn:hover {
+	background-color: #cccccc;
+}
+
+.linetools a {
+	
+}
+
+.linetools a.copy {
+	background-image: url('../ico/copy.png');
+}
+
+.linetools a.remove {
+	background-image: url('../ico/smazat.png');
+}
+
+.linetools a.edit {
+	background-image: url('../ico/edit.png');
+}
+
+.linetools a.save {
+	background-image: url('../ico/save.png');
+}
+
+.linetools a.new {
+	background-image: url('../ico/novy.png');
+}
+
+.linetools a.porovnani {
+	background-image: url('../ico/diagona/16/083.png');
+}
+
+div.edit {
+	background-image: url('../ico/edit.png');
+	color: transparent;
+	float: left;
+	height: 16px;
+	width: 16px;
+	overflow: hidden;
+	text-indent: 100%;
+	cursor: pointer;
+}
+
+div.remove {
+	background-image: url('../ico/smazat.png');
+	color: transparent;
+	float: left;
+	height: 16px;
+	width: 16px;
+	overflow: hidden;
+	text-indent: 100%;
+	cursor: pointer;
+}
+
+div.notActive {
+	background-image: url('../ico/zrusit.png');
+	color: transparent;
+	margin: auto;
+	height: 16px;
+	width: 16px;
+	overflow: hidden;
+	text-indent: 100%;
+}
+
+.slimColumn {
+	width: 7em;
+	text-align: center;
+}
+
+.actionColumn {
+	width: 40px;
+}
+/*
+.pageBody {
+	padding-bottom: 70px;
+}*/
+body.modal {
+	background-color: #EFEFEF;
+	width: 100%;
+}
+
+.mainAreaWide {
+	padding: 10px;
+	padding-bottom: 25px;
+}
+
+.pageHeader h1 {
+	left: 0px;
+}
+
+.linetools {
+	display: inline;
+}
+
+.linetools a {
+	margin-top: 0px;
+	margin-bottom: 0px;
+	float: left;
+	display: inline-block;
+	width: 18px;
+	min-height: 16px;
+	background-repeat: no-repeat;
+	text-decoration: none;
+	background-position: 0;
+}
+
+input.uppercase {
+	text-transform: uppercase;
+}
+
+.feedbackPanel {
+	text-align: left;
+	background: white;
+	margin: 0 5px 2px 5px;
+	padding: 0 3px 0 3px;
+	list-style: none outside none;
+}
+
+li.feedbackPanelERROR {
+	background: url('../ico/diagona/10/050.png') no-repeat 0px 5px;
+	padding-left: 13px;
+}
+
+ul.feedbackPanel {
+	
+}
+
+ul.feedbackPanelERROR {
+	color: red;
+}
+
+.feedbackPanelERROR {
+	
+}
+
+.buildInfo {
+	font-size: 8pt;
+}
+
+.buildInfo .info {
+	display: none;
+}
+
+.buildInfo:hover .info {
+	background: yellow;
+	padding: 5px 5px 5px 5px;
+	font-size: 9pt;
+	width: 200px;
+	height: 100px;
+	overflow: auto;
+	line-height: 10pt;
+	position: absolute;
+	display: block;
+	z-index: 1000;
+	top: -90px;
+	right: 140px;
+}
+
+.invalidField {
+	border: 2px solid red;
+	color: red;
+}
+
+div.wicket-modal div.w_content {
+	background-color: #ECECEC;
+}
+
+.formFieldGroup {
+	clear: both;
+	padding: 5px;
+}
+
+.formField {
+	float: left;
+}
+
+.fieldFeedback {
+	float: left;
+	margin-left: 13px;
+}
+
+.feedbackPanelERROR {
+	color: red;
+}
+
+.buttonLine {
+	background-color: #ECECEC;
+	border-top: 1px solid #000000;
+	bottom: 0;
+	float: left;
+	padding: 5px;
+	position: fixed;
+	width: 100%;
+}
+
+.projectDialog .formFieldGroup label {
+	width: 100px;
+}
+
+.saveButton {
+	background: url("../ico/save.png") no-repeat;
+	cursor: pointer;
+	width: 16px;
+	height: 16px;
+	border: none;
+	color: transparent;
+}
+
+.deleteButton {
+	background: url("../ico/smazat.png") no-repeat;
+	cursor: pointer;
+	width: 16px;
+	height: 16px;
+	border: none;
+	color: transparent;
+}
+
+.compareButton {
+	background: url("../ico/diagona/16/102.png") no-repeat;
+	cursor: pointer;
+	width: 16px;
+	height: 16px;
+	border: none;
+	color: transparent;
+}
+
+div.wicket-modal div.w_caption {
+	font-size: 20px;
+}
+
+.descriptionFields {
+	float: left;
+}
+
+.descriptionFields label {
+	margin-left: 1.2em;
+	margin-right: 1em;
+	display: inline-block;
+	overflow: hidden;
+}
+
+.descriptionFields span {
+	background-color: white;
+	display: inline-block;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+label {
+	font-weight: bold;
+	white-space: nowrap;
+}
+
+/***************** start table */
+table {
+	border-spacing: 0;
+}
+
+table.dataTable {
+	width: 100%;
+}
+
+table.dataTable thead tr {
+	width: 100%;
+	background-color: #c7c8c8;
+	font-weight: bold;
+}
+
+table.dataTable thead tr.navigation {
+	background-color: #ECECEC;
+	border: none;
+}
+
+table.dataTable thead tr th {
+	border-top: 1px solid black;
+	border-bottom: none;
+	border-right: 1px solid black;
+	padding: 3px 2px;
+	height: 35px;
+}
+
+/*
+table.dataTable thead tr:first-child th {
+	border-top: none;
+}
+*/
+table.dataTable thead tr th:last-child {
+	border-right: none;
+}
+
+table.dataTable tbody tr td {
+	border-right: 1px solid black;
+	padding: 2px;
+	border-top: 1px solid black;
+}
+
+table.dataTable tbody tr:last-child td {
+	border-bottom: 1px solid black;
+}
+
+table.dataTable tfoot tr td.summed {
+	border-bottom: 1px solid black;
+	border-right: 1px solid black;
+	padding: 2px;
+}
+
+table.dataTable tfoot tr td.sumaTextColumn {
+	border-right: 1px solid black;
+}
+
+table.dataTable tfoot tr.sumation {
+	font-weight: bold;
+}
+
+table.dataTable tbody tr td:last-child {
+	border-right: none;
+}
+
+table.dataTable tfoot tr td:last-child {
+	border-right: none;
+}
+
+table.dataTable tbody tr:nth-child(even) {
+	background-color: rgb(228, 230, 231);
+}
+
+table.dataTable tbody tr.selectedTableRow {
+	background-color: #4ba82e;
+}
+
+.tableContainer {
+	background-color: #ececec;
+	border: 1px solid black;
+	border-collapse: collapse;
+	padding-top: 1px;
+	padding-bottom: 1px;
+}
+
+div.tableContentWrapper {
+	word-warp: break;
+}
+
+th.generated {
+	background-color: #9f9f9f;
+}
+
+td.generated, td.center {
+	text-align: center;
+}
+
+table.dataTable tbody tr td div {
+	word-break: break-all;
+}
+
+table.dataTable tfoot tr td div {
+	word-break: break-all;
+}
+
+span.subTableLabel {
+	color: #DFE0E0;
+}
+
+table.dataTable thead tr.mainHeader {
+	border: none;
+	background-color: #ECECEC;
+	font-size: 1.1em;
+	font-weight: normal;
+	text-align: left;
+}
+
+table.dataTable tfoot tr td.norecords-td {
+	border-bottom: 1px solid black;
+	border-top: 1px solid black;
+}
+
+table.dataTable thead tr.mainHeader th {
+	border: none;
+	height: 18px;
+}
+/* end table */
+/* table navigation */
+table.dataTable thead tr.navigation .navigator {
+	float: right;
+}
+
+table.dataTable thead tr.navigation .navigatorLabel {
+	float: left;
+}
+
+.first {
+	background-image: url('../ico/vlevo_uplne.png');
+	min-height: 16px;
+	min-width: 18px;
+	display: block;
+	float: left;
+	background-position: 0 1px;
+	color: transparent;
+	font-size: 0;
+}
+
+a.first {
+	width: 18px;
+}
+
+.first em {
+	display: none;
+}
+
+.prev {
+	background-image: url('../ico/vlevo.png');
+	min-height: 16px;
+	min-width: 18px;
+	display: block;
+	float: left;
+	background-position: 0 1px;
+	color: transparent;
+	font-size: 0;
+}
+
+.prev em {
+	display: none;
+}
+
+.goto {
+	display: block;
+	float: left;
+	font-size: 16px;
+	text-align: center;
+	width: 16px;
+}
+
+.goto span em {
+	background: #4BA82E;
+	color: white;
+	font-style: normal;
+}
+
+.next {
+	background-image: url('../ico/vpravo.png');
+	min-height: 16px;
+	min-width: 18px;
+	display: block;
+	float: left;
+	background-position: 0 1px;
+	color: transparent;
+	font-size: 0;
+}
+
+.next em {
+	display: none;
+}
+
+.last {
+	background-image: url('../ico/vpravo_uplne.png');
+	min-height: 16px;
+	min-width: 18px;
+	display: block;
+	float: left;
+	background-position: 0 1px;
+	color: transparent;
+	font-size: 0;
+}
+
+.last em {
+	display: none;
+}
+
+a.last {
+	width: 18px;
+}
+/* end table navigation */
+a.newUser {
+	background-image: url('../ico/diagona/16/006.png');
+	min-height: 16px;
+	min-width: 16px;
+}
+
+a.newItem {
+	background-image: url('../ico/novy.png');
+	min-height: 16px;
+	min-width: 16px;
+}
+
+div.projectItemPanel {
+	float: left;
+	width: 14%;
+	height: 23.4em;
+}
+
+label.projectItemLabel {
+	float: left;
+	font-weight: bold;
+	font-size: 12px;
+}
+
+div.loadingDialog {
+	background-color: #FFFFFF;
+	left: 48%;
+	position: relative;
+	top: 48%;
+	border: 1px solid black;
+}
+
+div.loadingDialogImage {
+	height: 50px;
+	width: 50px;
+	background-image: url('../images/ajax-loader.gif');
+	background-position: center center;
+	background-repeat: no-repeat;
+}
+
+div.loadingDialogText {
+	height: 1.1em;
+	padding: 2em;
+	width: 6em;
+}
+
+label.setLabel {
+	width: 6em;
+}
+
+label.editLabel {
+	width: 8em;
+}
+
+label.projectLabel {
+	width: 6em;
+}
+
+label.modifierLabel {
+	width: 10em;
+}
+
+div.ok {
+	background: url("../ico/ok.png") no-repeat scroll 0 0 rgba(0, 0, 0, 0);
+	display: inline-block;
+	height: 16px;
+	width: 16px;
+}
+
+div.cancel {
+	background: url('../ico/zrusit.png') no-repeat scroll 0 0 rgba(0, 0, 0, 0);
+	display: inline-block;
+	height: 16px;
+	width: 16px;
+}
+
+td.greenText div, tr.greenText td div {
+	color: #299926;
+}
+
+label.specEquipmentDialogLabel {
+	width: 9em;
+}
+
+td.notFilled {
+	background-color: #ffd200;
+}
+
+label.priceLabel {
+	width: 10em;
+}
+
+.significationColumn {
+	width: 10em;
+}
+
+div.partLine {
+	float: left;
+	width: 470px;
+}
+
+label.costsDetailLabel {
+	width: 7em;
+}
+
+label.equipmentGradeProcurationDialogLabel {
+	width: 10em;
+}
+
+span.costsDetailLabel {
+	font-size: 1.1em;
+	font-weight: bold;
+}
+
+label.ebrProcurationDialogLabel {
+	width: 10em;
+}
+
+label.modelCareProcurationDialogLabel {
+	width: 15em;
+}
+
+.sopColumn {
+	width: 7em;
+}
+
+.programPointColumn {
+	width: 12em;
+}
+
+.helpTable tr td {
+	border-top: 1px solid black;
+	padding: 3px;
+}
+
+.helpTable tr:last-child td {
+	border-bottom: 1px solid black;
+}
+
+div.helpKey {
+	font-weight: bold;
+	font-size: 1.2 em;
+	text-align: right;
+	margin-right: 1em
+}
+
+div.helpValue {
+	background-color: white;
+	overflow: hidden;
+	padding: 0 1em;
+	width: 98%;
+	word-break: break-all;
+}
+
+table.k-widget.k-editor.k-header.k-editor-widget {
+	float: left;
+}
+
+.helpValue table tr td {
+	border: 1px solid black;
+}
+
+.helpValue table {
+	border-collapse: collapse;
+	width: 96%;
+	margin: auto;
+}
+
+.summed span {
+	color: black;
+}
+
+.sumaTextColumn span {
+	color: black;
+}
+
+label.compare {
+	width: 13em;
+}
+
+span.compare {
+	width: 35em;
+}
+
+span.compareHeader {
+	font-weight: bold;
+	font-size: 1.2em;
+	background-color: transparent;
+}
+
+label.compareProcuratinLabel {
+	width: 12em;
+}
+
+select.inputFormSelect {
+	margin-left: 6px;
+	float: left;
+}
+
+table.k-table {
+	margin: auto;
+	width: 95%;
+}
+
+div.fileinputs {
+	position: relative;
+}
+
+div.fakefile {
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	z-index: 1;
+	width: 305px;
+}
+
+input.file {
+	position: relative;
+	text-align: right;
+	-moz-opacity: 0;
+	filter: alpha(opacity : 0);
+	opacity: 0;
+	z-index: 2;
+	width: 305px;
+	height: 25px;
+}
+
+.fakeFileFiled {
+	height: 22px;
+}
+
+.fileSelectBotton {
+	float: left;
+}
+
+.progressUploadLabel {
+	width: 13em;
+}
+
+.errorText {
+	text-align: center;
+	font-weight: bold;
+	line-height: normal;
+	font-size: 3em;
+}
+
+div.costs1, th.costs1, .compareTable th.costs1 {
+	background-color: rgb(219, 238, 213);
+}
+
+div.costs2, th.costs2, .compareTable th.costs2 {
+	background-color: rgb(159, 159, 159);
+}
+
+.compareTable th.generated, .compareTable th {
+	background-color: rgb(199, 192, 184);
+}
+
+.costs1 span.subTableLabel {
+	color: #9F9F9F;
+}
+
+/* nice switcher */
+input.switch:empty {
+	margin-left: -999px;
+}
+
+input.switch:empty ~ label {
+	-moz-user-select: none;
+	cursor: pointer;
+	float: left;
+	line-height: 1.6em;
+	position: relative;
+	text-indent: 4em;
+}
+
+input.switch:empty ~ label:before, input.switch:empty ~ label:after {
+	background-color: #9F9F9F;
+	border-radius: 0.3em 0.3em 0.3em 0.3em;
+	bottom: 0;
+	box-shadow: 0 0.2em 0 rgba(0, 0, 0, 0.3) inset;
+	content: " ";
+	display: block;
+	left: 0;
+	position: absolute;
+	top: 0;
+	transition: all 100ms ease-in 0s;
+	width: 3.6em;
+}
+
+input.switch:empty ~ label:after {
+	background-color: #FFFFFF;
+	border-radius: 0.15em 0.15em 0.15em 0.15em;
+	bottom: 0.1em;
+	box-shadow: 0 -0.2em 0 rgba(0, 0, 0, 0.2) inset;
+	margin-left: 0.1em;
+	top: 0.1em;
+	width: 1.4em;
+}
+
+input.switch:checked ~ label:before {
+	background-color: #4BA82E;
+}
+
+input.switch:checked ~ label:after {
+	margin-left: 2.1em;
+}
+:-moz-any
+(
+.switchDiv
+)
+{
+width
+:
+130
+px
+
+
+
+
+
+
+;
+}

@@ -20,8 +20,8 @@ public class ArchCenikViewService {
 	private EntityManager entityManager;
 
 	public List<ArchCenikView> getArchCenikView(int kalkulace, String cdilu, String zavod, String dodavatel) {
-		zavod = zavod.isEmpty() ? "%" : zavod;
-		dodavatel = dodavatel.isEmpty() ? "%" : "%" + dodavatel + "%";
+		zavod = zavod.isEmpty() ? "%" : "%"+zavod+"%";
+		dodavatel = dodavatel.isEmpty() ? "%" : "%" + dodavatel.toUpperCase() + "%";
 		log.debug("###\t\t getArchCenikView(" + kalkulace + ", " + cdilu + ", " + zavod + ", " + dodavatel + " );");
 
 		List<ArchCenikView> gre = null;
@@ -35,4 +35,17 @@ public class ArchCenikViewService {
 		}
 		return gre;
 	}
+
+	public List<ArchCenikView> getArchCenikView(int kalkulace) {
+		log.trace("###\t\t getArchCenikView(" + kalkulace + ");");
+
+		List<ArchCenikView> gre = null;
+		try {
+			gre = entityManager.createQuery("SELECT u FROM ArchCenikView u WHERE u.kalkulace=:kalkulace  ", ArchCenikView.class).setParameter("kalkulace", kalkulace).getResultList();
+		} catch (NoResultException e) {
+			return null;
+		}
+		return gre;
+	}
+
 }

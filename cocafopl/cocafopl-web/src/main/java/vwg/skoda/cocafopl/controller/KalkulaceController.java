@@ -685,6 +685,7 @@ public class KalkulaceController {
 
 			SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
 			try {
+				log.debug("###\t\t Posilam mail...");
 				vwg.skoda.postak.Mail mail = new vwg.skoda.postak.Mail();
 				mail.setTo("petr.grecman@skoda-auto.cz");
 				mail.setFrom("Skoda.Apps.COCAFOPPL.SUPPORT@skoda-auto.cz");
